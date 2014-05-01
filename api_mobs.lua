@@ -1,4 +1,5 @@
-mobs = {}
+-- Creature registration - Mobs
+
 function creatures:register_mob(name, def)
 	minetest.register_entity(name, {
 		hp_max = def.hp_max,
@@ -476,9 +477,12 @@ function creatures:register_mob(name, def)
 	})
 end
 
-mobs.spawning_mobs = {}
+-- Mob spawning
+
+creatures.spawning_mobs = {}
+
 function creatures:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height, spawn_func)
-	mobs.spawning_mobs[name] = true
+	creatures.spawning_mobs[name] = true
 	minetest.register_abm({
 		nodenames = nodes,
 		neighbors = {"air"},
@@ -488,7 +492,7 @@ function creatures:register_spawn(name, nodes, max_light, min_light, chance, act
 			if active_object_count_wider > active_object_count then
 				return
 			end
-			if not mobs.spawning_mobs[name] then
+			if not creatures.spawning_mobs[name] then
 				return
 			end
 			pos.y = pos.y+1
@@ -522,6 +526,8 @@ function creatures:register_spawn(name, nodes, max_light, min_light, chance, act
 		end
 	})
 end
+
+-- Mob arrows
 
 function creatures:register_arrow(name, def)
 	minetest.register_entity(name, {

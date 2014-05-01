@@ -1,29 +1,13 @@
-creatures:register_mob("creatures:dirt_monster", {
-	type = "monster",
+creatures:register_creature("creatures:dirt_monster", {
+	-- Player and mob properties:
 	hp_max = 5,
+	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_stone_monster.x",
 	textures = {"mobs_dirt_monster.png"},
 	visual_size = {x=3, y=2.6},
-	makes_footstep_sound = true,
-	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
-	damage = 2,
-	drops = {
-		{name = "default:dirt",
-		chance = 1,
-		min = 3,
-		max = 5,},
-	},
-	armor = 100,
 	drawtype = "front",
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 2,
-	on_rightclick = nil,
-	attack_type = "dogfight",
 	animation = {
 		speed_normal = 15,
 		speed_run = 15,
@@ -35,19 +19,62 @@ creatures:register_mob("creatures:dirt_monster", {
 		run_end = 63,
 		punch_start = 40,
 		punch_end = 63,
-	}
+	},
+	makes_footstep_sound = true,
+
+	-- Mob properties:
+	type = "monster",
+	view_range = 15,
+	walk_velocity = 1,
+	run_velocity = 3,
+	damage = 2,
+	drops = {
+		{name = "default:dirt",
+		chance = 1,
+		min = 3,
+		max = 5,},
+	},
+	water_damage = 1,
+	lava_damage = 5,
+	light_damage = 2,
+	on_rightclick = nil,
+	attack_type = "dogfight",
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = 32,
+	inventory_craft = 9,
 })
 creatures:register_spawn("creatures:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
-creatures:register_mob("creatures:stone_monster", {
-	type = "monster",
+creatures:register_creature("creatures:stone_monster", {
+	-- Player and mob properties:
 	hp_max = 10,
+	armor = 80,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_stone_monster.x",
 	textures = {"mobs_stone_monster.png"},
 	visual_size = {x=3, y=2.6},
+	drawtype = "front",
+	animation = {
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 14,
+		walk_start = 15,
+		walk_end = 38,
+		run_start = 40,
+		run_end = 63,
+		punch_start = 40,
+		punch_end = 63,
+	},
 	makes_footstep_sound = true,
+
+	-- Mob properties:
+	type = "monster",
 	view_range = 10,
 	walk_velocity = 0.5,
 	run_velocity = 2,
@@ -59,53 +86,30 @@ creatures:register_mob("creatures:stone_monster", {
 		max = 5,},
 	},
 	light_resistant = true,
-	armor = 80,
-	drawtype = "front",
 	water_damage = 0,
 	lava_damage = 0,
 	light_damage = 0,
 	attack_type = "dogfight",
-	animation = {
-		speed_normal = 15,
-		speed_run = 15,
-		stand_start = 0,
-		stand_end = 14,
-		walk_start = 15,
-		walk_end = 38,
-		run_start = 40,
-		run_end = 63,
-		punch_start = 40,
-		punch_end = 63,
-	}
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = 32,
+	inventory_craft = 9,
 })
 creatures:register_spawn("creatures:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
 
-creatures:register_mob("creatures:sand_monster", {
-	type = "monster",
+creatures:register_creature("creatures:sand_monster", {
+	-- Player and mob properties:
 	hp_max = 3,
+	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_sand_monster.x",
 	textures = {"mobs_sand_monster.png"},
 	visual_size = {x=8,y=8},
-	makes_footstep_sound = true,
-	view_range = 15,
-	walk_velocity = 1.5,
-	run_velocity = 4,
-	damage = 1,
-	drops = {
-		{name = "default:sand",
-		chance = 1,
-		min = 3,
-		max = 5,},
-	},
-	light_resistant = true,
-	armor = 100,
 	drawtype = "front",
-	water_damage = 3,
-	lava_damage = 1,
-	light_damage = 0,
-	attack_type = "dogfight",
 	animation = {
 		speed_normal = 15,
 		speed_run = 15,
@@ -118,18 +122,61 @@ creatures:register_mob("creatures:sand_monster", {
 		punch_start = 74,
 		punch_end = 105,
 	},
+	makes_footstep_sound = true,
+
+	-- Mob properties:
+	type = "monster",
+	view_range = 15,
+	walk_velocity = 1.5,
+	run_velocity = 4,
+	damage = 1,
+	drops = {
+		{name = "default:sand",
+		chance = 1,
+		min = 3,
+		max = 5,},
+	},
+	light_resistant = true,
+	water_damage = 3,
+	lava_damage = 1,
+	light_damage = 0,
+	attack_type = "dogfight",
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = 32,
+	inventory_craft = 9,
 })
 creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
-creatures:register_mob("creatures:tree_monster", {
-	type = "monster",
+creatures:register_creature("creatures:tree_monster", {
+	-- Player and mob properties:
 	hp_max = 5,
+	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_tree_monster.x",
 	textures = {"mobs_tree_monster.png"},
 	visual_size = {x=4.5,y=4.5},
+	drawtype = "front",
+	animation = {
+		speed_normal = 15,
+		speed_run = 15,
+		stand_start = 0,
+		stand_end = 24,
+		walk_start = 25,
+		walk_end = 47,
+		run_start = 48,
+		run_end = 62,
+		punch_start = 48,
+		punch_end = 62,
+	},
 	makes_footstep_sound = true,
+
+	-- Mob properties:
+	type = "monster",
 	view_range = 15,
 	walk_velocity = 1,
 	run_velocity = 3,
@@ -145,57 +192,53 @@ creatures:register_mob("creatures:tree_monster", {
 		max = 2,},
 	},
 	light_resistant = true,
-	armor = 100,
-	drawtype = "front",
 	water_damage = 1,
 	lava_damage = 5,
 	light_damage = 2,
 	disable_fall_damage = true,
 	attack_type = "dogfight",
-	animation = {
-		speed_normal = 15,
-		speed_run = 15,
-		stand_start = 0,
-		stand_end = 24,
-		walk_start = 25,
-		walk_end = 47,
-		run_start = 48,
-		run_end = 62,
-		punch_start = 48,
-		punch_end = 62,
-	},
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = 32,
+	inventory_craft = 9,
 })
 creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 3, -1, 7000, 3, 31000)
 
-creatures:register_mob("creatures:sheep", {
-	type = "animal",
+creatures:register_creature("creatures:sheep", {
+	-- Player and mob properties:
 	hp_max = 5,
+	armor = 200,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
 	textures = {"mobs_sheep.png"},
 	visual = "mesh",
 	mesh = "mobs_sheep.x",
-	makes_footstep_sound = true,
-	walk_velocity = 1,
-	armor = 200,
-	drops = {
-		{name = "creatures:meat_raw",
-		chance = 1,
-		min = 2,
-		max = 3,},
-	},
 	drawtype = "front",
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 0,
-	sounds = {
-		random = "mobs_sheep",
-	},
 	animation = {
 		speed_normal = 15,
 		stand_start = 0,
 		stand_end = 80,
 		walk_start = 81,
 		walk_end = 100,
+	},
+	makes_footstep_sound = true,
+
+	-- Mob properties:
+	type = "animal",
+	walk_velocity = 1,
+	drops = {
+		{name = "creatures:meat_raw",
+		chance = 1,
+		min = 2,
+		max = 3,},
+	},
+	water_damage = 1,
+	lava_damage = 5,
+	light_damage = 0,
+	sounds = {
+		random = "mobs_sheep",
 	},
 	follow = "farming:wheat",
 	view_range = 5,
@@ -237,6 +280,13 @@ creatures:register_mob("creatures:sheep", {
 			})
 		end
 	end,
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = 32,
+	inventory_craft = 9,
 })
 creatures:register_spawn("creatures:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
 
@@ -258,18 +308,21 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
-creatures:register_mob("creatures:rat", {
-	type = "animal",
+creatures:register_creature("creatures:rat", {
+	-- Player and mob properties:
 	hp_max = 1,
+	armor = 200,
 	collisionbox = {-0.2, -0.01, -0.2, 0.2, 0.2, 0.2},
 	visual = "mesh",
 	mesh = "mobs_rat.x",
 	textures = {"mobs_rat.png"},
-	makes_footstep_sound = false,
-	walk_velocity = 1,
-	armor = 200,
-	drops = {},
 	drawtype = "front",
+	makes_footstep_sound = false,
+
+	-- Mob properties:
+	type = "animal",
+	walk_velocity = 1,
+	drops = {},
 	water_damage = 0,
 	lava_damage = 1,
 	light_damage = 0,
@@ -280,6 +333,13 @@ creatures:register_mob("creatures:rat", {
 			self.object:remove()
 		end
 	end,
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = 32,
+	inventory_craft = 9,
 })
 creatures:register_spawn("creatures:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
 
@@ -310,27 +370,16 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
-creatures:register_mob("creatures:oerkki", {
-	type = "monster",
+creatures:register_creature("creatures:oerkki", {
+	-- Player and mob properties:
 	hp_max = 8,
+	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_oerkki.x",
 	textures = {"mobs_oerkki.png"},
 	visual_size = {x=5, y=5},
-	makes_footstep_sound = false,
-	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
-	damage = 4,
-	drops = {},
-	armor = 100,
 	drawtype = "front",
-	light_resistant = true,
-	water_damage = 1,
-	lava_damage = 1,
-	light_damage = 0,
-	attack_type = "dogfight",
 	animation = {
 		stand_start = 0,
 		stand_end = 23,
@@ -343,40 +392,40 @@ creatures:register_mob("creatures:oerkki", {
 		speed_normal = 15,
 		speed_run = 15,
 	},
+	makes_footstep_sound = false,
+
+	-- Mob properties:
+	type = "monster",
+	view_range = 15,
+	walk_velocity = 1,
+	run_velocity = 3,
+	damage = 4,
+	drops = {},
+	light_resistant = true,
+	water_damage = 1,
+	lava_damage = 1,
+	light_damage = 0,
+	attack_type = "dogfight",
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = 32,
+	inventory_craft = 9,
 })
 creatures:register_spawn("creatures:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
-creatures:register_mob("creatures:dungeon_master", {
-	type = "monster",
+creatures:register_creature("creatures:dungeon_master", {
+	-- Player and mob properties:
 	hp_max = 10,
+	armor = 60,
 	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
 	visual = "mesh",
 	mesh = "mobs_dungeon_master.x",
 	textures = {"mobs_dungeon_master.png"},
 	visual_size = {x=8, y=8},
-	makes_footstep_sound = true,
-	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
-	damage = 4,
-	drops = {
-		{name = "default:mese",
-		chance = 100,
-		min = 1,
-		max = 2,},
-	},
-	armor = 60,
 	drawtype = "front",
-	water_damage = 1,
-	lava_damage = 1,
-	light_damage = 0,
-	on_rightclick = nil,
-	attack_type = "shoot",
-	arrow = "creatures:fireball",
-	shoot_interval = 2.5,
-	sounds = {
-		attack = "mobs_fireball",
-	},
 	animation = {
 		stand_start = 0,
 		stand_end = 19,
@@ -387,6 +436,37 @@ creatures:register_mob("creatures:dungeon_master", {
 		speed_normal = 15,
 		speed_run = 15,
 	},
+	makes_footstep_sound = true,
+
+	-- Mob properties:
+	type = "monster",
+	view_range = 15,
+	walk_velocity = 1,
+	run_velocity = 3,
+	damage = 4,
+	drops = {
+		{name = "default:mese",
+		chance = 100,
+		min = 1,
+		max = 2,},
+	},
+	water_damage = 1,
+	lava_damage = 1,
+	light_damage = 0,
+	on_rightclick = nil,
+	attack_type = "shoot",
+	arrow = "creatures:fireball",
+	shoot_interval = 2.5,
+	sounds = {
+		attack = "mobs_fireball",
+	},
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = 32,
+	inventory_craft = 9,
 })
 creatures:register_spawn("creatures:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
 

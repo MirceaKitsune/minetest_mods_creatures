@@ -1,13 +1,13 @@
 -- Race table
 
-local races = {}
+creatures.races = {}
 
 function creatures:set_race (player, race)
 	local pname = player
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-	races[pname] = race
+	creatures.races[pname] = race
 end
 
 function creatures:get_race (player)
@@ -15,7 +15,29 @@ function creatures:get_race (player)
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-	return races[pname]
+	return creatures.races[pname]
+end
+
+-- Creature registration - Players
+
+creatures.players = {}
+
+function creatures:register_player(name, def)
+	creatures.players[name] = {}
+	creatures.players[name].hp_max = def.hp_max
+	creatures.players[name].armor = def.armor
+	creatures.players[name].collisionbox = def.collisionbox
+	creatures.players[name].visual = def.visual
+	creatures.players[name].mesh = def.mesh
+	creatures.players[name].textures = def.textures
+	creatures.players[name].visual_size = def.visual_size
+	creatures.players[name].drawtype = def.drawtype
+	creatures.players[name].makes_footstep_sound = def.makes_footstep_sound
+	creatures.players[name].physics_speed = def.physics_speed
+	creatures.players[name].physics_jump = def.physics_jump
+	creatures.players[name].physics_gravity = def.physics_gravity
+	creatures.players[name].inventory_main = def.inventory_main
+	creatures.players[name].inventory_craft = def.inventory_craft
 end
 
 -- Ghost stuff
