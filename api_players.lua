@@ -1,10 +1,8 @@
-players = {}
-
 -- Race table
 
 local races = {}
 
-function players:set_race (player, race)
+function creatures:set_race (player, race)
 	local pname = player
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
@@ -12,7 +10,7 @@ function players:set_race (player, race)
 	races[pname] = race
 end
 
-function players:get_race (player)
+function creatures:get_race (player)
 	local pname = player
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
@@ -22,8 +20,8 @@ end
 
 -- Ghost stuff
 
-function players:set_ghost (player)
-	players:set_race(player, nil)
+function creatures:set_ghost (player)
+	creatures:set_race(player, nil)
 	-- configure inventory
 	local inv = player:get_inventory()
 	inv:set_list("main", {})
@@ -58,7 +56,7 @@ end
 -- prevent ghosts from having any items
 minetest.register_globalstep(function(dtime)
 	for _, player in ipairs(minetest.get_connected_players()) do
-		if not players:get_race(player) then
+		if not creatures:get_race(player) then
 			local inv = player:get_inventory()
 			inv:set_list("main", {})
 		end
@@ -67,18 +65,18 @@ end)
 
 -- revert any node modified by a ghost
 minetest.register_on_dignode(function(pos, oldnode, digger)
-	if not players:get_race(digger) then
+	if not creatures:get_race(digger) then
 		minetest.set_node(pos, oldnode)
 	end
 end)
 
 -- revert any node modified by a ghost
 minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
-	if not players:get_race(placer) then
+	if not creatures:get_race(placer) then
 		minetest.set_node(pos, oldnode)
 	end
 end)
 
 minetest.register_on_joinplayer(function(player)
-	minetest.after(0, function() players:set_ghost(player) end)
+	minetest.after(0, function() creatures:set_ghost(player) end)
 end)
