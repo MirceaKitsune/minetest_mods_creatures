@@ -137,6 +137,11 @@ minetest.register_globalstep(function(dtime)
 			race_settings.animation.speed_normal_player)
 		end
 
+		-- don't let players have more HP than their race allows
+		if player:get_hp() > race_settings.hp_max then
+			player:set_hp(race_settings.hp_max)
+		end
+
 		-- handle player environment damage
 		env_damage_timer = env_damage_timer + dtime
 		if env_damage_timer > 1 then
