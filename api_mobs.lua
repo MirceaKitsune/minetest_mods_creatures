@@ -260,8 +260,9 @@ function creatures:register_mob(name, def)
 			end
 			
 			if self.following and self.following:is_player() then
+				local psettings = creatures.player_settings[creatures:get_race(self.following)]
 				if self.following:get_wielded_item():get_name() ~= self.follow and
-				not (self.can_possess and not creatures:get_race(self.following)) then
+				not (self.can_possess and psettings.reincarnate) then
 					self.following = nil
 					self.v_start = false
 				else
@@ -478,7 +479,8 @@ function creatures:register_mob(name, def)
 		end,
 		
 		on_punch = function(self, hitter)
-			if self.can_possess and hitter:is_player() and not creatures:get_race(hitter) then
+			local psettings = creatures.player_settings[creatures:get_race(hitter)]
+			if self.can_possess and hitter:is_player() and psettings.reincarnate then
 				hitter:setpos(self.object:getpos())
 				hitter:setyaw(self.object:getyaw())
 				creatures:set_race(hitter, name)

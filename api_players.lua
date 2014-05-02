@@ -26,6 +26,8 @@ function creatures:register_player(name, def)
 	creatures.player_settings[name].hotbar = def.hotbar
 	creatures.player_settings[name].inventory = def.inventory
 	creatures.player_settings[name].interact = def.interact
+	creatures.player_settings[name].reincarnate = def.reincarnate
+	creatures.player_settings[name].ghost = def.ghost
 	creatures.player_settings[name].eye_offset = def.eye_offset
 	creatures.player_settings[name].sky = def.sky
 	creatures.player_settings[name].daytime = def.daytime
@@ -53,7 +55,6 @@ local function get_formspec(intentory, size_main, size_craft)
 end
 
 local function apply_settings (player, race)
-	if not race then race = "default" end
 	local settings = creatures.player_settings[race]
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
@@ -104,7 +105,6 @@ local env_damage_timer = 0
 minetest.register_globalstep(function(dtime)
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local race = creatures.player_races[player:get_player_name()]
-		if not race then race = "default" end
 		local race_settings = creatures.player_settings[race]
 
 		-- handle player animations
@@ -179,7 +179,6 @@ end)
 -- revert any node modified by a creature without interact abilities
 minetest.register_on_dignode(function(pos, oldnode, digger)
 	local race = creatures.player_races[digger:get_player_name()]
-	if not race then race = "default" end
 	local race_settings = creatures.player_settings[race]
 
 	if not race_settings.interact then
@@ -190,7 +189,6 @@ end)
 -- revert any node modified by a creature without interact abilities
 minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
 	local race = creatures.player_races[placer:get_player_name()]
-	if not race then race = "default" end
 	local race_settings = creatures.player_settings[race]
 
 	if not race_settings.interact then
@@ -198,11 +196,17 @@ minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack
 	end
 end)
 
--- turn the player into a ghost upon death
+-- turn the player into its ghost upon death
 minetest.register_on_respawnplayer(function(player)
 	local race = creatures.player_races[player:get_player_name()]
-	if race then
-		creatures:set_race (player, nil)
+	local race_settings = creatures.player_settings[race]
+	local ghost = race_settings.ghost
+	if not ghost or ghost == "" then
+		ghost = creatures.player_default
+	end
+
+	if race ~= ghost then
+		creatures:set_race (player, ghost)
 		return true
 	end
 end)
@@ -216,13 +220,8 @@ function creatures:set_race (player, race)
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-
-	local prace = race
-	if prace == "default" then
-		prace = nil
-	end
-	creatures.player_races[pname] = prace
-	apply_settings(player, prace)
+	creatures.player_races[pname] = race
+	apply_settings(player, race)
 end
 
 function creatures:get_race (player)
@@ -230,14 +229,11 @@ function creatures:get_race (player)
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-
-	local prace = creatures.player_races[pname]
-	if prace == "default" then
-		prace = nil
-	end
-	return prace
+	return creatures.player_races[pname]
 end
 
 minetest.register_on_joinplayer(function(player)
-	minetest.after(0, function() creatures:set_race(player, nil) end)
+	if not creatures:get_race(player) then
+		creatures:set_race(player, creatures.player_default)
+	end
 end)

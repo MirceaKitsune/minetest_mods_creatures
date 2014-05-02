@@ -1,6 +1,11 @@
--- Default player definition:
+-- Default player definitions:
 
-creatures:register_player("default", {
+-- default race for new players
+creatures.player_default = "creatures:ghost"
+
+-- player ghost, don't spawn as a mob
+creatures:register_creature("creatures:ghost", {
+	-- Player and mob properties:
 	hp_max = 20,
 	armor = 100,
 	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5},
@@ -14,7 +19,20 @@ creatures:register_player("default", {
 	water_damage = 0,
 	lava_damage = 0,
 	light_damage = 0,
-	teams = {},
+	teams = {"animals", "monsters", "people"},
+
+	-- Mob properties:
+	type = "monster",
+	view_range = 15,
+	walk_velocity = 1,
+	run_velocity = 3,
+	damage = 2,
+	drops = {},
+	on_rightclick = nil,
+	attack_type = "dogfight",
+	possession = 0,
+
+	-- Player properties:
 	physics_speed = 1,
 	physics_jump = 1,
 	physics_gravity = 1,
@@ -23,10 +41,12 @@ creatures:register_player("default", {
 	hotbar = 1,
 	inventory = false,
 	interact = false,
+	reincarnate = true,
+	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	sky = {{r = 64, g = 0, b = 128}, "plain", {}},
 	daytime = 0.15,
-	screen = "hud_ghost.png",
+	screen = "hud_ghost.png"
 })
 
 -- Creature definitions:
@@ -85,6 +105,8 @@ creatures:register_creature("creatures:dirt_monster", {
 	hotbar = 8,
 	inventory = true,
 	interact = true,
+	reincarnate = false,
+	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	sky = {{}, "regular", {}},
 	daytime = nil,
@@ -145,6 +167,8 @@ creatures:register_creature("creatures:stone_monster", {
 	hotbar = 8,
 	inventory = true,
 	interact = true,
+	reincarnate = false,
+	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	sky = {{}, "regular", {}},
 	daytime = nil,
@@ -205,6 +229,8 @@ creatures:register_creature("creatures:sand_monster", {
 	hotbar = 8,
 	inventory = true,
 	interact = true,
+	reincarnate = false,
+	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	sky = {{}, "regular", {}},
 	daytime = nil,
@@ -270,6 +296,8 @@ creatures:register_creature("creatures:tree_monster", {
 	hotbar = 8,
 	inventory = true,
 	interact = true,
+	reincarnate = false,
+	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	sky = {{}, "regular", {}},
 	daytime = nil,
@@ -368,6 +396,8 @@ creatures:register_creature("creatures:sheep", {
 	hotbar = 8,
 	inventory = true,
 	interact = true,
+	reincarnate = false,
+	ghost = "",
 	eye_offset = {{x = 0, y = -5, z = 0}, {x = 0, y = -5, z = 0}},
 	sky = {{}, "regular", {}},
 	daytime = nil,
@@ -431,6 +461,8 @@ creatures:register_creature("creatures:rat", {
 	hotbar = 4,
 	inventory = true,
 	interact = true,
+	reincarnate = false,
+	ghost = "",
 	eye_offset = {{x = 0, y = -10, z = 0}, {x = 0, y = -10, z = 0}},
 	sky = {{}, "regular", {}},
 	daytime = nil,
@@ -513,6 +545,8 @@ creatures:register_creature("creatures:oerkki", {
 	hotbar = 8,
 	inventory = true,
 	interact = true,
+	reincarnate = false,
+	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	sky = {{}, "regular", {}},
 	daytime = nil,
@@ -577,6 +611,8 @@ creatures:register_creature("creatures:dungeon_master", {
 	hotbar = 8,
 	inventory = true,
 	interact = true,
+	reincarnate = false,
+	ghost = "",
 	eye_offset = {{x = 0, y = 5, z = 0}, {x = 0, y = 5, z = 0}},
 	sky = {{}, "regular", {}},
 	daytime = nil,
