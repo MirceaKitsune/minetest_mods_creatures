@@ -8,7 +8,7 @@ function creatures:allied(creature1, creature2)
 	elseif creature1:is_player() then
 		local race = creatures:get_race(creature1)
 		if not race then return true end
-		creature1_teams = creatures.players[creatures:get_race(creature1)].teams
+		creature1_teams = creatures.player_settings[race].teams
 	end
 
 	local creature2_teams = {}
@@ -17,7 +17,7 @@ function creatures:allied(creature1, creature2)
 	elseif creature2:is_player() then
 		local race = creatures:get_race(creature2)
 		if not race then return true end
-		creature2_teams = creatures.players[creatures:get_race(creature2)].teams
+		creature2_teams = creatures.player_settings[race].teams
 	end
 
 	for _, team1 in ipairs(creature1_teams) do

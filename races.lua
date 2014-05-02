@@ -1,6 +1,6 @@
--- Ghost definition:
+-- Default player definition:
 
-creatures:register_player("ghost", {
+creatures:register_player("default", {
 	hp_max = 20,
 	armor = 100,
 	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5},
@@ -18,7 +18,12 @@ creatures:register_player("ghost", {
 	inventory_main = {x = 1, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	hotbar = 1,
+	inventory = false,
+	interact = false,
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{r = 64, g = 0, b = 128}, "plain", {}},
+	daytime = 0.15,
+	screen = "hud_ghost.png",
 })
 
 -- Creature definitions:
@@ -75,7 +80,12 @@ creatures:register_creature("creatures:dirt_monster", {
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
+	inventory = true,
+	interact = true,
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
 })
 creatures:register_spawn("creatures:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
@@ -131,7 +141,12 @@ creatures:register_creature("creatures:stone_monster", {
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
+	inventory = true,
+	interact = true,
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
 })
 creatures:register_spawn("creatures:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
 
@@ -187,7 +202,12 @@ creatures:register_creature("creatures:sand_monster", {
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
+	inventory = true,
+	interact = true,
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
 })
 creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
@@ -248,7 +268,12 @@ creatures:register_creature("creatures:tree_monster", {
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
+	inventory = true,
+	interact = true,
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
 })
 creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 3, -1, 7000, 3, 31000)
 
@@ -341,7 +366,12 @@ creatures:register_creature("creatures:sheep", {
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 2, y = 2},
 	hotbar = 8,
+	inventory = true,
+	interact = true,
 	eye_offset = {{x = 0, y = -5, z = 0}, {x = 0, y = -5, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
 })
 creatures:register_spawn("creatures:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
 
@@ -399,7 +429,12 @@ creatures:register_creature("creatures:rat", {
 	inventory_main = {x = 4, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	hotbar = 4,
+	inventory = true,
+	interact = true,
 	eye_offset = {{x = 0, y = -10, z = 0}, {x = 0, y = -10, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
 })
 creatures:register_spawn("creatures:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
 
@@ -477,7 +512,12 @@ creatures:register_creature("creatures:oerkki", {
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
+	inventory = true,
+	interact = true,
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
 })
 creatures:register_spawn("creatures:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
@@ -536,7 +576,12 @@ creatures:register_creature("creatures:dungeon_master", {
 	inventory_main = {x = 8, y = 5},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
+	inventory = true,
+	interact = true,
 	eye_offset = {{x = 0, y = 5, z = 0}, {x = 0, y = 5, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
 })
 creatures:register_spawn("creatures:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
 
