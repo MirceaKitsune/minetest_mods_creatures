@@ -11,6 +11,9 @@ creatures:register_player("default", {
 	drawtype = "front",
 	animation = nil,
 	makes_footstep_sound = false,
+	water_damage = 0,
+	lava_damage = 0,
+	light_damage = 0,
 	teams = {},
 	physics_speed = 1,
 	physics_jump = 1,
@@ -52,6 +55,9 @@ creatures:register_creature("creatures:dirt_monster", {
 		punch_end = 63,
 	},
 	makes_footstep_sound = true,
+	water_damage = 1,
+	lava_damage = 5,
+	light_damage = 2,
 	teams = {"monsters"},
 
 	-- Mob properties:
@@ -66,9 +72,6 @@ creatures:register_creature("creatures:dirt_monster", {
 		min = 3,
 		max = 5,},
 	},
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 2,
 	on_rightclick = nil,
 	attack_type = "dogfight",
 	possession = 0.25,
@@ -113,6 +116,9 @@ creatures:register_creature("creatures:stone_monster", {
 		punch_end = 63,
 	},
 	makes_footstep_sound = true,
+	water_damage = 0,
+	lava_damage = 0,
+	light_damage = 0,
 	teams = {"monsters"},
 
 	-- Mob properties:
@@ -127,10 +133,6 @@ creatures:register_creature("creatures:stone_monster", {
 		min = 3,
 		max = 5,},
 	},
-	light_resistant = true,
-	water_damage = 0,
-	lava_damage = 0,
-	light_damage = 0,
 	attack_type = "dogfight",
 	possession = 0.25,
 
@@ -174,6 +176,9 @@ creatures:register_creature("creatures:sand_monster", {
 		punch_end = 105,
 	},
 	makes_footstep_sound = true,
+	water_damage = 3,
+	lava_damage = 1,
+	light_damage = 0,
 	teams = {"monsters"},
 
 	-- Mob properties:
@@ -188,10 +193,6 @@ creatures:register_creature("creatures:sand_monster", {
 		min = 3,
 		max = 5,},
 	},
-	light_resistant = true,
-	water_damage = 3,
-	lava_damage = 1,
-	light_damage = 0,
 	attack_type = "dogfight",
 	possession = 0.25,
 
@@ -235,6 +236,9 @@ creatures:register_creature("creatures:tree_monster", {
 		punch_end = 62,
 	},
 	makes_footstep_sound = true,
+	water_damage = 1,
+	lava_damage = 5,
+	light_damage = 2,
 	teams = {"monsters", "animals"},
 
 	-- Mob properties:
@@ -253,10 +257,6 @@ creatures:register_creature("creatures:tree_monster", {
 		min = 1,
 		max = 2,},
 	},
-	light_resistant = true,
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 2,
 	disable_fall_damage = true,
 	attack_type = "dogfight",
 	possession = 0.25,
@@ -300,6 +300,9 @@ creatures:register_creature("creatures:sheep", {
 		punch_end = 100,
 	},
 	makes_footstep_sound = true,
+	water_damage = 1,
+	lava_damage = 5,
+	light_damage = 0,
 	teams = {"animals", "people"},
 
 	-- Mob properties:
@@ -311,9 +314,6 @@ creatures:register_creature("creatures:sheep", {
 		min = 2,
 		max = 3,},
 	},
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 0,
 	sounds = {
 		random = "mobs_sheep",
 	},
@@ -404,15 +404,15 @@ creatures:register_creature("creatures:rat", {
 	visual_size = {x=1.0,y=1.0},
 	drawtype = "front",
 	makes_footstep_sound = false,
+	water_damage = 0,
+	lava_damage = 1,
+	light_damage = 0,
 	teams = {"animals", "monsters"},
 
 	-- Mob properties:
 	type = "animal",
 	walk_velocity = 1,
 	drops = {},
-	water_damage = 0,
-	lava_damage = 1,
-	light_damage = 0,
 	possession = 0.5,
 	
 	on_rightclick = function(self, clicker)
@@ -489,6 +489,9 @@ creatures:register_creature("creatures:oerkki", {
 		punch_end = 49,
 	},
 	makes_footstep_sound = false,
+	water_damage = 1,
+	lava_damage = 1,
+	light_damage = 0,
 	teams = {"monsters", "people"},
 
 	-- Mob properties:
@@ -498,10 +501,6 @@ creatures:register_creature("creatures:oerkki", {
 	run_velocity = 3,
 	damage = 4,
 	drops = {},
-	light_resistant = true,
-	water_damage = 1,
-	lava_damage = 1,
-	light_damage = 0,
 	attack_type = "dogfight",
 	possession = 0.25,
 
@@ -543,6 +542,9 @@ creatures:register_creature("creatures:dungeon_master", {
 		punch_end = 48,
 	},
 	makes_footstep_sound = true,
+	water_damage = 1,
+	lava_damage = 1,
+	light_damage = 0,
 	teams = {"monsters"},
 
 	-- Mob properties:
@@ -557,9 +559,6 @@ creatures:register_creature("creatures:dungeon_master", {
 		min = 1,
 		max = 2,},
 	},
-	water_damage = 1,
-	lava_damage = 1,
-	light_damage = 0,
 	on_rightclick = nil,
 	attack_type = "shoot",
 	arrow = "creatures:fireball",

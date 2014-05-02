@@ -14,6 +14,9 @@ function creatures:register_player(name, def)
 	creatures.player_settings[name].drawtype = def.drawtype
 	creatures.player_settings[name].animation = def.animation
 	creatures.player_settings[name].makes_footstep_sound = def.makes_footstep_sound
+	creatures.player_settings[name].water_damage = def.water_damage
+	creatures.player_settings[name].lava_damage = def.lava_damage
+	creatures.player_settings[name].light_damage = def.light_damage
 	creatures.player_settings[name].teams = def.teams
 	creatures.player_settings[name].physics_speed = def.physics_speed
 	creatures.player_settings[name].physics_jump = def.physics_jump
@@ -55,6 +58,8 @@ local function apply_settings (player, race)
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
 	-- configure inventory
+	inv:set_list("main", {})
+	inv:set_list("craft", {})
 	inv:set_size("main", settings.inventory_main.x * settings.inventory_main.y)
 	inv:set_size("craft", settings.inventory_craft.x * settings.inventory_craft.y)
 	player:hud_set_hotbar_itemcount(settings.hotbar)
@@ -94,6 +99,8 @@ local function apply_settings (player, race)
 	end
 end
 
+local env_damage_timer = 0
+
 minetest.register_globalstep(function(dtime)
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local race = creatures.player_races[player:get_player_name()]
@@ -128,6 +135,37 @@ minetest.register_globalstep(function(dtime)
 			{x = race_settings.animation.punch_start, y = race_settings.animation.punch_end},
 			{x = race_settings.animation.walk_start, y = race_settings.animation.walk_end},
 			race_settings.animation.speed_normal_player)
+		end
+
+		-- handle player environment damage
+		env_damage_timer = env_damage_timer + dtime
+		if env_damage_timer > 1 then
+			env_damage_timer = 0
+			local pos = player:getpos()
+			local n = minetest.env:get_node(pos)
+
+			if race_settings.light_damage and race_settings.light_damage ~= 0
+				and pos.y > 0
+				and minetest.env:get_node_light(pos)
+				and minetest.env:get_node_light(pos) > 4
+				and minetest.env:get_timeofday() > 0.2
+				and minetest.env:get_timeofday() < 0.8
+			then
+				player:set_hp(player:get_hp() - race_settings.light_damage)
+			end
+
+			if race_settings.water_damage and race_settings.water_damage ~= 0 and
+				minetest.get_item_group(n.name, "water") ~= 0
+			then
+				player:set_hp(player:get_hp() - race_settings.water_damage)
+			end
+
+			-- NOTE: Lava damage is applied on top of normal player lava damage
+			if race_settings.lava_damage and race_settings.lava_damage ~= 0 and
+				minetest.get_item_group(n.name, "lava") ~= 0
+			then
+				player:set_hp(player:get_hp() - self.lava_damage)
+			end
 		end
 
 		-- prevent creatures without an inventory from holding any items
