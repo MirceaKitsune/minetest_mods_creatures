@@ -35,6 +35,7 @@ function creatures:register_mob(name, def)
 		animation = def.animation,
 		follow = def.follow,
 		jump = def.jump or true,
+		possession = def.possession,
 		
 		timer = 0,
 		env_damage_timer = 0, -- only if state = "attack"
@@ -44,6 +45,7 @@ function creatures:register_mob(name, def)
 		old_y = nil,
 		lifetimer = 600,
 		tamed = false,
+		can_possess = false,
 		
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
@@ -223,26 +225,28 @@ function creatures:register_mob(name, def)
 			
 			if self.type == "monster" and minetest.setting_getbool("enable_damage") then
 				for _,player in pairs(minetest.get_connected_players()) do
-					local s = self.object:getpos()
-					local p = player:getpos()
-					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-					if dist < self.view_range then
-						if self.attack.dist then
-							if self.attack.dist < dist then
+					if creatures:get_race(player) then -- TODO: Also add alliances here
+						local s = self.object:getpos()
+						local p = player:getpos()
+						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+						if dist < self.view_range then
+							if self.attack.dist then
+								if self.attack.dist < dist then
+									self.state = "attack"
+									self.attack.player = player
+									self.attack.dist = dist
+								end
+							else
 								self.state = "attack"
 								self.attack.player = player
 								self.attack.dist = dist
 							end
-						else
-							self.state = "attack"
-							self.attack.player = player
-							self.attack.dist = dist
 						end
 					end
 				end
 			end
 			
-			if self.follow ~= "" and not self.following then
+			if not self.following then
 				for _,player in pairs(minetest.get_connected_players()) do
 					local s = self.object:getpos()
 					local p = player:getpos()
@@ -254,7 +258,8 @@ function creatures:register_mob(name, def)
 			end
 			
 			if self.following and self.following:is_player() then
-				if self.following:get_wielded_item():get_name() ~= self.follow then
+				if self.following:get_wielded_item():get_name() ~= self.follow and
+				not (self.can_possess and not creatures:get_race(self.following)) then
 					self.following = nil
 					self.v_start = false
 				else
@@ -445,6 +450,9 @@ function creatures:register_mob(name, def)
 				self.object:remove()
 			end
 			self.lifetimer = 600 - dtime_s
+			if not self.tamed then
+				self.can_possess = math.random() < self.possession
+			end
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
 				if tmp and tmp.lifetimer then
@@ -468,7 +476,13 @@ function creatures:register_mob(name, def)
 		end,
 		
 		on_punch = function(self, hitter)
-			if self.object:get_hp() <= 0 then
+
+			if self.can_possess and hitter:is_player() and not creatures:get_race(hitter) then
+				hitter:setpos(self.object:getpos())
+				hitter:setyaw(self.object:getyaw())
+				creatures:set_race(hitter, name)
+				self.object:remove()
+			elseif self.object:get_hp() <= 0 then
 				if hitter and hitter:is_player() and hitter:get_inventory() then
 					for _,drop in ipairs(self.drops) do
 						if math.random(1, drop.chance) == 1 then

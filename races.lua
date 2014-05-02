@@ -9,7 +9,7 @@ creatures:register_player("ghost", {
 	textures = {"clear.png"},
 	visual_size = {x=1, y=1},
 	drawtype = "front",
-	animation = {},
+	animation = nil,
 	makes_footstep_sound = false,
 	physics_speed = 1,
 	physics_jump = 1,
@@ -64,6 +64,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	light_damage = 2,
 	on_rightclick = nil,
 	attack_type = "dogfight",
+	possession = 0.25,
 
 	-- Player properties:
 	physics_speed = 1,
@@ -118,6 +119,7 @@ creatures:register_creature("creatures:stone_monster", {
 	lava_damage = 0,
 	light_damage = 0,
 	attack_type = "dogfight",
+	possession = 0.25,
 
 	-- Player properties:
 	physics_speed = 1,
@@ -172,6 +174,7 @@ creatures:register_creature("creatures:sand_monster", {
 	lava_damage = 1,
 	light_damage = 0,
 	attack_type = "dogfight",
+	possession = 0.25,
 
 	-- Player properties:
 	physics_speed = 1,
@@ -231,6 +234,7 @@ creatures:register_creature("creatures:tree_monster", {
 	light_damage = 2,
 	disable_fall_damage = true,
 	attack_type = "dogfight",
+	possession = 0.25,
 
 	-- Player properties:
 	physics_speed = 1,
@@ -284,6 +288,7 @@ creatures:register_creature("creatures:sheep", {
 	},
 	follow = "farming:wheat",
 	view_range = 5,
+	possession = 0.35,
 	
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
@@ -371,6 +376,7 @@ creatures:register_creature("creatures:rat", {
 	water_damage = 0,
 	lava_damage = 1,
 	light_damage = 0,
+	possession = 0.5,
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
@@ -454,6 +460,7 @@ creatures:register_creature("creatures:oerkki", {
 	lava_damage = 1,
 	light_damage = 0,
 	attack_type = "dogfight",
+	possession = 0.25,
 
 	-- Player properties:
 	physics_speed = 1,
@@ -511,6 +518,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	sounds = {
 		attack = "mobs_fireball",
 	},
+	possession = 0.15,
 
 	-- Player properties:
 	physics_speed = 1,

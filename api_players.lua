@@ -153,6 +153,15 @@ minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack
 	end
 end)
 
+-- turn the player into a ghost when he dies
+minetest.register_on_respawnplayer(function(player)
+	local race = creatures.races[player:get_player_name()]
+	if race then
+		creatures:set_race (player, nil)
+		return true
+	end
+end)
+
 -- Global functions to read or change player settings:
 
 creatures.races = {}
@@ -162,8 +171,13 @@ function creatures:set_race (player, race)
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-	creatures.races[pname] = race
-	apply_settings(player, race)
+
+	local prace = race
+	if prace == "ghost" then
+		prace = nil
+	end
+	creatures.races[pname] = prace
+	apply_settings(player, prace)
 end
 
 function creatures:get_race (player)
@@ -171,7 +185,12 @@ function creatures:get_race (player)
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-	return creatures.races[pname]
+
+	local prace = creatures.races[pname]
+	if prace == "ghost" then
+		prace = nil
+	end
+	return prace
 end
 
 minetest.register_on_joinplayer(function(player)
