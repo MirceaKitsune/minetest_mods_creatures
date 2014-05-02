@@ -14,6 +14,7 @@ function creatures:register_player(name, def)
 	creatures.players[name].drawtype = def.drawtype
 	creatures.players[name].animation = def.animation
 	creatures.players[name].makes_footstep_sound = def.makes_footstep_sound
+	creatures.players[name].teams = def.teams
 	creatures.players[name].physics_speed = def.physics_speed
 	creatures.players[name].physics_jump = def.physics_jump
 	creatures.players[name].physics_gravity = def.physics_gravity

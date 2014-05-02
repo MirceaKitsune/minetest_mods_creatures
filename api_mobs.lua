@@ -36,6 +36,7 @@ function creatures:register_mob(name, def)
 		follow = def.follow,
 		jump = def.jump or true,
 		possession = def.possession,
+		teams = def.teams,
 		
 		timer = 0,
 		env_damage_timer = 0, -- only if state = "attack"
@@ -225,7 +226,7 @@ function creatures:register_mob(name, def)
 			
 			if self.type == "monster" and minetest.setting_getbool("enable_damage") then
 				for _,player in pairs(minetest.get_connected_players()) do
-					if creatures:get_race(player) then -- TODO: Also add alliances here
+					if not creatures:allied(self, player) then
 						local s = self.object:getpos()
 						local p = player:getpos()
 						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5

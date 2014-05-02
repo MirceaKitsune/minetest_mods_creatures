@@ -11,6 +11,7 @@ creatures:register_player("ghost", {
 	drawtype = "front",
 	animation = nil,
 	makes_footstep_sound = false,
+	teams = {},
 	physics_speed = 1,
 	physics_jump = 1,
 	physics_gravity = 1,
@@ -46,6 +47,7 @@ creatures:register_creature("creatures:dirt_monster", {
 		punch_end = 63,
 	},
 	makes_footstep_sound = true,
+	teams = {"monsters"},
 
 	-- Mob properties:
 	type = "monster",
@@ -101,6 +103,7 @@ creatures:register_creature("creatures:stone_monster", {
 		punch_end = 63,
 	},
 	makes_footstep_sound = true,
+	teams = {"monsters"},
 
 	-- Mob properties:
 	type = "monster",
@@ -156,6 +159,7 @@ creatures:register_creature("creatures:sand_monster", {
 		punch_end = 105,
 	},
 	makes_footstep_sound = true,
+	teams = {"monsters"},
 
 	-- Mob properties:
 	type = "monster",
@@ -211,6 +215,7 @@ creatures:register_creature("creatures:tree_monster", {
 		punch_end = 62,
 	},
 	makes_footstep_sound = true,
+	teams = {"monsters", "animals"},
 
 	-- Mob properties:
 	type = "monster",
@@ -270,6 +275,7 @@ creatures:register_creature("creatures:sheep", {
 		punch_end = 100,
 	},
 	makes_footstep_sound = true,
+	teams = {"animals", "people"},
 
 	-- Mob properties:
 	type = "animal",
@@ -368,6 +374,7 @@ creatures:register_creature("creatures:rat", {
 	visual_size = {x=1.0,y=1.0},
 	drawtype = "front",
 	makes_footstep_sound = false,
+	teams = {"animals", "monsters"},
 
 	-- Mob properties:
 	type = "animal",
@@ -447,6 +454,7 @@ creatures:register_creature("creatures:oerkki", {
 		punch_end = 49,
 	},
 	makes_footstep_sound = false,
+	teams = {"monsters", "people"},
 
 	-- Mob properties:
 	type = "monster",
@@ -495,6 +503,7 @@ creatures:register_creature("creatures:dungeon_master", {
 		punch_end = 48,
 	},
 	makes_footstep_sound = true,
+	teams = {"monsters"},
 
 	-- Mob properties:
 	type = "monster",
