@@ -1,3 +1,27 @@
+-- Ghost definition:
+
+creatures:register_player("ghost", {
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5},
+	visual = "sprite",
+	mesh = "",
+	textures = {"clear.png"},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {},
+	makes_footstep_sound = false,
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = {x = 1, y = 1},
+	inventory_craft = {x = 1, y = 1},
+	hotbar = 1,
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
+})
+
+-- Creature definitions:
+
 creatures:register_creature("creatures:dirt_monster", {
 	-- Player and mob properties:
 	hp_max = 5,
@@ -10,7 +34,8 @@ creatures:register_creature("creatures:dirt_monster", {
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
-		speed_run = 15,
+		speed_normal_player = 30,
+		speed_run = 20,
 		stand_start = 0,
 		stand_end = 14,
 		walk_start = 15,
@@ -44,8 +69,10 @@ creatures:register_creature("creatures:dirt_monster", {
 	physics_speed = 1,
 	physics_jump = 1,
 	physics_gravity = 1,
-	inventory_main = 32,
-	inventory_craft = 9,
+	inventory_main = {x = 8, y = 3},
+	inventory_craft = {x = 3, y = 3},
+	hotbar = 8,
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 })
 creatures:register_spawn("creatures:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
@@ -61,7 +88,8 @@ creatures:register_creature("creatures:stone_monster", {
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
-		speed_run = 15,
+		speed_normal_player = 30,
+		speed_run = 20,
 		stand_start = 0,
 		stand_end = 14,
 		walk_start = 15,
@@ -95,8 +123,10 @@ creatures:register_creature("creatures:stone_monster", {
 	physics_speed = 1,
 	physics_jump = 1,
 	physics_gravity = 1,
-	inventory_main = 32,
-	inventory_craft = 9,
+	inventory_main = {x = 8, y = 3},
+	inventory_craft = {x = 3, y = 3},
+	hotbar = 8,
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 })
 creatures:register_spawn("creatures:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
 
@@ -112,7 +142,8 @@ creatures:register_creature("creatures:sand_monster", {
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
-		speed_run = 15,
+		speed_normal_player = 30,
+		speed_run = 20,
 		stand_start = 0,
 		stand_end = 39,
 		walk_start = 41,
@@ -146,8 +177,10 @@ creatures:register_creature("creatures:sand_monster", {
 	physics_speed = 1,
 	physics_jump = 1,
 	physics_gravity = 1,
-	inventory_main = 32,
-	inventory_craft = 9,
+	inventory_main = {x = 8, y = 3},
+	inventory_craft = {x = 3, y = 3},
+	hotbar = 8,
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 })
 creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
@@ -163,7 +196,8 @@ creatures:register_creature("creatures:tree_monster", {
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
-		speed_run = 15,
+		speed_normal_player = 30,
+		speed_run = 20,
 		stand_start = 0,
 		stand_end = 24,
 		walk_start = 25,
@@ -202,8 +236,10 @@ creatures:register_creature("creatures:tree_monster", {
 	physics_speed = 1,
 	physics_jump = 1,
 	physics_gravity = 1,
-	inventory_main = 32,
-	inventory_craft = 9,
+	inventory_main = {x = 8, y = 3},
+	inventory_craft = {x = 3, y = 3},
+	hotbar = 8,
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 })
 creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 3, -1, 7000, 3, 31000)
 
@@ -212,16 +248,22 @@ creatures:register_creature("creatures:sheep", {
 	hp_max = 5,
 	armor = 200,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
-	textures = {"mobs_sheep.png"},
 	visual = "mesh",
 	mesh = "mobs_sheep.x",
+	textures = {"mobs_sheep.png"},
+	visual_size = {x=1.0,y=1.0},
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
+		speed_normal_player = 30,
 		stand_start = 0,
 		stand_end = 80,
 		walk_start = 81,
 		walk_end = 100,
+		run_start = 81,
+		run_end = 100,
+		punch_start = 81,
+		punch_end = 100,
 	},
 	makes_footstep_sound = true,
 
@@ -282,11 +324,13 @@ creatures:register_creature("creatures:sheep", {
 	end,
 
 	-- Player properties:
-	physics_speed = 1,
+	physics_speed = 0.5,
 	physics_jump = 1,
 	physics_gravity = 1,
-	inventory_main = 32,
-	inventory_craft = 9,
+	inventory_main = {x = 8, y = 1},
+	inventory_craft = {x = 2, y = 2},
+	hotbar = 8,
+	eye_offset = {{x = 0, y = -5, z = 0}, {x = 0, y = -5, z = 0}},
 })
 creatures:register_spawn("creatures:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
 
@@ -316,6 +360,7 @@ creatures:register_creature("creatures:rat", {
 	visual = "mesh",
 	mesh = "mobs_rat.x",
 	textures = {"mobs_rat.png"},
+	visual_size = {x=1.0,y=1.0},
 	drawtype = "front",
 	makes_footstep_sound = false,
 
@@ -336,10 +381,12 @@ creatures:register_creature("creatures:rat", {
 
 	-- Player properties:
 	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
-	inventory_main = 32,
-	inventory_craft = 9,
+	physics_jump = 0.75,
+	physics_gravity = 0.75,
+	inventory_main = {x = 4, y = 1},
+	inventory_craft = {x = 1, y = 1},
+	hotbar = 4,
+	eye_offset = {{x = 0, y = -10, z = 0}, {x = 0, y = -10, z = 0}},
 })
 creatures:register_spawn("creatures:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
 
@@ -381,6 +428,9 @@ creatures:register_creature("creatures:oerkki", {
 	visual_size = {x=5, y=5},
 	drawtype = "front",
 	animation = {
+		speed_normal = 15,
+		speed_normal_player = 30,
+		speed_run = 20,
 		stand_start = 0,
 		stand_end = 23,
 		walk_start = 24,
@@ -389,8 +439,6 @@ creatures:register_creature("creatures:oerkki", {
 		run_end = 49,
 		punch_start = 37,
 		punch_end = 49,
-		speed_normal = 15,
-		speed_run = 15,
 	},
 	makes_footstep_sound = false,
 
@@ -411,8 +459,10 @@ creatures:register_creature("creatures:oerkki", {
 	physics_speed = 1,
 	physics_jump = 1,
 	physics_gravity = 1,
-	inventory_main = 32,
-	inventory_craft = 9,
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	hotbar = 8,
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 })
 creatures:register_spawn("creatures:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
@@ -427,14 +477,15 @@ creatures:register_creature("creatures:dungeon_master", {
 	visual_size = {x=8, y=8},
 	drawtype = "front",
 	animation = {
+		speed_normal = 15,
+		speed_normal_player = 30,
+		speed_run = 20,
 		stand_start = 0,
 		stand_end = 19,
 		walk_start = 20,
 		walk_end = 35,
 		punch_start = 36,
 		punch_end = 48,
-		speed_normal = 15,
-		speed_run = 15,
 	},
 	makes_footstep_sound = true,
 
@@ -463,10 +514,12 @@ creatures:register_creature("creatures:dungeon_master", {
 
 	-- Player properties:
 	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
-	inventory_main = 32,
-	inventory_craft = 9,
+	physics_jump = 1.25,
+	physics_gravity = 1.25,
+	inventory_main = {x = 8, y = 5},
+	inventory_craft = {x = 3, y = 3},
+	hotbar = 8,
+	eye_offset = {{x = 0, y = 5, z = 0}, {x = 0, y = 5, z = 0}},
 })
 creatures:register_spawn("creatures:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
 

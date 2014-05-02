@@ -1,6 +1,11 @@
--- Creature registration - Mobs
+-- Creature registration - Mobs:
 
 function creatures:register_mob(name, def)
+	-- Players are offset by 1 node in the Minetest code. In order for mobs to have the same height, we must apply a similar offset to them
+	-- This is a bad choice, as the real position of mobs will be off by one unit. But it's the only way to make players and mobs work with the same models
+	def.collisionbox[2] = def.collisionbox[2] - 1
+	def.collisionbox[5] = def.collisionbox[5] - 1
+
 	minetest.register_entity(name, {
 		hp_max = def.hp_max,
 		physical = true,
@@ -477,7 +482,7 @@ function creatures:register_mob(name, def)
 	})
 end
 
--- Mob spawning
+-- Mob spawning:
 
 creatures.spawning_mobs = {}
 
@@ -527,7 +532,7 @@ function creatures:register_spawn(name, nodes, max_light, min_light, chance, act
 	})
 end
 
--- Mob arrows
+-- Mob arrows:
 
 function creatures:register_arrow(name, def)
 	minetest.register_entity(name, {
