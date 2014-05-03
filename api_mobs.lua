@@ -140,6 +140,10 @@ function creatures:register_mob(name, def)
 				end
 			end
 			
+			if self.tamed then
+				self.can_possess = false
+			end
+			
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
 				if self.drawtype == "side" then
@@ -262,7 +266,7 @@ function creatures:register_mob(name, def)
 			if self.following and self.following:is_player() then
 				local psettings = creatures.player_settings[creatures:get_race(self.following)]
 				if self.following:get_wielded_item():get_name() ~= self.follow and
-				not (self.can_possess and psettings.reincarnate) then
+				not (self.can_possess and psettings.reincarnate and creatures:allied(self, self.following)) then
 					self.following = nil
 					self.v_start = false
 				else
@@ -480,12 +484,12 @@ function creatures:register_mob(name, def)
 		
 		on_punch = function(self, hitter)
 			local psettings = creatures.player_settings[creatures:get_race(hitter)]
-			if self.can_possess and hitter:is_player() and psettings.reincarnate then
+			if self.can_possess and hitter:is_player() and psettings.reincarnate and creatures:allied(self, hitter) then
 				hitter:setpos(self.object:getpos())
 				hitter:setyaw(self.object:getyaw())
 				creatures:set_race(hitter, name)
 				self.object:remove()
-			elseif self.object:get_hp() then
+			elseif self.object:get_hp() <= 0 then
 				if hitter and hitter:is_player() and hitter:get_inventory() then
 					for _,drop in ipairs(self.drops) do
 						if math.random(1, drop.chance) == 1 then
