@@ -27,7 +27,6 @@ function creatures:register_mob(name, def)
 		armor = def.armor,
 		drawtype = def.drawtype,
 		on_rightclick = def.on_rightclick,
-		type = def.type,
 		attack_type = def.attack_type,
 		arrow = def.arrow,
 		shoot_interval = def.shoot_interval,
@@ -38,13 +37,14 @@ function creatures:register_mob(name, def)
 		possession = def.possession,
 		teams = def.teams,
 		
+		mob = true,
 		timer = 0,
-		env_damage_timer = 0, -- only if state = "attack"
-		attack = {player=nil, dist=nil},
+		env_damage_timer = 0,
+		attack = {entity=nil, dist=nil},
 		state = "stand",
 		v_start = false,
 		old_y = nil,
-		lifetimer = 600,
+		lifetimer = 60,
 		tamed = false,
 		can_possess = false,
 		
@@ -70,7 +70,10 @@ function creatures:register_mob(name, def)
 			if not self.animation.current then
 				self.animation.current = ""
 			end
-			if type == "stand" and self.animation.current ~= "stand" then
+			if type == self.animation.current then
+				return
+			end
+			if type == "stand" then
 				if
 					self.animation.stand_start
 					and self.animation.stand_end
@@ -82,7 +85,7 @@ function creatures:register_mob(name, def)
 					)
 					self.animation.current = "stand"
 				end
-			elseif type == "walk" and self.animation.current ~= "walk"  then
+			elseif type == "walk" then
 				if
 					self.animation.walk_start
 					and self.animation.walk_end
@@ -94,7 +97,7 @@ function creatures:register_mob(name, def)
 					)
 					self.animation.current = "walk"
 				end
-			elseif type == "run" and self.animation.current ~= "run"  then
+			elseif type == "run" then
 				if
 					self.animation.run_start
 					and self.animation.run_end
@@ -106,7 +109,7 @@ function creatures:register_mob(name, def)
 					)
 					self.animation.current = "run"
 				end
-			elseif type == "punch" and self.animation.current ~= "punch"  then
+			elseif type == "punch" then
 				if
 					self.animation.punch_start
 					and self.animation.punch_end
@@ -122,10 +125,11 @@ function creatures:register_mob(name, def)
 		end,
 		
 		on_step = function(self, dtime)
-			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
+			if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
 				self.object:remove()
 			end
 			
+			-- remove this mob if its lifetime is up and doing so is appropriate
 			self.lifetimer = self.lifetimer - dtime
 			if self.lifetimer <= 0 and not self.tamed then
 				local player_count = 0
@@ -137,13 +141,13 @@ function creatures:register_mob(name, def)
 				if player_count == 0 and self.state ~= "attack" then
 					self.object:remove()
 					return
+				else
+					self.lifetimer = 60
 				end
 			end
 			
-			if self.tamed then
-				self.can_possess = false
-			end
-			
+			-- make mobs push forward while jumping
+			local accel = self.object:getacceleration()
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
 				if self.drawtype == "side" then
@@ -151,11 +155,12 @@ function creatures:register_mob(name, def)
 				end
 				local x = math.sin(yaw) * -2
 				local z = math.cos(yaw) * 2
-				self.object:setacceleration({x=x, y=-10, z=z})
+				self.object:setacceleration({x=x, y=accel.y, z=z})
 			else
-				self.object:setacceleration({x=0, y=-10, z=0})
+				self.object:setacceleration({x=0, y=accel.y, z=0})
 			end
 			
+			-- handle fall damage
 			if self.disable_fall_damage and self.object:getvelocity().y == 0 then
 				if not self.old_y then
 					self.old_y = self.object:getpos().y
@@ -172,19 +177,10 @@ function creatures:register_mob(name, def)
 				end
 			end
 			
-			self.timer = self.timer+dtime
-			if self.state ~= "attack" then
-				if self.timer < 1 then
-					return
-				end
-				self.timer = 0
-			end
-			
-			if self.sounds and self.sounds.random and math.random(1, 100) <= 1 then
-				minetest.sound_play(self.sounds.random, {object = self.object})
-			end
-			
-			local do_env_damage = function(self)
+			-- handle environment damage
+			self.env_damage_timer = self.env_damage_timer + dtime
+			if self.env_damage_timer > 1 then
+				self.env_damage_timer = 0
 				local pos = self.object:getpos()
 				pos.y = pos.y - 1 -- exclude player offset
 				local n = minetest.env:get_node(pos)
@@ -221,30 +217,41 @@ function creatures:register_mob(name, def)
 				end
 			end
 			
-			self.env_damage_timer = self.env_damage_timer + dtime
-			if self.state == "attack" and self.env_damage_timer > 1 then
-				self.env_damage_timer = 0
-				do_env_damage(self)
-			elseif self.state ~= "attack" then
-				do_env_damage(self)
+			-- limit execution of code beyond this point
+			self.timer = self.timer+dtime
+			if self.state ~= "attack" then
+				if self.timer < 1 then
+					return
+				end
+				self.timer = 0
 			end
 			
-			if self.type == "monster" and minetest.setting_getbool("enable_damage") then
-				for _,player in pairs(minetest.get_connected_players()) do
-					if not creatures:allied(self, player) then
+			if self.tamed then
+				self.can_possess = false
+			end
+			
+			if self.sounds and self.sounds.random and math.random(1, 100) <= 1 then
+				minetest.sound_play(self.sounds.random, {object = self.object})
+			end
+			
+			-- choose an attack target
+			if self.attack_type and minetest.setting_getbool("enable_damage") and self.state ~= "attack" then
+				for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.view_range)) do
+					if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().mob)) and
+					not creatures:allied(self.object, obj) then
 						local s = self.object:getpos()
-						local p = player:getpos()
+						local p = obj:getpos()
 						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 						if dist < self.view_range then
 							if self.attack.dist then
 								if self.attack.dist < dist then
 									self.state = "attack"
-									self.attack.player = player
+									self.attack.entity = obj
 									self.attack.dist = dist
 								end
 							else
 								self.state = "attack"
-								self.attack.player = player
+								self.attack.entity = obj
 								self.attack.dist = dist
 							end
 						end
@@ -252,63 +259,33 @@ function creatures:register_mob(name, def)
 				end
 			end
 			
-			if not self.following then
+			-- choose or discard a follow target
+			if not self.following and self.state ~= "attack" then
 				for _,player in pairs(minetest.get_connected_players()) do
 					local s = self.object:getpos()
 					local p = player:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 					if self.view_range and dist < self.view_range then
-						self.following = player
+						-- reasons to start following the player
+						local psettings = creatures.player_settings[creatures:get_race(player)]
+						if player:get_wielded_item():get_name() == self.follow or
+						(self.can_possess and psettings.reincarnate and creatures:allied(self.object, player)) then
+							self.following = player
+							self.state = "follow"
+						end
 					end
 				end
-			end
-			
-			if self.following and self.following:is_player() then
+			elseif self.following then
+				-- reasons to stop following the player
 				local psettings = creatures.player_settings[creatures:get_race(self.following)]
 				if self.following:get_wielded_item():get_name() ~= self.follow and
-				not (self.can_possess and psettings.reincarnate and creatures:allied(self, self.following)) then
+				not (self.can_possess and psettings.reincarnate and creatures:allied(self.object, self.following)) then
 					self.following = nil
-					self.v_start = false
-				else
-					local s = self.object:getpos()
-					local p = self.following:getpos()
-					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-					if dist > self.view_range then
-						self.following = nil
-						self.v_start = false
-					else
-						local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
-						local yaw = math.atan(vec.z/vec.x)+math.pi/2
-						if self.drawtype == "side" then
-							yaw = yaw+(math.pi/2)
-						end
-						if p.x > s.x then
-							yaw = yaw+math.pi
-						end
-						self.object:setyaw(yaw)
-						if dist > 2 then
-							if not self.v_start then
-								self.v_start = true
-								self.set_velocity(self, self.walk_velocity)
-							else
-								if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-									local v = self.object:getvelocity()
-									v.y = 5
-									self.object:setvelocity(v)
-								end
-								self.set_velocity(self, self.walk_velocity)
-							end
-							self:set_animation("walk")
-						else
-							self.v_start = false
-							self.set_velocity(self, 0)
-							self:set_animation("stand")
-						end
-						return
-					end
+					self.state = "stand"
 				end
 			end
 			
+			-- carry out mob actions
 			if self.state == "stand" then
 				if math.random(1, 4) == 1 then
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
@@ -337,15 +314,15 @@ function creatures:register_mob(name, def)
 					self:set_animation("stand")
 				end
 			elseif self.state == "attack" and self.attack_type == "dogfight" then
-				if not self.attack.player or not self.attack.player:is_player() then
+				if not self.attack.entity or not (self.attack.entity:get_luaentity() or self.attack.entity:is_player()) then
 					self.state = "stand"
 					self:set_animation("stand")
 					return
 				end
 				local s = self.object:getpos()
-				local p = self.attack.player:getpos()
+				local p = self.attack.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
+				if dist > self.view_range or self.attack.entity:get_hp() <= 0 then
 					self.state = "stand"
 					self.v_start = false
 					self.set_velocity(self, 0)
@@ -387,22 +364,22 @@ function creatures:register_mob(name, def)
 						if self.sounds and self.sounds.attack then
 							minetest.sound_play(self.sounds.attack, {object = self.object})
 						end
-						self.attack.player:punch(self.object, 1.0,  {
+						self.attack.entity:punch(self.object, 1.0,  {
 							full_punch_interval=1.0,
 							damage_groups = {fleshy=self.damage}
 						}, vec)
 					end
 				end
 			elseif self.state == "attack" and self.attack_type == "shoot" then
-				if not self.attack.player or not self.attack.player:is_player() then
+				if not self.attack.entity or not (self.attack.entity:get_luaentity() or self.attack.entity:is_player()) then
 					self.state = "stand"
 					self:set_animation("stand")
 					return
 				end
 				local s = self.object:getpos()
-				local p = self.attack.player:getpos()
+				local p = self.attack.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-				if dist > self.view_range or self.attack.player:get_hp() <= 0 then
+				if dist > self.view_range or self.attack.entity:get_hp() <= 0 then
 					self.state = "stand"
 					self.v_start = false
 					self.set_velocity(self, 0)
@@ -444,6 +421,56 @@ function creatures:register_mob(name, def)
 					vec.z = vec.z*v/amount
 					obj:setvelocity(vec)
 				end
+			elseif self.state == "follow" then
+				if not self.following or not self.following:is_player() then
+					self.state = "stand"
+					self.v_start = false
+					self.set_velocity(self, 0)
+					self.following = nil
+					self:set_animation("stand")
+					return
+				end
+				
+				local s = self.object:getpos()
+				local p = self.following:getpos()
+				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+				if dist > self.view_range then
+					self.state = "stand"
+					self.v_start = false
+					self.set_velocity(self, 0)
+					self.following = nil
+					self:set_animation("stand")
+					return
+				else
+					local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
+					local yaw = math.atan(vec.z/vec.x)+math.pi/2
+					if self.drawtype == "side" then
+						yaw = yaw+(math.pi/2)
+					end
+					if p.x > s.x then
+						yaw = yaw+math.pi
+					end
+					self.object:setyaw(yaw)
+					if dist > 2 then
+						if not self.v_start then
+							self.v_start = true
+							self.set_velocity(self, self.walk_velocity)
+						else
+							if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
+								local v = self.object:getvelocity()
+								v.y = 5
+								self.object:setvelocity(v)
+							end
+							self.set_velocity(self, self.walk_velocity)
+						end
+						self:set_animation("walk")
+					else
+						self.v_start = false
+						self.set_velocity(self, 0)
+						self:set_animation("stand")
+					end
+					return
+				end
 			end
 		end,
 		
@@ -453,7 +480,7 @@ function creatures:register_mob(name, def)
 			self.state = "stand"
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
-			if self.type == "monster" and minetest.setting_getbool("only_peaceful_mobs") then
+			if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
 				self.object:remove()
 			end
 			self.lifetimer = 600 - dtime_s
@@ -484,7 +511,7 @@ function creatures:register_mob(name, def)
 		
 		on_punch = function(self, hitter)
 			local psettings = creatures.player_settings[creatures:get_race(hitter)]
-			if self.can_possess and hitter:is_player() and psettings.reincarnate and creatures:allied(self, hitter) then
+			if self.can_possess and hitter:is_player() and psettings.reincarnate and creatures:allied(self.object, hitter) then
 				hitter:setpos(self.object:getpos())
 				hitter:setyaw(self.object:getyaw())
 				creatures:set_race(hitter, name)

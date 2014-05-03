@@ -22,7 +22,6 @@ creatures:register_creature("creatures:ghost", {
 	teams = {"animals", "monsters", "people"},
 
 	-- Mob properties:
-	type = "monster",
 	view_range = 15,
 	walk_velocity = 1,
 	run_velocity = 3,
@@ -81,7 +80,6 @@ creatures:register_creature("creatures:human", {
 	teams = {"people"},
 
 	-- Mob properties:
-	type = "monster",
 	view_range = 20,
 	walk_velocity = 2,
 	run_velocity = 4,
@@ -152,7 +150,6 @@ creatures:register_creature("creatures:dirt_monster", {
 	teams = {"monsters"},
 
 	-- Mob properties:
-	type = "monster",
 	view_range = 15,
 	walk_velocity = 1,
 	run_velocity = 3,
@@ -215,7 +212,6 @@ creatures:register_creature("creatures:stone_monster", {
 	teams = {"monsters"},
 
 	-- Mob properties:
-	type = "monster",
 	view_range = 10,
 	walk_velocity = 0.5,
 	run_velocity = 2,
@@ -277,7 +273,6 @@ creatures:register_creature("creatures:sand_monster", {
 	teams = {"monsters"},
 
 	-- Mob properties:
-	type = "monster",
 	view_range = 15,
 	walk_velocity = 1.5,
 	run_velocity = 4,
@@ -339,7 +334,6 @@ creatures:register_creature("creatures:tree_monster", {
 	teams = {"monsters", "animals"},
 
 	-- Mob properties:
-	type = "monster",
 	view_range = 15,
 	walk_velocity = 1,
 	run_velocity = 3,
@@ -405,7 +399,6 @@ creatures:register_creature("creatures:sheep", {
 	teams = {"animals", "people"},
 
 	-- Mob properties:
-	type = "animal",
 	walk_velocity = 1,
 	drops = {
 		{name = "creatures:meat_raw",
@@ -511,7 +504,6 @@ creatures:register_creature("creatures:rat", {
 	teams = {"animals", "monsters"},
 
 	-- Mob properties:
-	type = "animal",
 	walk_velocity = 1,
 	drops = {},
 	possession = 0.5,
@@ -598,7 +590,6 @@ creatures:register_creature("creatures:oerkki", {
 	teams = {"monsters", "people"},
 
 	-- Mob properties:
-	type = "monster",
 	view_range = 15,
 	walk_velocity = 1,
 	run_velocity = 3,
@@ -653,7 +644,6 @@ creatures:register_creature("creatures:dungeon_master", {
 	teams = {"monsters"},
 
 	-- Mob properties:
-	type = "monster",
 	view_range = 15,
 	walk_velocity = 1,
 	run_velocity = 3,
