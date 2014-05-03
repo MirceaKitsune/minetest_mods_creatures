@@ -51,6 +51,77 @@ creatures:register_creature("creatures:ghost", {
 
 -- Creature definitions:
 
+creatures:register_creature("creatures:human", {
+	-- Player and mob properties:
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_human.x",
+	textures = {"mobs_human.png"},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed_normal = 20,
+		speed_normal_player = 30,
+		speed_run = 25,
+		stand_start = 0,
+		stand_end = 79,
+		walk_start = 168,
+		walk_end = 187,
+		run_start = 200,
+		run_end = 219,
+		punch_start = 189,
+		punch_end = 198,
+	},
+	makes_footstep_sound = true,
+	water_damage = 0,
+	lava_damage = 5,
+	light_damage = 0,
+	teams = {"people"},
+
+	-- Mob properties:
+	type = "monster",
+	view_range = 20,
+	walk_velocity = 2,
+	run_velocity = 4,
+	damage = 1,
+	drops = {
+		{name = "default:sword_bronze",
+		chance = 3,
+		min = 1,
+		max = 1,},
+		{name = "default:sword_steel",
+		chance = 2,
+		min = 1,
+		max = 1,},
+		{name = "default:sword_diamond",
+		chance = 1,
+		min = 1,
+		max = 1,},
+	},
+	on_rightclick = nil,
+	attack_type = "dogfight",
+	possession = 0.35,
+
+	-- Player properties:
+	physics_speed = 1,
+	physics_jump = 1,
+	physics_gravity = 1,
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	hotbar = 8,
+	inventory = true,
+	interact = true,
+	reincarnate = false,
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
+})
+creatures:register_spawn("creatures:human", {"default:dirt_with_grass"}, 20, -1, 9000, 1, 31000)
+
 creatures:register_creature("creatures:dirt_monster", {
 	-- Player and mob properties:
 	hp_max = 5,
@@ -62,9 +133,9 @@ creatures:register_creature("creatures:dirt_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 15,
+		speed_normal = 20,
 		speed_normal_player = 30,
-		speed_run = 20,
+		speed_run = 25,
 		stand_start = 0,
 		stand_end = 14,
 		walk_start = 15,
@@ -125,9 +196,9 @@ creatures:register_creature("creatures:stone_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 15,
+		speed_normal = 20,
 		speed_normal_player = 30,
-		speed_run = 20,
+		speed_run = 25,
 		stand_start = 0,
 		stand_end = 14,
 		walk_start = 15,
@@ -187,9 +258,9 @@ creatures:register_creature("creatures:sand_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 15,
+		speed_normal = 20,
 		speed_normal_player = 30,
-		speed_run = 20,
+		speed_run = 25,
 		stand_start = 0,
 		stand_end = 39,
 		walk_start = 41,
@@ -249,9 +320,9 @@ creatures:register_creature("creatures:tree_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 15,
+		speed_normal = 20,
 		speed_normal_player = 30,
-		speed_run = 20,
+		speed_run = 25,
 		stand_start = 0,
 		stand_end = 24,
 		walk_start = 25,
@@ -264,7 +335,7 @@ creatures:register_creature("creatures:tree_monster", {
 	makes_footstep_sound = true,
 	water_damage = 1,
 	lava_damage = 5,
-	light_damage = 2,
+	light_damage = 0,
 	teams = {"monsters", "animals"},
 
 	-- Mob properties:
@@ -303,20 +374,20 @@ creatures:register_creature("creatures:tree_monster", {
 	daytime = nil,
 	screen = "",
 })
-creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 3, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
 
 creatures:register_creature("creatures:sheep", {
 	-- Player and mob properties:
 	hp_max = 5,
 	armor = 200,
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
+	collisionbox = {-0.5, -0.01, -0.5, 0.6, 1, 0.5},
 	visual = "mesh",
 	mesh = "mobs_sheep.x",
 	textures = {"mobs_sheep.png"},
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 15,
+		speed_normal = 20,
 		speed_normal_player = 30,
 		stand_start = 0,
 		stand_end = 80,
@@ -508,9 +579,9 @@ creatures:register_creature("creatures:oerkki", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 15,
+		speed_normal = 20,
 		speed_normal_player = 30,
-		speed_run = 20,
+		speed_run = 25,
 		stand_start = 0,
 		stand_end = 23,
 		walk_start = 24,
@@ -565,9 +636,9 @@ creatures:register_creature("creatures:dungeon_master", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 15,
+		speed_normal = 20,
 		speed_normal_player = 30,
-		speed_run = 20,
+		speed_run = 25,
 		stand_start = 0,
 		stand_end = 19,
 		walk_start = 20,
