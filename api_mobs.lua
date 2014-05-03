@@ -511,12 +511,20 @@ function creatures:register_mob(name, def)
 		
 		on_punch = function(self, hitter)
 			local psettings = creatures.player_settings[creatures:get_race(hitter)]
-			if self.can_possess and hitter:is_player() and psettings.reincarnate and creatures:allied(self.object, hitter) then
+			local allied = creatures:allied(self.object, hitter)
+			if self.can_possess and hitter:is_player() and psettings.reincarnate and allied then
+				-- handle player possession of mobs
 				hitter:setpos(self.object:getpos())
-				hitter:setyaw(self.object:getyaw())
+				hitter:set_look_yaw(self.object:getyaw())
+				hitter:set_look_pitch(0)
 				creatures:set_race(hitter, name)
 				self.object:remove()
+			elseif self.attack_type and hitter:is_player() and allied then
+				-- warm and punish the player if hitting an ally
+				minetest.chat_send_player(hitter:get_player_name(), "Don't hit your allies!")
+				hitter:set_hp(hitter:get_hp() - 1)
 			elseif self.object:get_hp() <= 0 then
+				-- handle mob death
 				if hitter and hitter:is_player() and hitter:get_inventory() then
 					for _,drop in ipairs(self.drops) do
 						if math.random(1, drop.chance) == 1 then
