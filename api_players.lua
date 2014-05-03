@@ -37,6 +37,7 @@ end
 -- Functions to handle player settings:
 
 local player_hud = {}
+local player_animation = {}
 
 local function get_formspec(intentory, size_main, size_craft)
 	if not intentory then
@@ -54,41 +55,88 @@ local function get_formspec(intentory, size_main, size_craft)
 	return formspec
 end
 
+local function set_animation(player, type, speed)
+	local name = player:get_player_name()
+	if not player_animation[name] then
+		player_animation[name] = ""
+	end
+	if type == player_animation[name] then
+		return
+	end
+
+	local race = creatures.player_races[name]
+	local race_settings = creatures.player_settings[race]
+	local animation = race_settings.animation
+	if not animation.speed_normal_player then
+		return
+	end
+
+	if type == "stand" then
+		if animation.stand_start and animation.stand_end then
+			player:set_animation(
+				{x=animation.stand_start, y=animation.stand_end},
+				speed, 0)
+			player_animation[name] = "stand"
+		end
+	elseif type == "walk" then
+		if animation.walk_start and animation.walk_end then
+			player:set_animation(
+				{x=animation.walk_start, y=animation.walk_end},
+				speed, 0)
+			player_animation[name] = "walk"
+		end
+	elseif type == "run" then
+		if animation.run_start and animation.run_end then
+			player:set_animation(
+				{x=animation.run_start, y=animation.run_end},
+				speed, 0)
+			player_animation[name] = "run"
+		end
+	elseif type == "punch" then
+		if animation.punch_start and animation.punch_end then
+			player:set_animation(
+				{x=animation.punch_start, y=animation.punch_end},
+				speed, 0)
+			player_animation[name] = "punch"
+		end
+	end
+end
+
 local function apply_settings (player, race)
-	local settings = creatures.player_settings[race]
+	local def = creatures.player_settings[race]
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
 	-- configure inventory
 	inv:set_list("main", {})
 	inv:set_list("craft", {})
-	inv:set_size("main", settings.inventory_main.x * settings.inventory_main.y)
-	inv:set_size("craft", settings.inventory_craft.x * settings.inventory_craft.y)
-	player:hud_set_hotbar_itemcount(settings.hotbar)
-	player:hud_set_flags({hotbar = settings.inventory, wielditem = settings.inventory})
+	inv:set_size("main", def.inventory_main.x * def.inventory_main.y)
+	inv:set_size("craft", def.inventory_craft.x * def.inventory_craft.y)
+	player:hud_set_hotbar_itemcount(def.hotbar)
+	player:hud_set_flags({hotbar = def.inventory, wielditem = def.inventory})
 	if not minetest.setting_getbool("creative_mode") and not minetest.setting_getbool("inventory_crafting_full") then
-		player:set_inventory_formspec(get_formspec(settings.inventory, settings.inventory_main, settings.inventory_craft))
+		player:set_inventory_formspec(get_formspec(def.inventory, def.inventory_main, def.inventory_craft))
 	end
 	-- configure properties
-	player:set_hp(settings.hp_max)
-	player:set_armor_groups({fleshy = settings.armor})
-	player:set_physics_override({speed = settings.physics_speed, jump = settings.physics_jump, gravity = settings.physics_gravity})
+	player:set_hp(def.hp_max)
+	player:set_armor_groups({fleshy = def.armor})
+	player:set_physics_override({speed = def.physics_speed, jump = def.physics_jump, gravity = def.physics_gravity})
 	player:set_properties({
-		collisionbox = settings.collisionbox,
-		drawtype = settings.drawtype,
-		mesh = settings.mesh,
-		textures = settings.textures,
-		visual = settings.visual,
-		visual_size = settings.visual_size,
-		makes_footstep_sound = settings.makes_footstep_sound,
+		collisionbox = def.collisionbox,
+		drawtype = def.drawtype,
+		mesh = def.mesh,
+		textures = def.textures,
+		visual = def.visual,
+		visual_size = def.visual_size,
+		makes_footstep_sound = def.makes_footstep_sound,
 	})
 	-- configure visual effects
-	player:set_eye_offset(settings.eye_offset[1], settings.eye_offset[2])
-	player:override_day_night_ratio(settings.daytime)
-	player:set_sky(settings.sky[1], settings.sky[2], settings.sky[3])
-	if settings.screen ~= "" then
+	player:set_eye_offset(def.eye_offset[1], def.eye_offset[2])
+	player:override_day_night_ratio(def.daytime)
+	player:set_sky(def.sky[1], def.sky[2], def.sky[3])
+	if def.screen ~= "" then
 		player_hud[name] = player:hud_add({
 			hud_elem_type = "image",
-			text = settings.screen,
+			text = def.screen,
 			name = "creatures:screen",
 			scale = {x=-100, y=-100},
 			position = {x=0, y=0},
@@ -97,6 +145,14 @@ local function apply_settings (player, race)
 	elseif player_hud[name] then
 		player:hud_remove(player_hud[name])
 		player_hud[name] = nil
+	end
+	-- set local animations
+	if def.animation and def.animation.speed_normal_player then
+		player:set_local_animation({x = def.animation.stand_start, y = def.animation.stand_end},
+			{x = def.animation.walk_start, y = def.animation.walk_end},
+			{x = def.animation.punch_start, y = def.animation.punch_end},
+			{x = def.animation.walk_start, y = def.animation.walk_end},
+			def.animation.speed_normal_player)
 	end
 end
 
@@ -123,18 +179,12 @@ minetest.register_globalstep(function(dtime)
 			if player:get_hp() == 0 then
 				-- mobs don't have a death animation, make the player invisible here perhaps?
 			elseif walking then
-				player:set_animation({x = race_settings.animation.walk_start, y = race_settings.animation.walk_end}, speed)
+				set_animation(player, "walk", speed)
 			elseif controls.LMB then
-				player:set_animation({x = race_settings.animation.punch_start, y = race_settings.animation.punch_end}, speed)
+				set_animation(player, "punch", speed)
 			else
-				player:set_animation({x = race_settings.animation.stand_start, y = race_settings.animation.stand_end}, speed)
+				set_animation(player, "stand", speed)
 			end
-			-- set local animations
-			player:set_local_animation({x = race_settings.animation.stand_start, y = race_settings.animation.stand_end},
-			{x = race_settings.animation.walk_start, y = race_settings.animation.walk_end},
-			{x = race_settings.animation.punch_start, y = race_settings.animation.punch_end},
-			{x = race_settings.animation.walk_start, y = race_settings.animation.walk_end},
-			race_settings.animation.speed_normal_player)
 		end
 
 		-- don't let players have more HP than their race allows
