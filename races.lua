@@ -59,7 +59,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	visual = "mesh",
 	mesh = "mobs_stone_monster.x",
 	textures = {"mobs_dirt_monster.png"},
-	visual_size = {x=3, y=2.6},
+	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
@@ -122,7 +122,7 @@ creatures:register_creature("creatures:stone_monster", {
 	visual = "mesh",
 	mesh = "mobs_stone_monster.x",
 	textures = {"mobs_stone_monster.png"},
-	visual_size = {x=3, y=2.6},
+	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
@@ -184,7 +184,7 @@ creatures:register_creature("creatures:sand_monster", {
 	visual = "mesh",
 	mesh = "mobs_sand_monster.x",
 	textures = {"mobs_sand_monster.png"},
-	visual_size = {x=8,y=8},
+	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
@@ -246,7 +246,7 @@ creatures:register_creature("creatures:tree_monster", {
 	visual = "mesh",
 	mesh = "mobs_tree_monster.x",
 	textures = {"mobs_tree_monster.png"},
-	visual_size = {x=4.5,y=4.5},
+	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
@@ -313,7 +313,7 @@ creatures:register_creature("creatures:sheep", {
 	visual = "mesh",
 	mesh = "mobs_sheep.x",
 	textures = {"mobs_sheep.png"},
-	visual_size = {x=1.0,y=1.0},
+	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
@@ -431,7 +431,7 @@ creatures:register_creature("creatures:rat", {
 	visual = "mesh",
 	mesh = "mobs_rat.x",
 	textures = {"mobs_rat.png"},
-	visual_size = {x=1.0,y=1.0},
+	visual_size = {x=1, y=1},
 	drawtype = "front",
 	makes_footstep_sound = false,
 	water_damage = 0,
@@ -505,7 +505,7 @@ creatures:register_creature("creatures:oerkki", {
 	visual = "mesh",
 	mesh = "mobs_oerkki.x",
 	textures = {"mobs_oerkki.png"},
-	visual_size = {x=5, y=5},
+	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
@@ -562,7 +562,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	visual = "mesh",
 	mesh = "mobs_dungeon_master.x",
 	textures = {"mobs_dungeon_master.png"},
-	visual_size = {x=8, y=8},
+	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
 		speed_normal = 15,
