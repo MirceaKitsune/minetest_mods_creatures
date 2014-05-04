@@ -15,13 +15,9 @@ function creatures:register_player(name, def)
 	creatures.player_settings[name].animation = def.animation
 	creatures.player_settings[name].sounds = def.sounds
 	creatures.player_settings[name].makes_footstep_sound = def.makes_footstep_sound
-	creatures.player_settings[name].water_damage = def.water_damage
-	creatures.player_settings[name].lava_damage = def.lava_damage
-	creatures.player_settings[name].light_damage = def.light_damage
+	creatures.player_settings[name].env_damage = def.env_damage
 	creatures.player_settings[name].teams = def.teams
-	creatures.player_settings[name].physics_speed = def.physics_speed
-	creatures.player_settings[name].physics_jump = def.physics_jump
-	creatures.player_settings[name].physics_gravity = def.physics_gravity
+	creatures.player_settings[name].physics = def.physics
 	creatures.player_settings[name].inventory_main = def.inventory_main
 	creatures.player_settings[name].inventory_craft = def.inventory_craft
 	creatures.player_settings[name].hotbar = def.hotbar
@@ -78,7 +74,7 @@ local function set_animation(player, type, speed)
 	local race = creatures.player_races[name]
 	local race_settings = creatures.player_settings[race]
 	local animation = race_settings.animation
-	if not animation.speed_normal_player then
+	if not animation.speed then
 		return
 	end
 
@@ -131,7 +127,7 @@ local function apply_settings (player, race)
 	-- configure properties
 	player:set_hp(def.hp_max)
 	player:set_armor_groups({fleshy = def.armor})
-	player:set_physics_override({speed = def.physics_speed, jump = def.physics_jump, gravity = def.physics_gravity})
+	player:set_physics_override({speed = def.physics.speed, jump = def.physics.jump, gravity = def.physics.gravity})
 	player:set_properties({
 		collisionbox = def.collisionbox,
 		drawtype = def.drawtype,
@@ -169,12 +165,12 @@ local function apply_settings (player, race)
 	end
 
 	-- set local animations
-	if def.animation and def.animation.speed_normal_player then
+	if def.animation and def.animation.speed then
 		player:set_local_animation({x = def.animation.stand_start, y = def.animation.stand_end},
 			{x = def.animation.walk_start, y = def.animation.walk_end},
 			{x = def.animation.punch_start, y = def.animation.punch_end},
 			{x = def.animation.walk_start, y = def.animation.walk_end},
-			def.animation.speed_normal_player)
+			def.animation.speed)
 	end
 end
 
@@ -191,9 +187,9 @@ minetest.register_globalstep(function(dtime)
 			local walking = controls.up or controls.down or controls.left or controls.right
 			-- determine if the player is sneaking, and reduce animation speed if so
 			-- TODO: Use run animation and speed when player is running (fast mode)
-			local speed = race_settings.animation.speed_normal_player
+			local speed = race_settings.animation.speed
 			if controls.sneak then
-				speed = race_settings.animation.speed_normal_player / 2
+				speed = race_settings.animation.speed / 2
 			end
 
 			-- apply animations based on what the player is doing
@@ -240,25 +236,25 @@ minetest.register_globalstep(function(dtime)
 		-- handle player environment damage
 		local pos = player:getpos()
 		local n = minetest.env:get_node(pos)
-		if race_settings.light_damage and race_settings.light_damage ~= 0
+		if race_settings.env_damage.light and race_settings.env_damage.light ~= 0
 			and pos.y > 0
 			and minetest.env:get_node_light(pos)
 			and minetest.env:get_node_light(pos) > 4
 			and minetest.env:get_timeofday() > 0.2
 			and minetest.env:get_timeofday() < 0.8
 		then
-			player:set_hp(player:get_hp() - race_settings.light_damage)
+			player:set_hp(player:get_hp() - race_settings.env_damage.light)
 		end
-		if race_settings.water_damage and race_settings.water_damage ~= 0 and
+		if race_settings.env_damage.water and race_settings.env_damage.water ~= 0 and
 			minetest.get_item_group(n.name, "water") ~= 0
 		then
-			player:set_hp(player:get_hp() - race_settings.water_damage)
+			player:set_hp(player:get_hp() - race_settings.env_damage.water)
 		end
 		-- NOTE: Lava damage is applied on top of normal player lava damage
-		if race_settings.lava_damage and race_settings.lava_damage ~= 0 and
+		if race_settings.env_damage.lava and race_settings.env_damage.lava ~= 0 and
 			minetest.get_item_group(n.name, "lava") ~= 0
 		then
-			player:set_hp(player:get_hp() - race_settings.lava_damage)
+			player:set_hp(player:get_hp() - race_settings.env_damage.lava)
 		end
 
 		if race_settings.sounds and race_settings.sounds.random and math.random(1, 50) <= 1 then

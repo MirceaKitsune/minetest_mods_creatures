@@ -22,15 +22,20 @@ creatures:register_creature("creatures:ghost", {
 		die = "creatures_ghost_die",
 	},
 	makes_footstep_sound = false,
-	water_damage = 0,
-	lava_damage = 0,
-	light_damage = 0,
+	env_damage = {
+		water = 0,
+		lava = 0,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
 	teams = {"animals", "monsters", "people"},
 
 	-- Mob properties:
 	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
 	damage = 2,
 	drops = {},
 	on_rightclick = nil,
@@ -38,9 +43,6 @@ creatures:register_creature("creatures:ghost", {
 	possession = 0,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
 	inventory_main = {x = 1, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	hotbar = 1,
@@ -69,9 +71,7 @@ creatures:register_creature("creatures:human", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 20,
-		speed_normal_player = 30,
-		speed_run = 25,
+		speed = 30,
 		stand_start = 0,
 		stand_end = 79,
 		walk_start = 168,
@@ -87,15 +87,20 @@ creatures:register_creature("creatures:human", {
 		die = "creatures_human_die",
 	},
 	makes_footstep_sound = true,
-	water_damage = 0,
-	lava_damage = 5,
-	light_damage = 0,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
 	teams = {"people"},
 
 	-- Mob properties:
 	view_range = 20,
-	walk_velocity = 2,
-	run_velocity = 4,
 	damage = 1,
 	drops = {
 		{name = "default:sword_bronze",
@@ -116,9 +121,6 @@ creatures:register_creature("creatures:human", {
 	possession = 0.35,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
@@ -146,9 +148,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 20,
-		speed_normal_player = 30,
-		speed_run = 25,
+		speed = 30,
 		stand_start = 0,
 		stand_end = 14,
 		walk_start = 15,
@@ -165,15 +165,20 @@ creatures:register_creature("creatures:dirt_monster", {
 		die = "creatures_monster_die",
 	},
 	makes_footstep_sound = true,
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 2,
+	env_damage = {
+		water = 1,
+		lava = 5,
+		light = 2,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
 	teams = {"monsters"},
 
 	-- Mob properties:
 	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
 	damage = 2,
 	drops = {
 		{name = "default:dirt",
@@ -186,9 +191,6 @@ creatures:register_creature("creatures:dirt_monster", {
 	possession = 0.25,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
@@ -216,9 +218,7 @@ creatures:register_creature("creatures:stone_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 20,
-		speed_normal_player = 30,
-		speed_run = 25,
+		speed = 30,
 		stand_start = 0,
 		stand_end = 14,
 		walk_start = 15,
@@ -235,15 +235,20 @@ creatures:register_creature("creatures:stone_monster", {
 		die = "creatures_monster_die",
 	},
 	makes_footstep_sound = true,
-	water_damage = 0,
-	lava_damage = 0,
-	light_damage = 0,
+	env_damage = {
+		water = 0,
+		lava = 0,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
 	teams = {"monsters"},
 
 	-- Mob properties:
 	view_range = 10,
-	walk_velocity = 0.5,
-	run_velocity = 2,
 	damage = 3,
 	drops = {
 		{name = "default:mossycobble",
@@ -255,9 +260,6 @@ creatures:register_creature("creatures:stone_monster", {
 	possession = 0.25,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
@@ -285,9 +287,7 @@ creatures:register_creature("creatures:sand_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 20,
-		speed_normal_player = 30,
-		speed_run = 25,
+		speed = 30,
 		stand_start = 0,
 		stand_end = 39,
 		walk_start = 41,
@@ -304,15 +304,20 @@ creatures:register_creature("creatures:sand_monster", {
 		die = "creatures_monster_die",
 	},
 	makes_footstep_sound = true,
-	water_damage = 3,
-	lava_damage = 1,
-	light_damage = 0,
+	env_damage = {
+		water = 3,
+		lava = 1,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
 	teams = {"monsters"},
 
 	-- Mob properties:
 	view_range = 15,
-	walk_velocity = 1.5,
-	run_velocity = 4,
 	damage = 1,
 	drops = {
 		{name = "default:sand",
@@ -324,9 +329,6 @@ creatures:register_creature("creatures:sand_monster", {
 	possession = 0.25,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
@@ -354,9 +356,7 @@ creatures:register_creature("creatures:tree_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 20,
-		speed_normal_player = 30,
-		speed_run = 25,
+		speed = 30,
 		stand_start = 0,
 		stand_end = 24,
 		walk_start = 25,
@@ -373,15 +373,20 @@ creatures:register_creature("creatures:tree_monster", {
 		die = "creatures_monster_die",
 	},
 	makes_footstep_sound = true,
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 0,
+	env_damage = {
+		water = 1,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
 	teams = {"monsters", "animals"},
 
 	-- Mob properties:
 	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
 	damage = 2,
 	drops = {
 		{name = "default:sapling",
@@ -398,9 +403,6 @@ creatures:register_creature("creatures:tree_monster", {
 	possession = 0.25,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
@@ -428,8 +430,7 @@ creatures:register_creature("creatures:sheep", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 20,
-		speed_normal_player = 30,
+		speed = 30,
 		stand_start = 0,
 		stand_end = 80,
 		walk_start = 81,
@@ -445,13 +446,19 @@ creatures:register_creature("creatures:sheep", {
 		die = "creatures_sheep_die",
 	},
 	makes_footstep_sound = true,
-	water_damage = 1,
-	lava_damage = 5,
-	light_damage = 0,
+	env_damage = {
+		water = 1,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
 	teams = {"animals", "people"},
 
 	-- Mob properties:
-	walk_velocity = 1,
 	drops = {
 		{name = "creatures:meat_raw",
 		chance = 1,
@@ -501,9 +508,6 @@ creatures:register_creature("creatures:sheep", {
 	end,
 
 	-- Player properties:
-	physics_speed = 0.5,
-	physics_jump = 1,
-	physics_gravity = 1,
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 2, y = 2},
 	hotbar = 8,
@@ -554,13 +558,19 @@ creatures:register_creature("creatures:rat", {
 		die = "creatures_rat_die",
 	},
 	makes_footstep_sound = false,
-	water_damage = 0,
-	lava_damage = 1,
-	light_damage = 0,
+	env_damage = {
+		water = 0,
+		lava = 1,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 0.75,
+		gravity = 0.75,
+	},
 	teams = {"animals", "monsters"},
 
 	-- Mob properties:
-	walk_velocity = 1,
 	drops = {},
 	possession = 0.5,
 	
@@ -572,9 +582,6 @@ creatures:register_creature("creatures:rat", {
 	end,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 0.75,
-	physics_gravity = 0.75,
 	inventory_main = {x = 4, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	hotbar = 4,
@@ -629,9 +636,7 @@ creatures:register_creature("creatures:oerkki", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 20,
-		speed_normal_player = 30,
-		speed_run = 25,
+		speed = 30,
 		stand_start = 0,
 		stand_end = 23,
 		walk_start = 24,
@@ -647,24 +652,26 @@ creatures:register_creature("creatures:oerkki", {
 		die = "creatures_human_die",
 	},
 	makes_footstep_sound = false,
-	water_damage = 1,
-	lava_damage = 1,
-	light_damage = 0,
+	env_damage = {
+		water = 1,
+		lava = 1,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
 	teams = {"monsters", "people"},
 
 	-- Mob properties:
 	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
 	damage = 4,
 	drops = {},
 	attack_type = "dogfight",
 	possession = 0.25,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 1,
-	physics_gravity = 1,
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,
@@ -692,9 +699,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed_normal = 20,
-		speed_normal_player = 30,
-		speed_run = 25,
+		speed = 30,
 		stand_start = 0,
 		stand_end = 19,
 		walk_start = 20,
@@ -709,15 +714,20 @@ creatures:register_creature("creatures:dungeon_master", {
 		die = "creatures_monster_die",
 	},
 	makes_footstep_sound = true,
-	water_damage = 1,
-	lava_damage = 1,
-	light_damage = 0,
+	env_damage = {
+		water = 1,
+		lava = 1,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1.25,
+		gravity = 1.25,
+	},
 	teams = {"monsters"},
 
 	-- Mob properties:
 	view_range = 15,
-	walk_velocity = 1,
-	run_velocity = 3,
 	damage = 4,
 	drops = {
 		{name = "default:mese",
@@ -732,9 +742,6 @@ creatures:register_creature("creatures:dungeon_master", {
 	possession = 0.15,
 
 	-- Player properties:
-	physics_speed = 1,
-	physics_jump = 1.25,
-	physics_gravity = 1.25,
 	inventory_main = {x = 8, y = 5},
 	inventory_craft = {x = 3, y = 3},
 	hotbar = 8,

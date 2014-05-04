@@ -16,12 +16,8 @@ function creatures:register_mob(name, def)
 		textures = def.textures,
 		makes_footstep_sound = def.makes_footstep_sound,
 		view_range = def.view_range,
-		walk_velocity = def.walk_velocity,
-		run_velocity = def.run_velocity,
 		damage = def.damage,
-		light_damage = def.light_damage,
-		water_damage = def.water_damage,
-		lava_damage = def.lava_damage,
+		env_damage = def.env_damage,
 		disable_fall_damage = def.disable_fall_damage,
 		drops = def.drops,
 		armor = def.armor,
@@ -40,6 +36,10 @@ function creatures:register_mob(name, def)
 		mob = true,
 		timer = 0,
 		env_damage_timer = 0,
+		walk_velocity = tonumber(minetest.setting_get("movement_speed_walk")) * def.physics.speed,
+		run_velocity = tonumber(minetest.setting_get("movement_speed_fast")) * def.physics.speed,
+		jump_velocity = tonumber(minetest.setting_get("movement_speed_jump")) * def.physics.jump,
+		gravity = tonumber(minetest.setting_get("movement_gravity")) * def.physics.gravity,
 		attack = {entity=nil, dist=nil},
 		state = "stand",
 		v_start = false,
@@ -64,7 +64,7 @@ function creatures:register_mob(name, def)
 		end,
 		
 		set_animation = function(self, type)
-			if not self.animation then
+			if not self.animation or not self.animation.speed then
 				return
 			end
 			if not self.animation.current then
@@ -77,11 +77,10 @@ function creatures:register_mob(name, def)
 				if
 					self.animation.stand_start
 					and self.animation.stand_end
-					and self.animation.speed_normal
 				then
 					self.object:set_animation(
 						{x=self.animation.stand_start,y=self.animation.stand_end},
-						self.animation.speed_normal, 0
+						self.animation.speed, 0
 					)
 					self.animation.current = "stand"
 				end
@@ -89,11 +88,10 @@ function creatures:register_mob(name, def)
 				if
 					self.animation.walk_start
 					and self.animation.walk_end
-					and self.animation.speed_normal
 				then
 					self.object:set_animation(
 						{x=self.animation.walk_start,y=self.animation.walk_end},
-						self.animation.speed_normal, 0
+						self.animation.speed, 0
 					)
 					self.animation.current = "walk"
 				end
@@ -101,11 +99,10 @@ function creatures:register_mob(name, def)
 				if
 					self.animation.run_start
 					and self.animation.run_end
-					and self.animation.speed_run
 				then
 					self.object:set_animation(
 						{x=self.animation.run_start,y=self.animation.run_end},
-						self.animation.speed_run, 0
+						self.animation.speed * 2, 0
 					)
 					self.animation.current = "run"
 				end
@@ -113,11 +110,10 @@ function creatures:register_mob(name, def)
 				if
 					self.animation.punch_start
 					and self.animation.punch_end
-					and self.animation.speed_normal
 				then
 					self.object:set_animation(
 						{x=self.animation.punch_start,y=self.animation.punch_end},
-						self.animation.speed_normal, 0
+						self.animation.speed, 0
 					)
 					self.animation.current = "punch"
 				end
@@ -146,8 +142,7 @@ function creatures:register_mob(name, def)
 				end
 			end
 			
-			-- make mobs push forward while jumping
-			local accel = self.object:getacceleration()
+			-- make mobs push forward while jumping and apply gravity
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
 				if self.drawtype == "side" then
@@ -155,9 +150,9 @@ function creatures:register_mob(name, def)
 				end
 				local x = math.sin(yaw) * -2
 				local z = math.cos(yaw) * 2
-				self.object:setacceleration({x=x, y=accel.y, z=z})
+				self.object:setacceleration({x=x, y=-self.gravity, z=z})
 			else
-				self.object:setacceleration({x=0, y=accel.y, z=0})
+				self.object:setacceleration({x=0, y=-self.gravity, z=0})
 			end
 			
 			-- handle fall damage
@@ -188,14 +183,14 @@ function creatures:register_mob(name, def)
 				pos.y = pos.y - 1 -- exclude player offset
 				local n = minetest.env:get_node(pos)
 				
-				if self.light_damage and self.light_damage ~= 0
+				if self.env_damage.light and self.env_damage.light ~= 0
 					and pos.y>0
 					and minetest.env:get_node_light(pos)
 					and minetest.env:get_node_light(pos) > 4
 					and minetest.env:get_timeofday() > 0.2
 					and minetest.env:get_timeofday() < 0.8
 				then
-					self.object:set_hp(self.object:get_hp()-self.light_damage)
+					self.object:set_hp(self.object:get_hp()-self.env_damage.light)
 					if self.object:get_hp() == 0 then
 						if self.sounds and self.sounds.die then
 							minetest.sound_play(self.sounds.die, {object = self.object})
@@ -204,10 +199,10 @@ function creatures:register_mob(name, def)
 					end
 				end
 				
-				if self.water_damage and self.water_damage ~= 0 and
+				if self.env_damage.water and self.env_damage.water ~= 0 and
 					minetest.get_item_group(n.name, "water") ~= 0
 				then
-					self.object:set_hp(self.object:get_hp()-self.water_damage)
+					self.object:set_hp(self.object:get_hp()-self.env_damage.water)
 					if self.object:get_hp() == 0 then
 						if self.sounds and self.sounds.die then
 							minetest.sound_play(self.sounds.die, {object = self.object})
@@ -216,10 +211,10 @@ function creatures:register_mob(name, def)
 					end
 				end
 				
-				if self.lava_damage and self.lava_damage ~= 0 and
+				if self.env_damage.lava and self.env_damage.lava ~= 0 and
 					minetest.get_item_group(n.name, "lava") ~= 0
 				then
-					self.object:set_hp(self.object:get_hp()-self.lava_damage)
+					self.object:set_hp(self.object:get_hp()-self.env_damage.lava)
 					if self.object:get_hp() == 0 then
 						if self.sounds and self.sounds.die then
 							minetest.sound_play(self.sounds.die, {object = self.object})
@@ -315,7 +310,7 @@ function creatures:register_mob(name, def)
 				end
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 					local v = self.object:getvelocity()
-					v.y = 5
+					v.y = self.jump_velocity
 					self.object:setvelocity(v)
 				end
 				self:set_animation("walk")
@@ -361,7 +356,7 @@ function creatures:register_mob(name, def)
 					else
 						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 							local v = self.object:getvelocity()
-							v.y = 5
+							v.y = self.jump_velocity
 							self.object:setvelocity(v)
 						end
 						self.set_velocity(self, self.run_velocity)
@@ -470,7 +465,7 @@ function creatures:register_mob(name, def)
 						else
 							if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 								local v = self.object:getvelocity()
-								v.y = 5
+								v.y = self.jump_velocity
 								self.object:setvelocity(v)
 							end
 							self.set_velocity(self, self.walk_velocity)
