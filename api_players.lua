@@ -32,6 +32,7 @@ function creatures:register_player(name, def)
 	creatures.player_settings[name].sky = def.sky
 	creatures.player_settings[name].daytime = def.daytime
 	creatures.player_settings[name].screen = def.screen
+	creatures.player_settings[name].icon = def.icon
 end
 
 -- Functions to handle player settings:
@@ -39,16 +40,25 @@ end
 local player_hud = {}
 local player_animation = {}
 
-local function get_formspec(intentory, size_main, size_craft)
+local function get_formspec(intentory, size_main, size_craft, icon)
+	local image = icon
+	if not image or image == "" then
+		image = "logo.png"
+	end
+
 	if not intentory then
-		return "size[1,1]"
+		local formspec =
+			"size[1,1]"
+			.."image[0,0;1,1;"..image.."]"
+		return formspec
 	end
 
 	local size = {}
-	size.x = math.max(size_main.x, (size_craft.x + 2))
+	size.x = math.max(size_main.x, (size_craft.x + 3))
 	size.y = size_main.y + size_craft.y + 1
 	local formspec =
 		"size["..size.x..","..size.y.."]"
+		.."image[0,0;1,1;"..image.."]"
 		.."list[current_player;craft;"..(size.x - size_craft.x - 2)..",0;"..size_craft.x..","..size_craft.y..";]"
 		.."list[current_player;craftpreview;"..(size.x - 1)..","..math.floor(size_craft.y / 2)..";1,1;]"
 		.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 1)..";"..size_main.x..","..size_main.y..";]"
@@ -114,7 +124,7 @@ local function apply_settings (player, race)
 	player:hud_set_hotbar_itemcount(def.hotbar)
 	player:hud_set_flags({hotbar = def.inventory, wielditem = def.inventory})
 	if not minetest.setting_getbool("creative_mode") and not minetest.setting_getbool("inventory_crafting_full") then
-		player:set_inventory_formspec(get_formspec(def.inventory, def.inventory_main, def.inventory_craft))
+		player:set_inventory_formspec(get_formspec(def.inventory, def.inventory_main, def.inventory_craft, def.icon))
 	end
 	-- configure properties
 	player:set_hp(def.hp_max)

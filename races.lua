@@ -45,7 +45,8 @@ creatures:register_creature("creatures:ghost", {
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	sky = {{r = 64, g = 0, b = 128}, "plain", {}},
 	daytime = 0.15,
-	screen = "hud_ghost.png"
+	screen = "hud_ghost.png",
+	icon = "mobs_ghost_icon.png",
 })
 
 -- Creature definitions:
@@ -117,6 +118,7 @@ creatures:register_creature("creatures:human", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_human_icon.png",
 })
 creatures:register_spawn("creatures:human", {"default:dirt_with_grass"}, 20, -1, 9000, 1, 31000)
 
@@ -179,6 +181,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_dirt_monster_icon.png",
 })
 creatures:register_spawn("creatures:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
@@ -240,6 +243,7 @@ creatures:register_creature("creatures:stone_monster", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_stone_monster_icon.png",
 })
 creatures:register_spawn("creatures:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
 
@@ -301,6 +305,7 @@ creatures:register_creature("creatures:sand_monster", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_sand_monster_icon.png",
 })
 creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
@@ -367,6 +372,7 @@ creatures:register_creature("creatures:tree_monster", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_tree_monster_icon.png",
 })
 creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
 
@@ -466,6 +472,7 @@ creatures:register_creature("creatures:sheep", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_sheep_icon.png",
 })
 creatures:register_spawn("creatures:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
 
@@ -530,6 +537,7 @@ creatures:register_creature("creatures:rat", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_rat_icon.png",
 })
 creatures:register_spawn("creatures:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
 
@@ -613,6 +621,7 @@ creatures:register_creature("creatures:oerkki", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_oerkki_icon.png",
 })
 creatures:register_spawn("creatures:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
@@ -678,6 +687,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	sky = {{}, "regular", {}},
 	daytime = nil,
 	screen = "",
+	icon = "mobs_dungeon_master_icon.png",
 })
 creatures:register_spawn("creatures:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
 
