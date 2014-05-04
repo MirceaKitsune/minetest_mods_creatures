@@ -3,7 +3,7 @@ by MirceaKitsune
 
 License:
 Sourcecode: WTFPL (see below)
-Sounds: PD (by legoluft, Independent.nu)
+Sounds: PD (by legoluft, Independent.nu, qubodup, Gwes, Ogrebane, Stilgar)
 
 === SimpleMobs for MINETEST-C55 ===
 by PilzAdam

@@ -170,6 +170,9 @@ function creatures:register_mob(name, def)
 						local damage = d-5
 						self.object:set_hp(self.object:get_hp()-damage)
 						if self.object:get_hp() == 0 then
+							if self.sounds and self.sounds.die then
+								minetest.sound_play(self.sounds.die, {object = self.object})
+							end
 							self.object:remove()
 						end
 					end
@@ -194,6 +197,9 @@ function creatures:register_mob(name, def)
 				then
 					self.object:set_hp(self.object:get_hp()-self.light_damage)
 					if self.object:get_hp() == 0 then
+						if self.sounds and self.sounds.die then
+							minetest.sound_play(self.sounds.die, {object = self.object})
+						end
 						self.object:remove()
 					end
 				end
@@ -203,6 +209,9 @@ function creatures:register_mob(name, def)
 				then
 					self.object:set_hp(self.object:get_hp()-self.water_damage)
 					if self.object:get_hp() == 0 then
+						if self.sounds and self.sounds.die then
+							minetest.sound_play(self.sounds.die, {object = self.object})
+						end
 						self.object:remove()
 					end
 				end
@@ -212,6 +221,9 @@ function creatures:register_mob(name, def)
 				then
 					self.object:set_hp(self.object:get_hp()-self.lava_damage)
 					if self.object:get_hp() == 0 then
+						if self.sounds and self.sounds.die then
+							minetest.sound_play(self.sounds.die, {object = self.object})
+						end
 						self.object:remove()
 					end
 				end
@@ -230,7 +242,7 @@ function creatures:register_mob(name, def)
 				self.can_possess = false
 			end
 			
-			if self.sounds and self.sounds.random and math.random(1, 100) <= 1 then
+			if self.sounds and self.sounds.random and math.random(1, 50) <= 1 then
 				minetest.sound_play(self.sounds.random, {object = self.object})
 			end
 			
@@ -512,18 +524,23 @@ function creatures:register_mob(name, def)
 		on_punch = function(self, hitter)
 			local psettings = creatures.player_settings[creatures:get_race(hitter)]
 			local allied = creatures:allied(self.object, hitter)
+			if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
+				minetest.sound_play(psettings.sounds.attack, {object = hitter})
+			end
 			if self.can_possess and hitter:is_player() and psettings.reincarnate and allied then
 				-- handle player possession of mobs
 				hitter:setpos(self.object:getpos())
 				hitter:set_look_yaw(self.object:getyaw())
 				hitter:set_look_pitch(0)
 				creatures:set_race(hitter, name)
-				minetest.sound_play("creatures_possess", {toplayer = hitter:get_player_name()})
 				self.object:remove()
 			elseif self.attack_type and hitter:is_player() and allied then
 				-- warm and punish the player if hitting an ally
 				minetest.chat_send_player(hitter:get_player_name(), "Don't hit your allies!")
 				hitter:set_hp(hitter:get_hp() - 1)
+				if self.sounds and self.sounds.damage then
+					minetest.sound_play(self.sounds.damage, {object = self.object})
+				end
 			elseif self.object:get_hp() <= 0 then
 				-- handle mob death
 				if hitter and hitter:is_player() and hitter:get_inventory() then
@@ -532,6 +549,13 @@ function creatures:register_mob(name, def)
 							hitter:get_inventory():add_item("main", ItemStack(drop.name.." "..math.random(drop.min, drop.max)))
 						end
 					end
+				end
+				if self.sounds and self.sounds.die then
+					minetest.sound_play(self.sounds.die, {object = self.object})
+				end
+			else
+				if self.sounds and self.sounds.damage then
+					minetest.sound_play(self.sounds.damage, {object = self.object})
 				end
 			end
 		end,
