@@ -5,7 +5,7 @@ creatures.player_default = "creatures:ghost"
 
 -- player ghost, don't spawn as a mob
 creatures:register_creature("creatures:ghost", {
-	-- Player and mob properties:
+	-- Common properties:
 	hp_max = 20,
 	armor = 100,
 	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5},
@@ -39,7 +39,7 @@ creatures:register_creature("creatures:ghost", {
 	damage = 2,
 	drops = {},
 	on_rightclick = nil,
-	attack_type = "dogfight",
+	attack_type = "melee",
 	possession = 0,
 
 	-- Player properties:
@@ -61,7 +61,7 @@ creatures:register_creature("creatures:ghost", {
 -- Creature definitions:
 
 creatures:register_creature("creatures:human", {
-	-- Player and mob properties:
+	-- Common properties:
 	hp_max = 20,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -108,17 +108,17 @@ creatures:register_creature("creatures:human", {
 		min = 1,
 		max = 1,},
 		{name = "default:sword_steel",
-		chance = 2,
+		chance = 5,
 		min = 1,
 		max = 1,},
 		{name = "default:sword_diamond",
-		chance = 1,
+		chance = 10,
 		min = 1,
 		max = 1,},
 	},
 	on_rightclick = nil,
-	attack_type = "dogfight",
-	possession = 0.35,
+	attack_type = "melee",
+	possession = 0.5,
 
 	-- Player properties:
 	inventory_main = {x = 8, y = 4},
@@ -138,7 +138,7 @@ creatures:register_creature("creatures:human", {
 creatures:register_spawn("creatures:human", {"default:dirt_with_grass"}, 20, -1, 9000, 1, 31000)
 
 creatures:register_creature("creatures:dirt_monster", {
-	-- Player and mob properties:
+	-- Common properties:
 	hp_max = 5,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -148,7 +148,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
+		speed = 25,
 		stand_start = 0,
 		stand_end = 14,
 		walk_start = 15,
@@ -168,10 +168,10 @@ creatures:register_creature("creatures:dirt_monster", {
 	env_damage = {
 		water = 1,
 		lava = 5,
-		light = 2,
+		light = 1,
 	},
 	physics = {
-		speed = 1,
+		speed = 0.75,
 		jump = 1,
 		gravity = 1,
 	},
@@ -179,7 +179,7 @@ creatures:register_creature("creatures:dirt_monster", {
 
 	-- Mob properties:
 	view_range = 15,
-	damage = 2,
+	damage = 1,
 	drops = {
 		{name = "default:dirt",
 		chance = 1,
@@ -187,12 +187,12 @@ creatures:register_creature("creatures:dirt_monster", {
 		max = 5,},
 	},
 	on_rightclick = nil,
-	attack_type = "dogfight",
+	attack_type = "melee",
 	possession = 0.25,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 3},
-	inventory_craft = {x = 3, y = 3},
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
 	hotbar = 8,
 	inventory = true,
 	interact = true,
@@ -208,7 +208,7 @@ creatures:register_creature("creatures:dirt_monster", {
 creatures:register_spawn("creatures:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
 creatures:register_creature("creatures:stone_monster", {
-	-- Player and mob properties:
+	-- Common properties:
 	hp_max = 10,
 	armor = 80,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -218,7 +218,7 @@ creatures:register_creature("creatures:stone_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
+		speed = 25,
 		stand_start = 0,
 		stand_end = 14,
 		walk_start = 15,
@@ -241,9 +241,9 @@ creatures:register_creature("creatures:stone_monster", {
 		light = 0,
 	},
 	physics = {
-		speed = 1,
-		jump = 1,
-		gravity = 1,
+		speed = 0.75,
+		jump = 0.75,
+		gravity = 1.25,
 	},
 	teams = {"monsters"},
 
@@ -256,12 +256,12 @@ creatures:register_creature("creatures:stone_monster", {
 		min = 3,
 		max = 5,},
 	},
-	attack_type = "dogfight",
+	attack_type = "melee",
 	possession = 0.25,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 3},
-	inventory_craft = {x = 3, y = 3},
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
 	hotbar = 8,
 	inventory = true,
 	interact = true,
@@ -277,8 +277,8 @@ creatures:register_creature("creatures:stone_monster", {
 creatures:register_spawn("creatures:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
 
 creatures:register_creature("creatures:sand_monster", {
-	-- Player and mob properties:
-	hp_max = 3,
+	-- Common properties:
+	hp_max = 5,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
@@ -287,7 +287,7 @@ creatures:register_creature("creatures:sand_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
+		speed = 20,
 		stand_start = 0,
 		stand_end = 39,
 		walk_start = 41,
@@ -310,27 +310,27 @@ creatures:register_creature("creatures:sand_monster", {
 		light = 0,
 	},
 	physics = {
-		speed = 1,
+		speed = 0.5,
 		jump = 1,
 		gravity = 1,
 	},
 	teams = {"monsters"},
 
 	-- Mob properties:
-	view_range = 15,
-	damage = 1,
+	view_range = 20,
+	damage = 2,
 	drops = {
 		{name = "default:sand",
 		chance = 1,
 		min = 3,
 		max = 5,},
 	},
-	attack_type = "dogfight",
-	possession = 0.25,
+	attack_type = "melee",
+	possession = 0.35,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 3},
-	inventory_craft = {x = 3, y = 3},
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
 	hotbar = 8,
 	inventory = true,
 	interact = true,
@@ -346,8 +346,8 @@ creatures:register_creature("creatures:sand_monster", {
 creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
 creatures:register_creature("creatures:tree_monster", {
-	-- Player and mob properties:
-	hp_max = 5,
+	-- Common properties:
+	hp_max = 10,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
@@ -356,7 +356,7 @@ creatures:register_creature("creatures:tree_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
+		speed = 25,
 		stand_start = 0,
 		stand_end = 24,
 		walk_start = 25,
@@ -379,14 +379,14 @@ creatures:register_creature("creatures:tree_monster", {
 		light = 0,
 	},
 	physics = {
-		speed = 1,
+		speed = 0.75,
 		jump = 1,
 		gravity = 1,
 	},
 	teams = {"monsters", "animals"},
 
 	-- Mob properties:
-	view_range = 15,
+	view_range = 20,
 	damage = 2,
 	drops = {
 		{name = "default:sapling",
@@ -399,12 +399,12 @@ creatures:register_creature("creatures:tree_monster", {
 		max = 2,},
 	},
 	disable_fall_damage = true,
-	attack_type = "dogfight",
-	possession = 0.25,
+	attack_type = "melee",
+	possession = 0.35,
 
 	-- Player properties:
 	inventory_main = {x = 8, y = 3},
-	inventory_craft = {x = 3, y = 3},
+	inventory_craft = {x = 2, y = 2},
 	hotbar = 8,
 	inventory = true,
 	interact = true,
@@ -420,17 +420,17 @@ creatures:register_creature("creatures:tree_monster", {
 creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
 
 creatures:register_creature("creatures:sheep", {
-	-- Player and mob properties:
+	-- Common properties:
 	hp_max = 5,
-	armor = 200,
-	collisionbox = {-0.5, -0.01, -0.5, 0.6, 1, 0.5},
+	armor = 100,
+	collisionbox = {-0.5, -0.01, -0.5, 0.65, 1, 0.5},
 	visual = "mesh",
 	mesh = "mobs_sheep.x",
 	textures = {"mobs_sheep.png"},
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
+		speed = 10,
 		stand_start = 0,
 		stand_end = 80,
 		walk_start = 81,
@@ -452,7 +452,7 @@ creatures:register_creature("creatures:sheep", {
 		light = 0,
 	},
 	physics = {
-		speed = 1,
+		speed = 0.35,
 		jump = 1,
 		gravity = 1,
 	},
@@ -467,7 +467,7 @@ creatures:register_creature("creatures:sheep", {
 	},
 	follow = "farming:wheat",
 	view_range = 5,
-	possession = 0.35,
+	possession = 0.65,
 	
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
@@ -509,7 +509,7 @@ creatures:register_creature("creatures:sheep", {
 
 	-- Player properties:
 	inventory_main = {x = 8, y = 1},
-	inventory_craft = {x = 2, y = 2},
+	inventory_craft = {x = 1, y = 1},
 	hotbar = 8,
 	inventory = true,
 	interact = true,
@@ -543,9 +543,9 @@ minetest.register_craft({
 })
 
 creatures:register_creature("creatures:rat", {
-	-- Player and mob properties:
+	-- Common properties:
 	hp_max = 1,
-	armor = 200,
+	armor = 100,
 	collisionbox = {-0.2, -0.01, -0.2, 0.2, 0.2, 0.2},
 	visual = "mesh",
 	mesh = "mobs_rat.x",
@@ -572,7 +572,7 @@ creatures:register_creature("creatures:rat", {
 
 	-- Mob properties:
 	drops = {},
-	possession = 0.5,
+	possession = 0.75,
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
@@ -626,8 +626,8 @@ minetest.register_craft({
 })
 
 creatures:register_creature("creatures:oerkki", {
-	-- Player and mob properties:
-	hp_max = 8,
+	-- Common properties:
+	hp_max = 10,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
@@ -636,7 +636,7 @@ creatures:register_creature("creatures:oerkki", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
+		speed = 40,
 		stand_start = 0,
 		stand_end = 23,
 		walk_start = 24,
@@ -658,17 +658,17 @@ creatures:register_creature("creatures:oerkki", {
 		light = 0,
 	},
 	physics = {
-		speed = 1,
+		speed = 1.25,
 		jump = 1,
 		gravity = 1,
 	},
 	teams = {"monsters", "people"},
 
 	-- Mob properties:
-	view_range = 15,
-	damage = 4,
+	view_range = 10,
+	damage = 3,
 	drops = {},
-	attack_type = "dogfight",
+	attack_type = "melee",
 	possession = 0.25,
 
 	-- Player properties:
@@ -689,7 +689,7 @@ creatures:register_creature("creatures:oerkki", {
 creatures:register_spawn("creatures:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
 creatures:register_creature("creatures:dungeon_master", {
-	-- Player and mob properties:
+	-- Common properties:
 	hp_max = 10,
 	armor = 60,
 	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
@@ -699,7 +699,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
+		speed = 20,
 		stand_start = 0,
 		stand_end = 19,
 		walk_start = 20,
@@ -715,12 +715,12 @@ creatures:register_creature("creatures:dungeon_master", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 1,
+		water = 0,
 		lava = 1,
 		light = 0,
 	},
 	physics = {
-		speed = 1,
+		speed = 0.65,
 		jump = 1.25,
 		gravity = 1.25,
 	},
@@ -731,7 +731,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	damage = 4,
 	drops = {
 		{name = "default:mese",
-		chance = 100,
+		chance = 50,
 		min = 1,
 		max = 2,},
 	},

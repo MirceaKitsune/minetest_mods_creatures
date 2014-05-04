@@ -320,7 +320,7 @@ function creatures:register_mob(name, def)
 					self.state = "stand"
 					self:set_animation("stand")
 				end
-			elseif self.state == "attack" and self.attack_type == "dogfight" then
+			elseif self.state == "attack" and self.attack_type == "melee" then
 				if not self.attack.entity or not (self.attack.entity:get_luaentity() or self.attack.entity:is_player()) then
 					self.state = "stand"
 					self:set_animation("stand")
