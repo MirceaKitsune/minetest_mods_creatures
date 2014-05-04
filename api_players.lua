@@ -32,13 +32,15 @@ function creatures:register_player(name, def)
 	creatures.player_settings[name].sky = def.sky
 	creatures.player_settings[name].daytime = def.daytime
 	creatures.player_settings[name].screen = def.screen
+	creatures.player_settings[name].ambience = def.ambience
 	creatures.player_settings[name].icon = def.icon
 end
 
 -- Functions to handle player settings:
 
-local player_hud = {}
 local player_animation = {}
+local player_hud = {}
+local player_ambience = {}
 
 local function get_formspec(intentory, size_main, size_craft, icon)
 	local image = icon
@@ -143,7 +145,7 @@ local function apply_settings (player, race)
 	player:set_eye_offset(def.eye_offset[1], def.eye_offset[2])
 	player:override_day_night_ratio(def.daytime)
 	player:set_sky(def.sky[1], def.sky[2], def.sky[3])
-	if def.screen ~= "" then
+	if def.screen and def.screen ~= "" then
 		player_hud[name] = player:hud_add({
 			hud_elem_type = "image",
 			text = def.screen,
@@ -155,6 +157,13 @@ local function apply_settings (player, race)
 	elseif player_hud[name] then
 		player:hud_remove(player_hud[name])
 		player_hud[name] = nil
+	end
+	-- configure sound effects
+	if def.ambience and def.ambience ~= "" then
+		player_ambience[name] = minetest.sound_play(def.ambience, {toplayer = name, loop = true})
+	elseif player_ambience[name] then
+		minetest.sound_stop(player_ambience[name])
+		player_ambience[name] = nil
 	end
 	-- set local animations
 	if def.animation and def.animation.speed_normal_player then
@@ -229,7 +238,7 @@ minetest.register_globalstep(function(dtime)
 			if race_settings.lava_damage and race_settings.lava_damage ~= 0 and
 				minetest.get_item_group(n.name, "lava") ~= 0
 			then
-				player:set_hp(player:get_hp() - self.lava_damage)
+				player:set_hp(player:get_hp() - race_settings.lava_damage)
 			end
 		end
 
@@ -263,7 +272,8 @@ end)
 
 -- turn the player into its ghost upon death
 minetest.register_on_respawnplayer(function(player)
-	local race = creatures.player_races[player:get_player_name()]
+	local name = player:get_player_name()
+	local race = creatures.player_races[name]
 	local race_settings = creatures.player_settings[race]
 	local ghost = race_settings.ghost
 	if not ghost or ghost == "" then
@@ -272,6 +282,7 @@ minetest.register_on_respawnplayer(function(player)
 
 	if race ~= ghost then
 		creatures:set_race (player, ghost)
+		minetest.sound_play("creatures_ghost", {toplayer = name})
 		return true
 	end
 end)

@@ -518,6 +518,7 @@ function creatures:register_mob(name, def)
 				hitter:set_look_yaw(self.object:getyaw())
 				hitter:set_look_pitch(0)
 				creatures:set_race(hitter, name)
+				minetest.sound_play("creatures_possess", {toplayer = hitter:get_player_name()})
 				self.object:remove()
 			elseif self.attack_type and hitter:is_player() and allied then
 				-- warm and punish the player if hitting an ally
