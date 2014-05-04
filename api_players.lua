@@ -266,6 +266,16 @@ minetest.register_on_respawnplayer(function(player)
 	end
 end)
 
+-- set player race upon joining
+minetest.register_on_joinplayer(function(player)
+	local race = creatures:get_race(player)
+	if not race then
+		creatures:set_race(player, creatures.player_default)
+	else
+		creatures:set_race(player, race)
+	end
+end)
+
 -- Global functions to get or set player races:
 
 creatures.player_races = {}
@@ -287,8 +297,38 @@ function creatures:get_race (player)
 	return creatures.player_races[pname]
 end
 
-minetest.register_on_joinplayer(function(player)
-	if not creatures:get_race(player) then
-		creatures:set_race(player, creatures.player_default)
+-- Save and load player races to and from file:
+
+local file = io.open(minetest:get_worldpath().."/races.txt", "r")
+if file then
+	local table = minetest.deserialize(file:read("*all"))
+	if type(table) == "table" then
+		creatures.player_races = table
+	else
+		minetest.log("error", "Corrupted player races file")
 	end
+	file:close()
+end
+
+local function save_races()
+	local file = io.open(minetest:get_worldpath().."/races.txt", "w")
+	if file then
+		file:write(minetest.serialize(creatures.player_races))
+		file:close()
+	else
+		minetest.log("error", "Can't save player races to file")
+	end
+end
+
+local save_races_timer = 0
+minetest.register_globalstep(function(dtime)
+	save_races_timer = save_races_timer + dtime
+	if save_races_timer > 10 then
+		save_races_timer = 0
+		save_races()
+	end
+end)
+
+minetest.register_on_shutdown(function()
+	save_races()
 end)
