@@ -116,9 +116,19 @@ local function apply_settings (player, race)
 	local inv = player:get_inventory()
 
 	-- configure inventory
-	inv:set_size("main", def.inventory_main.x * def.inventory_main.y)
-	inv:set_size("craft", def.inventory_craft.x * def.inventory_craft.y)
-	player:hud_set_hotbar_itemcount(def.hotbar)
+	local inv_main = math.max(def.inventory_main.x * def.inventory_main.y, 1)
+	if inv:get_size("main") ~= inv_main then
+		inv:set_list("main", {})
+		inv:set_size("main", inv_main)
+		inv:set_width("main", def.inventory_main.x)
+	end
+	local inv_craft = math.max(def.inventory_craft.x * def.inventory_craft.y, 1)
+	if inv:get_size("craft") ~= inv_craft then
+		inv:set_list("craft", {})
+		inv:set_size("craft", inv_craft)
+		inv:set_width("craft", def.inventory_craft.x)
+	end
+	player:hud_set_hotbar_itemcount(math.min(def.hotbar, inv_main))
 	player:hud_set_flags({hotbar = def.inventory, wielditem = def.inventory})
 	if not minetest.setting_getbool("creative_mode") and not minetest.setting_getbool("inventory_crafting_full") then
 		player:set_inventory_formspec(get_formspec(def.inventory, def.inventory_main, def.inventory_craft, def.icon))
