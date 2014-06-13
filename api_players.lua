@@ -20,9 +20,6 @@ function creatures:register_player(name, def)
 	creatures.player_settings[name].physics = def.physics
 	creatures.player_settings[name].inventory_main = def.inventory_main
 	creatures.player_settings[name].inventory_craft = def.inventory_craft
-	creatures.player_settings[name].hotbar = def.hotbar
-	creatures.player_settings[name].inventory = def.inventory
-	creatures.player_settings[name].interact = def.interact
 	creatures.player_settings[name].reincarnate = def.reincarnate
 	creatures.player_settings[name].ghost = def.ghost
 	creatures.player_settings[name].eye_offset = def.eye_offset
@@ -37,17 +34,10 @@ end
 
 local player_data = {}
 
-local function get_formspec(intentory, size_main, size_craft, icon)
+local function get_formspec(size_main, size_craft, icon)
 	local image = icon
 	if not image or image == "" then
 		image = "logo.png"
-	end
-
-	if not intentory then
-		local formspec =
-			"size[1,1]"
-			.."image[0,0;1,1;"..image.."]"
-		return formspec
 	end
 
 	local size = {}
@@ -116,22 +106,19 @@ local function apply_settings (player, race)
 	local inv = player:get_inventory()
 
 	-- configure inventory
-	local inv_main = math.max(def.inventory_main.x * def.inventory_main.y, 1)
+	local inv_main = def.inventory_main.x * def.inventory_main.y
 	if inv:get_size("main") ~= inv_main then
-		inv:set_list("main", {})
 		inv:set_size("main", inv_main)
 		inv:set_width("main", def.inventory_main.x)
 	end
-	local inv_craft = math.max(def.inventory_craft.x * def.inventory_craft.y, 1)
+	local inv_craft = def.inventory_craft.x * def.inventory_craft.y
 	if inv:get_size("craft") ~= inv_craft then
-		inv:set_list("craft", {})
 		inv:set_size("craft", inv_craft)
 		inv:set_width("craft", def.inventory_craft.x)
 	end
-	player:hud_set_hotbar_itemcount(math.min(def.hotbar, inv_main))
-	player:hud_set_flags({hotbar = def.inventory, wielditem = def.inventory})
+	player:hud_set_hotbar_itemcount(def.inventory_main.x)
 	if not minetest.setting_getbool("creative_mode") and not minetest.setting_getbool("inventory_crafting_full") then
-		player:set_inventory_formspec(get_formspec(def.inventory, def.inventory_main, def.inventory_craft, def.icon))
+		player:set_inventory_formspec(get_formspec(def.inventory_main, def.inventory_craft, def.icon))
 	end
 
 	-- configure properties
@@ -227,12 +214,6 @@ minetest.register_globalstep(function(dtime)
 			player:set_hp(race_settings.hp_max)
 		end
 
-		-- prevent creatures without an inventory from holding any items
-		if not race_settings.inventory then
-			local inv = player:get_inventory()
-			inv:set_list("main", {})
-		end
-
 		-- limit execution of code beyond this point
 		if not player_data[name].timer then
 			player_data[name].timer = 0
@@ -270,26 +251,6 @@ minetest.register_globalstep(function(dtime)
 		if race_settings.sounds and race_settings.sounds.random and math.random(1, 50) <= 1 then
 			minetest.sound_play(race_settings.sounds.random, {object = player})
 		end
-	end
-end)
-
--- revert any node modified by a creature without interact abilities
-minetest.register_on_dignode(function(pos, oldnode, digger)
-	local race = creatures.player_races[digger:get_player_name()]
-	local race_settings = creatures.player_settings[race]
-
-	if not race_settings.interact then
-		minetest.set_node(pos, oldnode)
-	end
-end)
-
--- revert any node modified by a creature without interact abilities
-minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
-	local race = creatures.player_races[placer:get_player_name()]
-	local race_settings = creatures.player_settings[race]
-
-	if not race_settings.interact then
-		minetest.set_node(pos, oldnode)
 	end
 end)
 

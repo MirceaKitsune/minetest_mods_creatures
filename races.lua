@@ -45,9 +45,6 @@ creatures:register_creature("creatures:ghost", {
 	-- Player properties:
 	inventory_main = {x = 1, y = 1},
 	inventory_craft = {x = 1, y = 1},
-	hotbar = 1,
-	inventory = false,
-	interact = false,
 	reincarnate = true,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
@@ -123,9 +120,6 @@ creatures:register_creature("creatures:human", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
-	hotbar = 8,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
@@ -193,9 +187,6 @@ creatures:register_creature("creatures:dirt_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
-	hotbar = 8,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
@@ -262,9 +253,6 @@ creatures:register_creature("creatures:stone_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
-	hotbar = 8,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
@@ -331,9 +319,6 @@ creatures:register_creature("creatures:sand_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
-	hotbar = 8,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
@@ -405,9 +390,6 @@ creatures:register_creature("creatures:tree_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 2, y = 2},
-	hotbar = 8,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
@@ -510,9 +492,6 @@ creatures:register_creature("creatures:sheep", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 1, y = 1},
-	hotbar = 8,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = -5, z = 0}, {x = 0, y = -5, z = 0}},
@@ -584,9 +563,6 @@ creatures:register_creature("creatures:rat", {
 	-- Player properties:
 	inventory_main = {x = 4, y = 1},
 	inventory_craft = {x = 1, y = 1},
-	hotbar = 4,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = -10, z = 0}, {x = 0, y = -10, z = 0}},
@@ -674,9 +650,6 @@ creatures:register_creature("creatures:oerkki", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
-	hotbar = 8,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
@@ -744,9 +717,6 @@ creatures:register_creature("creatures:dungeon_master", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 5},
 	inventory_craft = {x = 3, y = 3},
-	hotbar = 8,
-	inventory = true,
-	interact = true,
 	reincarnate = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 5, z = 0}, {x = 0, y = 5, z = 0}},
