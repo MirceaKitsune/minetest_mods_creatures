@@ -35,6 +35,7 @@ creatures:register_creature("creatures:ghost", {
 	teams = {monsters = 1, people = 1, animals = 1},
 
 	-- Mob properties:
+	think = 1,
 	view_range = 15,
 	damage = 2,
 	drops = {},
@@ -97,6 +98,7 @@ creatures:register_creature("creatures:human", {
 	teams = {monsters = -0.8, people = 1, animals = 0.4},
 
 	-- Mob properties:
+	think = 1,
 	view_range = 20,
 	damage = 1,
 	drops = {
@@ -172,6 +174,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	teams = {monsters = 0.8, people = -0.4, animals = 0},
 
 	-- Mob properties:
+	think = 1,
 	view_range = 15,
 	damage = 1,
 	drops = {
@@ -239,6 +242,7 @@ creatures:register_creature("creatures:stone_monster", {
 	teams = {monsters = 1, people = -0.6, animals = -0.2},
 
 	-- Mob properties:
+	think = 1,
 	view_range = 10,
 	damage = 3,
 	drops = {
@@ -305,6 +309,7 @@ creatures:register_creature("creatures:sand_monster", {
 	teams = {monsters = 0.6, people = -0.2, animals = 0},
 
 	-- Mob properties:
+	think = 1,
 	view_range = 20,
 	damage = 2,
 	drops = {
@@ -371,6 +376,7 @@ creatures:register_creature("creatures:tree_monster", {
 	teams = {monsters = 0.6, people = -0.4, animals = 0.6},
 
 	-- Mob properties:
+	think = 1,
 	view_range = 20,
 	damage = 2,
 	drops = {
@@ -441,6 +447,7 @@ creatures:register_creature("creatures:sheep", {
 	teams = {monsters = -0.4, people = 0.6, animals = 1},
 
 	-- Mob properties:
+	think = 1,
 	drops = {
 		{name = "creatures:meat_raw",
 		chance = 1,
@@ -550,6 +557,7 @@ creatures:register_creature("creatures:rat", {
 	teams = {monsters = 0.4, people = -0.4, animals = 0.6},
 
 	-- Mob properties:
+	think = 1,
 	drops = {},
 	
 	on_rightclick = function(self, clicker)
@@ -641,6 +649,7 @@ creatures:register_creature("creatures:oerkki", {
 	teams = {monsters = 0.6, people = 0.4, animals = 0.4},
 
 	-- Mob properties:
+	think = 1,
 	view_range = 10,
 	damage = 3,
 	drops = {},
@@ -700,6 +709,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	teams = {monsters = 1, people = -1, animals = -0.4},
 
 	-- Mob properties:
+	think = 1,
 	view_range = 15,
 	damage = 4,
 	drops = {

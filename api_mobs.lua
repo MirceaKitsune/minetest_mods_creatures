@@ -15,6 +15,7 @@ function creatures:register_mob(name, def)
 		mesh = def.mesh,
 		textures = def.textures,
 		makes_footstep_sound = def.makes_footstep_sound,
+		think = def.think,
 		view_range = def.view_range,
 		damage = def.damage,
 		env_damage = def.env_damage,
@@ -245,15 +246,15 @@ function creatures:register_mob(name, def)
 			-- Apply AI think speed, influenced by the mob's current status
 			self.timer_think = self.timer_think+dtime
 			if self.state == "attack" then
-				if self.timer_think < 0.1 then
+				if self.timer_think < self.think / 10 then
 					return
 				end
 			elseif self.state == "follow" then
-				if self.timer_think < 0.5 then
+				if self.timer_think < self.think / 2 then
 					return
 				end
 			else
-				if self.timer_think < 1 then
+				if self.timer_think < self.think then
 					return
 				end
 			end
