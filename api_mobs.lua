@@ -30,7 +30,6 @@ function creatures:register_mob(name, def)
 		animation = def.animation,
 		follow = def.follow,
 		jump = def.jump or true,
-		possession = def.possession,
 		teams = def.teams,
 		
 		mob = true,
@@ -44,9 +43,9 @@ function creatures:register_mob(name, def)
 		state = "stand",
 		v_start = false,
 		old_y = nil,
+		alliance_action = 0,
 		lifetimer = 60,
 		tamed = false,
-		can_possess = false,
 		
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
@@ -249,19 +248,18 @@ function creatures:register_mob(name, def)
 				self.timer = 0
 			end
 			
-			if self.tamed then
-				self.can_possess = false
-			end
-			
 			if self.sounds and self.sounds.random and math.random(1, 50) <= 1 then
 				minetest.sound_play(self.sounds.random, {object = self.object})
 			end
+
+			-- probability of the mob taking actions toward a creature based on friend / foe status
+			self.alliance_action = math.random()
 			
 			-- choose an attack target
 			if self.attack_type and minetest.setting_getbool("enable_damage") and self.state ~= "attack" then
 				for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.view_range)) do
 					if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().mob)) and
-					creatures:alliance(self.object, obj) < 0 then
+					1 + creatures:alliance(self.object, obj) < self.alliance_action then
 						local s = self.object:getpos()
 						local p = obj:getpos()
 						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
@@ -290,9 +288,8 @@ function creatures:register_mob(name, def)
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 					if self.view_range and dist < self.view_range then
 						-- reasons to start following the player
-						local psettings = creatures.player_settings[creatures:get_race(player)]
 						if player:get_wielded_item():get_name() == self.follow or
-						(self.can_possess and psettings.reincarnate and creatures:alliance(self.object, player) >= 0) then
+						(not self.tamed and creatures:alliance(self.object, player) >= self.alliance_action) then
 							self.following = player
 							self.state = "follow"
 						end
@@ -300,9 +297,8 @@ function creatures:register_mob(name, def)
 				end
 			elseif self.following then
 				-- reasons to stop following the player
-				local psettings = creatures.player_settings[creatures:get_race(self.following)]
-				if self.following:get_wielded_item():get_name() ~= self.follow and
-				not (self.can_possess and psettings.reincarnate and creatures:alliance(self.object, self.following) >= 0) then
+				if self.following:get_wielded_item():get_name() ~= self.follow and not
+				(not self.tamed and creatures:alliance(self.object, self.following) >= 0) then
 					self.following = nil
 					self.state = "stand"
 				end
@@ -507,9 +503,6 @@ function creatures:register_mob(name, def)
 				self.object:remove()
 			end
 			self.lifetimer = 600 - dtime_s
-			if not self.tamed then
-				self.can_possess = math.random() < self.possession
-			end
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
 				if tmp and tmp.lifetimer then
@@ -534,18 +527,18 @@ function creatures:register_mob(name, def)
 		
 		on_punch = function(self, hitter)
 			local psettings = creatures.player_settings[creatures:get_race(hitter)]
-			local allied = creatures:alliance(self.object, hitter) >= 0
+			local relation = creatures:alliance(self.object, hitter)
 			if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
 				minetest.sound_play(psettings.sounds.attack, {object = hitter})
 			end
-			if self.can_possess and hitter:is_player() and psettings.reincarnate and allied then
+			if not self.tamed and hitter == self.following and psettings.reincarnate and relation >= 0 then
 				-- handle player possession of mobs
 				hitter:setpos(self.object:getpos())
 				hitter:set_look_yaw(self.object:getyaw())
 				hitter:set_look_pitch(0)
 				creatures:set_race(hitter, name)
 				self.object:remove()
-			elseif self.attack_type and hitter:is_player() and allied then
+			elseif self.attack_type and hitter:is_player() and relation >= 0 then
 				-- warn and punish the player if hitting an ally
 				minetest.chat_send_player(hitter:get_player_name(), "Don't hit your allies!")
 				hitter:set_hp(hitter:get_hp() - 1)

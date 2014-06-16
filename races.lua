@@ -32,7 +32,7 @@ creatures:register_creature("creatures:ghost", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {},
+	teams = {monsters = 1, people = 1, animals = 1},
 
 	-- Mob properties:
 	view_range = 15,
@@ -40,7 +40,6 @@ creatures:register_creature("creatures:ghost", {
 	drops = {},
 	on_rightclick = nil,
 	attack_type = "melee",
-	possession = 0,
 
 	-- Player properties:
 	menu = false,
@@ -116,7 +115,6 @@ creatures:register_creature("creatures:human", {
 	},
 	on_rightclick = nil,
 	attack_type = "melee",
-	possession = 0.5,
 
 	-- Player properties:
 	menu = true,
@@ -184,7 +182,6 @@ creatures:register_creature("creatures:dirt_monster", {
 	},
 	on_rightclick = nil,
 	attack_type = "melee",
-	possession = 0.25,
 
 	-- Player properties:
 	menu = true,
@@ -251,7 +248,6 @@ creatures:register_creature("creatures:stone_monster", {
 		max = 5,},
 	},
 	attack_type = "melee",
-	possession = 0.25,
 
 	-- Player properties:
 	menu = true,
@@ -318,7 +314,6 @@ creatures:register_creature("creatures:sand_monster", {
 		max = 5,},
 	},
 	attack_type = "melee",
-	possession = 0.35,
 
 	-- Player properties:
 	menu = true,
@@ -390,7 +385,6 @@ creatures:register_creature("creatures:tree_monster", {
 	},
 	disable_fall_damage = true,
 	attack_type = "melee",
-	possession = 0.35,
 
 	-- Player properties:
 	menu = true,
@@ -455,7 +449,6 @@ creatures:register_creature("creatures:sheep", {
 	},
 	follow = "farming:wheat",
 	view_range = 5,
-	possession = 0.65,
 	
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
@@ -558,7 +551,6 @@ creatures:register_creature("creatures:rat", {
 
 	-- Mob properties:
 	drops = {},
-	possession = 0.75,
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
@@ -653,7 +645,6 @@ creatures:register_creature("creatures:oerkki", {
 	damage = 3,
 	drops = {},
 	attack_type = "melee",
-	possession = 0.25,
 
 	-- Player properties:
 	menu = true,
@@ -721,7 +712,6 @@ creatures:register_creature("creatures:dungeon_master", {
 	attack_type = "shoot",
 	arrow = "creatures:fireball",
 	shoot_interval = 2.5,
-	possession = 0.15,
 
 	-- Player properties:
 	menu = true,
