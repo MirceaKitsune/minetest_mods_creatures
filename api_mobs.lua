@@ -33,8 +33,10 @@ function creatures:register_mob(name, def)
 		teams = def.teams,
 		
 		mob = true,
-		timer = 0,
-		env_damage_timer = 0,
+		timer_life = 60,
+		timer_think = 0,
+		timer_attack = 0,
+		timer_env_damage = 0,
 		walk_velocity = tonumber(minetest.setting_get("movement_speed_walk")) * def.physics.speed,
 		run_velocity = tonumber(minetest.setting_get("movement_speed_fast")) * def.physics.speed,
 		jump_velocity = tonumber(minetest.setting_get("movement_speed_jump")) * def.physics.jump,
@@ -44,7 +46,6 @@ function creatures:register_mob(name, def)
 		v_start = false,
 		old_y = nil,
 		alliance_action = 0,
-		lifetimer = 60,
 		tamed = false,
 		
 		set_velocity = function(self, v)
@@ -125,8 +126,8 @@ function creatures:register_mob(name, def)
 			end
 			
 			-- remove this mob if its lifetime is up and doing so is appropriate
-			self.lifetimer = self.lifetimer - dtime
-			if self.lifetimer <= 0 and not self.tamed then
+			self.timer_life = self.timer_life - dtime
+			if self.timer_life <= 0 and not self.tamed then
 				local player_count = 0
 				for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), 20)) do
 					if obj:is_player() then
@@ -137,7 +138,7 @@ function creatures:register_mob(name, def)
 					self.object:remove()
 					return
 				else
-					self.lifetimer = 60
+					self.timer_life = 60
 				end
 			end
 			
@@ -179,9 +180,9 @@ function creatures:register_mob(name, def)
 			end
 			
 			-- handle environment damage
-			self.env_damage_timer = self.env_damage_timer + dtime
-			if self.env_damage_timer > 1 then
-				self.env_damage_timer = 0
+			self.timer_env_damage = self.timer_env_damage + dtime
+			if self.timer_env_damage > 1 then
+				self.timer_env_damage = 0
 				local pos = self.object:getpos()
 				pos.y = pos.y - 1 -- exclude player offset
 				local n = minetest.env:get_node(pos)
@@ -239,14 +240,24 @@ function creatures:register_mob(name, def)
 				end
 			end
 			
-			-- limit execution of code beyond this point
-			self.timer = self.timer+dtime
-			if self.state ~= "attack" then
-				if self.timer < 1 then
+			self.timer_attack = self.timer_attack+dtime
+
+			-- Apply AI think speed, influenced by the mob's current status
+			self.timer_think = self.timer_think+dtime
+			if self.state == "attack" then
+				if self.timer_think < 0.1 then
 					return
 				end
-				self.timer = 0
+			elseif self.state == "follow" then
+				if self.timer_think < 0.5 then
+					return
+				end
+			else
+				if self.timer_think < 1 then
+					return
+				end
 			end
+			self.timer_think = 0
 			
 			if self.sounds and self.sounds.random and math.random(1, 50) <= 1 then
 				minetest.sound_play(self.sounds.random, {object = self.object})
@@ -378,8 +389,8 @@ function creatures:register_mob(name, def)
 					self.set_velocity(self, 0)
 					self:set_animation("punch")
 					self.v_start = false
-					if self.timer > 1 then
-						self.timer = 0
+					if self.timer_attack > 1 then
+						self.timer_attack = 0
 						if self.sounds and self.sounds.attack then
 							minetest.sound_play(self.sounds.attack, {object = self.object})
 						end
@@ -420,8 +431,8 @@ function creatures:register_mob(name, def)
 				self.object:setyaw(yaw)
 				self.set_velocity(self, 0)
 				
-				if self.timer > self.shoot_interval and math.random(1, 100) <= 60 then
-					self.timer = 0
+				if self.timer_attack > self.shoot_interval and math.random(1, 100) <= 60 then
+					self.timer_attack = 0
 					
 					self:set_animation("punch")
 					
@@ -509,24 +520,24 @@ function creatures:register_mob(name, def)
 			if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
 				self.object:remove()
 			end
-			self.lifetimer = 600 - dtime_s
+			self.timer_life = 600 - dtime_s
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
-				if tmp and tmp.lifetimer then
-					self.lifetimer = tmp.lifetimer - dtime_s
+				if tmp and tmp.timer_life then
+					self.timer_life = tmp.timer_life - dtime_s
 				end
 				if tmp and tmp.tamed then
 					self.tamed = tmp.tamed
 				end
 			end
-			if self.lifetimer <= 0 and not self.tamed then
+			if self.timer_life <= 0 and not self.tamed then
 				self.object:remove()
 			end
 		end,
 		
 		get_staticdata = function(self)
 			local tmp = {
-				lifetimer = self.lifetimer,
+				timer_life = self.timer_life,
 				tamed = self.tamed,
 			}
 			return minetest.serialize(tmp)
