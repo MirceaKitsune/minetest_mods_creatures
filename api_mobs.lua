@@ -474,15 +474,22 @@ function creatures:register_mob(name, def)
 						if not self.v_start then
 							self.v_start = true
 							self.set_velocity(self, self.walk_velocity)
+							self:set_animation("walk")
 						else
 							if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 								local v = self.object:getvelocity()
 								v.y = self.jump_velocity
 								self.object:setvelocity(v)
 							end
-							self.set_velocity(self, self.walk_velocity)
+
+							if dist > self.view_range / 2 then
+								self.set_velocity(self, self.run_velocity)
+								self:set_animation("run")
+							else
+								self.set_velocity(self, self.walk_velocity)
+								self:set_animation("walk")
+							end
 						end
-						self:set_animation("walk")
 					else
 						self.v_start = false
 						self.set_velocity(self, 0)
