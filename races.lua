@@ -32,7 +32,7 @@ creatures:register_creature("creatures:ghost", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {"animals", "monsters", "people"},
+	teams = {},
 
 	-- Mob properties:
 	view_range = 15,
@@ -95,7 +95,7 @@ creatures:register_creature("creatures:human", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {"people"},
+	teams = {monsters = -0.8, people = 1, animals = 0.4},
 
 	-- Mob properties:
 	view_range = 20,
@@ -171,7 +171,7 @@ creatures:register_creature("creatures:dirt_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {"monsters"},
+	teams = {monsters = 0.8, people = -0.4, animals = 0},
 
 	-- Mob properties:
 	view_range = 15,
@@ -239,7 +239,7 @@ creatures:register_creature("creatures:stone_monster", {
 		jump = 0.75,
 		gravity = 1.25,
 	},
-	teams = {"monsters"},
+	teams = {monsters = 1, people = -0.6, animals = -0.2},
 
 	-- Mob properties:
 	view_range = 10,
@@ -306,7 +306,7 @@ creatures:register_creature("creatures:sand_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {"monsters"},
+	teams = {monsters = 0.6, people = -0.2, animals = 0},
 
 	-- Mob properties:
 	view_range = 20,
@@ -373,7 +373,7 @@ creatures:register_creature("creatures:tree_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {"monsters", "animals"},
+	teams = {monsters = 0.6, people = -0.4, animals = 0.6},
 
 	-- Mob properties:
 	view_range = 20,
@@ -444,7 +444,7 @@ creatures:register_creature("creatures:sheep", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {"animals", "people"},
+	teams = {monsters = -0.4, people = 0.6, animals = 1},
 
 	-- Mob properties:
 	drops = {
@@ -554,7 +554,7 @@ creatures:register_creature("creatures:rat", {
 		jump = 0.75,
 		gravity = 0.75,
 	},
-	teams = {"animals", "monsters"},
+	teams = {monsters = 0.4, people = -0.4, animals = 0.6},
 
 	-- Mob properties:
 	drops = {},
@@ -646,7 +646,7 @@ creatures:register_creature("creatures:oerkki", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {"monsters", "people"},
+	teams = {monsters = 0.6, people = 0.4, animals = 0.4},
 
 	-- Mob properties:
 	view_range = 10,
@@ -706,7 +706,7 @@ creatures:register_creature("creatures:dungeon_master", {
 		jump = 1.25,
 		gravity = 1.25,
 	},
-	teams = {"monsters"},
+	teams = {monsters = 1, people = -1, animals = -0.4},
 
 	-- Mob properties:
 	view_range = 15,
