@@ -41,6 +41,7 @@ creatures:register_creature("creatures:ghost", {
 	drops = {},
 	on_rightclick = nil,
 	attack_type = "melee",
+	attack_interval = 1,
 
 	-- Player properties:
 	menu = false,
@@ -117,6 +118,7 @@ creatures:register_creature("creatures:human", {
 	},
 	on_rightclick = nil,
 	attack_type = "melee",
+	attack_interval = 1,
 
 	-- Player properties:
 	menu = true,
@@ -185,6 +187,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	},
 	on_rightclick = nil,
 	attack_type = "melee",
+	attack_interval = 1,
 
 	-- Player properties:
 	menu = true,
@@ -252,6 +255,7 @@ creatures:register_creature("creatures:stone_monster", {
 		max = 5,},
 	},
 	attack_type = "melee",
+	attack_interval = 1,
 
 	-- Player properties:
 	menu = true,
@@ -319,6 +323,7 @@ creatures:register_creature("creatures:sand_monster", {
 		max = 5,},
 	},
 	attack_type = "melee",
+	attack_interval = 1,
 
 	-- Player properties:
 	menu = true,
@@ -391,6 +396,7 @@ creatures:register_creature("creatures:tree_monster", {
 	},
 	disable_fall_damage = true,
 	attack_type = "melee",
+	attack_interval = 1,
 
 	-- Player properties:
 	menu = true,
@@ -654,6 +660,7 @@ creatures:register_creature("creatures:oerkki", {
 	damage = 3,
 	drops = {},
 	attack_type = "melee",
+	attack_interval = 1,
 
 	-- Player properties:
 	menu = true,
@@ -721,7 +728,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	on_rightclick = nil,
 	attack_type = "shoot",
 	arrow = "creatures:fireball",
-	shoot_interval = 2.5,
+	attack_interval = 2.5,
 
 	-- Player properties:
 	menu = true,

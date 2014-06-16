@@ -26,7 +26,7 @@ function creatures:register_mob(name, def)
 		on_rightclick = def.on_rightclick,
 		attack_type = def.attack_type,
 		arrow = def.arrow,
-		shoot_interval = def.shoot_interval,
+		attack_interval = def.attack_interval,
 		sounds = def.sounds,
 		animation = def.animation,
 		follow = def.follow,
@@ -390,7 +390,7 @@ function creatures:register_mob(name, def)
 					self.set_velocity(self, 0)
 					self:set_animation("punch")
 					self.v_start = false
-					if self.timer_attack > 1 then
+					if self.timer_attack > self.attack_interval then
 						self.timer_attack = 0
 						if self.sounds and self.sounds.attack then
 							minetest.sound_play(self.sounds.attack, {object = self.object})
@@ -432,7 +432,7 @@ function creatures:register_mob(name, def)
 				self.object:setyaw(yaw)
 				self.set_velocity(self, 0)
 				
-				if self.timer_attack > self.shoot_interval and math.random(1, 100) <= 60 then
+				if self.timer_attack > self.attack_interval and math.random(1, 100) <= 60 then
 					self.timer_attack = 0
 					
 					self:set_animation("punch")
