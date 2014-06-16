@@ -18,6 +18,7 @@ function creatures:register_player(name, def)
 	creatures.player_settings[name].env_damage = def.env_damage
 	creatures.player_settings[name].teams = def.teams
 	creatures.player_settings[name].physics = def.physics
+	creatures.player_settings[name].menu = def.menu
 	creatures.player_settings[name].inventory_main = def.inventory_main
 	creatures.player_settings[name].inventory_craft = def.inventory_craft
 	creatures.player_settings[name].reincarnate = def.reincarnate
@@ -118,7 +119,11 @@ local function apply_settings (player, race)
 	end
 	player:hud_set_hotbar_itemcount(def.inventory_main.x)
 	if not minetest.setting_getbool("creative_mode") and not minetest.setting_getbool("inventory_crafting_full") then
-		player:set_inventory_formspec(get_formspec(def.inventory_main, def.inventory_craft, def.icon))
+		if def.menu then
+			player:set_inventory_formspec(get_formspec(def.inventory_main, def.inventory_craft, def.icon))
+		else
+			player:set_inventory_formspec("size[1,1]image[0,0;1,1;"..def.icon.."]")
+		end
 	end
 
 	-- configure properties

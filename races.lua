@@ -43,6 +43,7 @@ creatures:register_creature("creatures:ghost", {
 	possession = 0,
 
 	-- Player properties:
+	menu = false,
 	inventory_main = {x = 1, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	reincarnate = true,
@@ -118,6 +119,7 @@ creatures:register_creature("creatures:human", {
 	possession = 0.5,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	reincarnate = false,
@@ -185,6 +187,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	possession = 0.25,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnate = false,
@@ -251,6 +254,7 @@ creatures:register_creature("creatures:stone_monster", {
 	possession = 0.25,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnate = false,
@@ -317,6 +321,7 @@ creatures:register_creature("creatures:sand_monster", {
 	possession = 0.35,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnate = false,
@@ -388,6 +393,7 @@ creatures:register_creature("creatures:tree_monster", {
 	possession = 0.35,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 8, y = 3},
 	inventory_craft = {x = 2, y = 2},
 	reincarnate = false,
@@ -490,6 +496,7 @@ creatures:register_creature("creatures:sheep", {
 	end,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	reincarnate = false,
@@ -561,6 +568,7 @@ creatures:register_creature("creatures:rat", {
 	end,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 4, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	reincarnate = false,
@@ -648,6 +656,7 @@ creatures:register_creature("creatures:oerkki", {
 	possession = 0.25,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	reincarnate = false,
@@ -715,6 +724,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	possession = 0.15,
 
 	-- Player properties:
+	menu = true,
 	inventory_main = {x = 8, y = 5},
 	inventory_craft = {x = 3, y = 3},
 	reincarnate = false,
