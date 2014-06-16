@@ -565,6 +565,15 @@ function creatures:register_mob(name, def)
 					minetest.sound_play(self.sounds.die, {object = self.object})
 				end
 			else
+				-- if the creature who hit us is an enemy, attack them
+				if 1 + relation < math.random()  then
+					local s = self.object:getpos()
+					local p = hitter:getpos()
+					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+					self.state = "attack"
+					self.attack.entity = hitter
+					self.attack.dist = dist
+				end
 				if self.sounds and self.sounds.damage then
 					minetest.sound_play(self.sounds.damage, {object = self.object})
 				end
