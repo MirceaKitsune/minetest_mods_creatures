@@ -169,6 +169,10 @@ function creatures:register_mob(name, def)
 								minetest.sound_play(self.sounds.die, {object = self.object})
 							end
 							self.object:remove()
+						else
+							if self.sounds and self.sounds.damage then
+								minetest.sound_play(self.sounds.damage, {object = self.object})
+							end
 						end
 					end
 					self.old_y = self.object:getpos().y
@@ -196,6 +200,10 @@ function creatures:register_mob(name, def)
 							minetest.sound_play(self.sounds.die, {object = self.object})
 						end
 						self.object:remove()
+					else
+						if self.sounds and self.sounds.damage then
+							minetest.sound_play(self.sounds.damage, {object = self.object})
+						end
 					end
 				end
 				
@@ -208,6 +216,10 @@ function creatures:register_mob(name, def)
 							minetest.sound_play(self.sounds.die, {object = self.object})
 						end
 						self.object:remove()
+					else
+						if self.sounds and self.sounds.damage then
+							minetest.sound_play(self.sounds.damage, {object = self.object})
+						end
 					end
 				end
 				
@@ -220,6 +232,10 @@ function creatures:register_mob(name, def)
 							minetest.sound_play(self.sounds.die, {object = self.object})
 						end
 						self.object:remove()
+					else
+						if self.sounds and self.sounds.damage then
+							minetest.sound_play(self.sounds.damage, {object = self.object})
+						end
 					end
 				end
 			end
