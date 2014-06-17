@@ -467,7 +467,6 @@ creatures:register_creature("creatures:sheep", {
 		min = 2,
 		max = 3,},
 	},
-	follow = "farming:wheat",
 	view_range = 5,
 	
 	on_rightclick = function(self, clicker)

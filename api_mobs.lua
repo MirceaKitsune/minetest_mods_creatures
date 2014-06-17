@@ -30,7 +30,6 @@ function creatures:register_mob(name, def)
 		attack_interval = def.attack_interval,
 		sounds = def.sounds,
 		animation = def.animation,
-		follow = def.follow,
 		jump = def.jump or true,
 		teams = def.teams,
 		
@@ -266,29 +265,26 @@ function creatures:register_mob(name, def)
 
 			-- targets: scan for targets to add
 			for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.view_range)) do
-				-- attack targets
-				if (self.attack_type and minetest.setting_getbool("enable_damage")) and
-				(obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().mob)) and
-				(1 + creatures:alliance(self.object, obj) < math.random()) then
+				if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().mob)) then
 					local s = self.object:getpos()
 					local p = obj:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 					if dist < self.view_range then
-						if not self.targets[obj] then
-							self.targets[obj] = {entity = obj, type = "attack", priority = 1}
-						end
-					end
-				end
-
-				-- follow targets
-				if (obj:is_player() and obj:get_wielded_item():get_name() == self.follow) or
-				(not self.tamed and obj:is_player() and creatures:alliance(self.object, obj) >= math.random()) then
-					local s = self.object:getpos()
-					local p = obj:getpos()
-					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-					if dist < self.view_range then
-						if not self.targets[obj] then
-							self.targets[obj] = {entity = obj, type = "follow", priority = 1}
+						-- the stronger the relation, the more likely it is for the mob to act
+						local relation = creatures:alliance(self.object, obj)
+						if (math.abs(relation) >= math.random()) then
+							-- attack targets
+							if relation < 0 and self.attack_type and minetest.setting_getbool("enable_damage") then
+								if not self.targets[obj] then
+									self.targets[obj] = {entity = obj, type = "attack", priority = math.abs(relation)}
+								end
+							end
+							-- follow targets
+							if relation > 0 and not self.tamed and obj:is_player() then
+								if not self.targets[obj] then
+									self.targets[obj] = {entity = obj, type = "follow", priority = math.abs(relation) / 2}
+								end
+							end
 						end
 					end
 				end
@@ -516,12 +512,13 @@ function creatures:register_mob(name, def)
 					minetest.sound_play(self.sounds.die, {object = self.object})
 				end
 			else
-				-- if the creature who hit us is an enemy, attack them
-				if 1 + relation < math.random()  then
-					if not self.targets[hitter] then
-						self.targets[hitter] = {entity = hitter, type = "attack", priority = 1}
-					end
+				-- if the creature hitting us is an enemy, start attacking or increase attack priority
+				if not self.targets[hitter] then
+					self.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation)}
+				else
+					self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation)
 				end
+
 				if self.sounds and self.sounds.damage then
 					minetest.sound_play(self.sounds.damage, {object = self.object})
 				end
