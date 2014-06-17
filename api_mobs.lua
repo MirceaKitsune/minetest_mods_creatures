@@ -50,9 +50,6 @@ function creatures:register_mob(name, def)
 		
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
-			if self.drawtype == "side" then
-				yaw = yaw+(math.pi/2)
-			end
 			local x = math.sin(yaw) * -v
 			local z = math.cos(yaw) * v
 			self.object:setvelocity({x=x, y=self.object:getvelocity().y, z=z})
@@ -145,9 +142,6 @@ function creatures:register_mob(name, def)
 			-- make mobs push forward while jumping and apply gravity
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
-				if self.drawtype == "side" then
-					yaw = yaw+(math.pi/2)
-				end
 				local x = math.sin(yaw) * -2
 				local z = math.cos(yaw) * 2
 				self.object:setacceleration({x=x, y=-self.gravity, z=z})
@@ -248,7 +242,7 @@ function creatures:register_mob(name, def)
 				if self.timer_think < self.think / 10 then
 					return
 				end
-			elseif self.target_current and self.target_current.type == "follow" then
+			elseif self.target_current and (self.target_current.type == "follow" or self.target_current.type == "avoid") then
 				if self.timer_think < self.think / 2 then
 					return
 				end
@@ -278,9 +272,13 @@ function creatures:register_mob(name, def)
 								if not self.targets[obj] then
 									self.targets[obj] = {entity = obj, type = "attack", priority = math.abs(relation)}
 								end
-							end
+							-- avoid targets
+							elseif relation < 0 then
+								if not self.targets[obj] then
+									self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation) / 2}
+								end
 							-- follow targets
-							if relation > 0 and not self.tamed and obj:is_player() then
+							elseif relation > 0 and not self.tamed and obj:is_player() then
 								if not self.targets[obj] then
 									self.targets[obj] = {entity = obj, type = "follow", priority = math.abs(relation) / 2}
 								end
@@ -338,9 +336,6 @@ function creatures:register_mob(name, def)
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
-				if self.drawtype == "side" then
-					yaw = yaw+(math.pi/2)
-				end
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -349,15 +344,14 @@ function creatures:register_mob(name, def)
 				if dist > 2 then
 					if not self.v_start then
 						self.v_start = true
-						self.set_velocity(self, self.run_velocity)
 					else
 						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 							local v = self.object:getvelocity()
 							v.y = self.jump_velocity
 							self.object:setvelocity(v)
 						end
-						self.set_velocity(self, self.run_velocity)
 					end
+					self.set_velocity(self, self.run_velocity)
 					self:set_animation("run")
 				else
 					self.set_velocity(self, 0)
@@ -377,9 +371,6 @@ function creatures:register_mob(name, def)
 			elseif self.target_current.type == "attack" and self.attack_type == "shoot" then				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
-				if self.drawtype == "side" then
-					yaw = yaw+(math.pi/2)
-				end
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
@@ -406,39 +397,41 @@ function creatures:register_mob(name, def)
 					vec.z = vec.z*v/amount
 					obj:setvelocity(vec)
 				end
-			elseif self.target_current.type == "follow" then
+			elseif self.target_current.type == "follow" or self.target_current.type == "avoid" then
+				local avoid = self.target_current.type == "avoid"
+
 				local s = self.object:getpos()
 				local p = self.target_current.entity:getpos() or self.target_current.entity.object:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
-				if self.drawtype == "side" then
-					yaw = yaw+(math.pi/2)
+				if avoid then
+					yaw = yaw+math.pi
 				end
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
 				self.object:setyaw(yaw)
-				if dist > self.view_range / 5 then
+
+				if dist > self.view_range / 5 or avoid then
 					if not self.v_start then
 						self.v_start = true
-						self.set_velocity(self, self.walk_velocity)
-						self:set_animation("walk")
 					else
 						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
 							local v = self.object:getvelocity()
 							v.y = self.jump_velocity
 							self.object:setvelocity(v)
 						end
+					end
 
-						if dist > self.view_range / 2 then
-							self.set_velocity(self, self.run_velocity)
-							self:set_animation("run")
-						else
-							self.set_velocity(self, self.walk_velocity)
-							self:set_animation("walk")
-						end
+					if (not avoid and dist > self.view_range / 2 ) or
+					(avoid and dist <= self.view_range / 2) then
+						self.set_velocity(self, self.run_velocity)
+						self:set_animation("run")
+					else
+						self.set_velocity(self, self.walk_velocity)
+						self:set_animation("walk")
 					end
 				else
 					self.v_start = false
@@ -485,7 +478,7 @@ function creatures:register_mob(name, def)
 			if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
 				minetest.sound_play(psettings.sounds.attack, {object = hitter})
 			end
-			if not self.tamed and hitter:is_player() and hitter == self.target_current.entity and psettings.reincarnate and relation >= 0 then
+			if not self.tamed and hitter:is_player() and self.target_current and hitter == self.target_current.entity and psettings.reincarnate then
 				-- handle player possession of mobs
 				hitter:setpos(self.object:getpos())
 				hitter:set_look_yaw(self.object:getyaw())
@@ -513,10 +506,12 @@ function creatures:register_mob(name, def)
 				end
 			else
 				-- if the creature hitting us is an enemy, start attacking or increase attack priority
-				if not self.targets[hitter] then
-					self.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation)}
-				else
-					self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation)
+				if self.attack_type and minetest.setting_getbool("enable_damage") then
+					if not self.targets[hitter] then
+						self.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation)}
+					else
+						self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation)
+					end
 				end
 
 				if self.sounds and self.sounds.damage then
