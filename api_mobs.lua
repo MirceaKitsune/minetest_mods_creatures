@@ -268,14 +268,14 @@ function creatures:register_mob(name, def)
 						local relation = creatures:alliance(self.object, obj)
 						if (math.abs(relation) >= math.random()) then
 							-- attack targets
-							if relation < 0 and self.attack_type and minetest.setting_getbool("enable_damage") then
+							if relation < 0 and self.object:get_hp() > self.hp_max / 2.5 and self.attack_type and minetest.setting_getbool("enable_damage") then
 								if not self.targets[obj] then
 									self.targets[obj] = {entity = obj, type = "attack", priority = math.abs(relation)}
 								end
 							-- avoid targets
 							elseif relation < 0 then
 								if not self.targets[obj] then
-									self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation) / 2}
+									self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation)}
 								end
 							-- follow targets
 							elseif relation > 0 and not self.tamed and obj:is_player() then
@@ -288,14 +288,19 @@ function creatures:register_mob(name, def)
 				end
 			end
 
-			-- targets: scan for targets to remove
+			-- targets: scan for targets to remove or modify
 			for obj, target in pairs(self.targets) do
 				if (target.entity:is_player() or target.entity:get_luaentity()) then
 					local s = self.object:getpos()
 					local p = target.entity:getpos() or target.entity.object:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+
+					-- remove targets which are dead or out of range
 					if dist > self.view_range or target.entity:get_hp() <= 0 then
 						self.targets[obj] = nil
+					-- if the mob is no longer fit to fight, change attack targets to avoid
+					elseif target.type == "attack" and self.object:get_hp() <= self.hp_max / 5 then
+						self.targets[obj].type = "avoid"
 					end
 				else
 					self.targets[obj] = nil
