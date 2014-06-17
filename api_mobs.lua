@@ -293,31 +293,37 @@ function creatures:register_mob(name, def)
 			end
 			
 			-- choose or discard a follow target
-			if not self.following and self.state ~= "attack" then
-				for _,player in pairs(minetest.get_connected_players()) do
-					local s = self.object:getpos()
-					local p = player:getpos()
-					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-					if self.view_range and dist < self.view_range then
-						-- reasons to start following the player
-						if player:get_wielded_item():get_name() == self.follow or
-						(not self.tamed and creatures:alliance(self.object, player) >= self.alliance_action) then
-							self.following = player
-							self.state = "follow"
+			if self.state ~= "attack" then
+				if not self.following then
+					for _,player in pairs(minetest.get_connected_players()) do
+						local s = self.object:getpos()
+						local p = player:getpos()
+						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+						if self.view_range and dist < self.view_range then
+							-- reasons to start following the player
+							if player:get_wielded_item():get_name() == self.follow or
+							(not self.tamed and creatures:alliance(self.object, player) >= self.alliance_action) then
+								self.following = player
+								self.state = "follow"
+							end
 						end
 					end
-				end
-			elseif self.following then
-				-- reasons to stop following the player
-				if self.following:get_wielded_item():get_name() ~= self.follow and not
-				(not self.tamed and creatures:alliance(self.object, self.following) >= 0) then
-					self.following = nil
-					self.state = "stand"
+				elseif self.following then
+					-- reasons to stop following the player
+					if self.following:get_wielded_item():get_name() ~= self.follow and not
+					(not self.tamed and creatures:alliance(self.object, self.following) >= 0) then
+						self.following = nil
+						self.state = "stand"
+					end
 				end
 			end
 			
 			-- carry out mob actions
 			if self.state == "stand" then
+				if self.following then
+					self.state = "follow"
+					return
+				end
 				if math.random(1, 4) == 1 then
 					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 				end
@@ -482,7 +488,7 @@ function creatures:register_mob(name, def)
 						yaw = yaw+math.pi
 					end
 					self.object:setyaw(yaw)
-					if dist > 2 then
+					if dist > self.view_range / 5 then
 						if not self.v_start then
 							self.v_start = true
 							self.set_velocity(self, self.walk_velocity)
