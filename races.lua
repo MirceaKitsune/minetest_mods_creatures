@@ -573,6 +573,7 @@ creatures:register_creature("creatures:rat", {
 	think = 1,
 	roam = 0.5,
 	drops = {},
+	view_range = 5,
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
