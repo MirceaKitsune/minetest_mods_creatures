@@ -1,5 +1,16 @@
 -- Creature registration - Mobs:
 
+-- Reports mob state based on targets and objectives
+local function get_state(self)
+	if self.attack.entity then
+		return "attack"
+	elseif self.following then
+		return "follow"
+	else
+		return "idle"
+	end
+end
+
 function creatures:register_mob(name, def)
 	-- Players are offset by 1 node in the Minetest code. In order for mobs to have the same height, we must apply a similar offset to them
 	-- This is a bad choice, as the real position of mobs will be off by one unit. But it's the only way to make players and mobs work with the same models
@@ -16,6 +27,7 @@ function creatures:register_mob(name, def)
 		textures = def.textures,
 		makes_footstep_sound = def.makes_footstep_sound,
 		think = def.think,
+		roam = def.roam,
 		view_range = def.view_range,
 		damage = def.damage,
 		env_damage = def.env_damage,
@@ -43,10 +55,9 @@ function creatures:register_mob(name, def)
 		jump_velocity = tonumber(minetest.setting_get("movement_speed_jump")) * def.physics.jump,
 		gravity = tonumber(minetest.setting_get("movement_gravity")) * def.physics.gravity,
 		attack = {entity=nil, dist=nil},
-		state = "stand",
 		v_start = false,
 		old_y = nil,
-		alliance_action = 0,
+		action_alliance = 0,
 		tamed = false,
 		
 		set_velocity = function(self, v)
@@ -135,7 +146,7 @@ function creatures:register_mob(name, def)
 						player_count = player_count+1
 					end
 				end
-				if player_count == 0 and self.state ~= "attack" then
+				if player_count == 0 and get_state(self) ~= "attack" then
 					self.object:remove()
 					return
 				else
@@ -245,11 +256,11 @@ function creatures:register_mob(name, def)
 
 			-- Apply AI think speed, influenced by the mob's current status
 			self.timer_think = self.timer_think+dtime
-			if self.state == "attack" then
+			if get_state(self) == "attack" then
 				if self.timer_think < self.think / 10 then
 					return
 				end
-			elseif self.state == "follow" then
+			elseif get_state(self) == "follow" then
 				if self.timer_think < self.think / 2 then
 					return
 				end
@@ -265,25 +276,23 @@ function creatures:register_mob(name, def)
 			end
 
 			-- probability of the mob taking actions toward a creature based on friend / foe status
-			self.alliance_action = math.random()
+			self.action_alliance = math.random()
 			
 			-- choose an attack target
-			if self.attack_type and minetest.setting_getbool("enable_damage") and self.state ~= "attack" then
+			if self.attack_type and minetest.setting_getbool("enable_damage") and get_state(self) ~= "attack" then
 				for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.view_range)) do
 					if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().mob)) and
-					1 + creatures:alliance(self.object, obj) < self.alliance_action then
+					1 + creatures:alliance(self.object, obj) < self.action_alliance then
 						local s = self.object:getpos()
 						local p = obj:getpos()
 						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 						if dist < self.view_range then
 							if self.attack.dist then
 								if self.attack.dist < dist then
-									self.state = "attack"
 									self.attack.entity = obj
 									self.attack.dist = dist
 								end
 							else
-								self.state = "attack"
 								self.attack.entity = obj
 								self.attack.dist = dist
 							end
@@ -293,7 +302,7 @@ function creatures:register_mob(name, def)
 			end
 			
 			-- choose or discard a follow target
-			if self.state ~= "attack" then
+			if get_state(self) ~= "attack" then
 				if not self.following then
 					for _,player in pairs(minetest.get_connected_players()) do
 						local s = self.object:getpos()
@@ -302,9 +311,8 @@ function creatures:register_mob(name, def)
 						if self.view_range and dist < self.view_range then
 							-- reasons to start following the player
 							if player:get_wielded_item():get_name() == self.follow or
-							(not self.tamed and creatures:alliance(self.object, player) >= self.alliance_action) then
+							(not self.tamed and creatures:alliance(self.object, player) >= self.action_alliance) then
 								self.following = player
-								self.state = "follow"
 							end
 						end
 					end
@@ -313,46 +321,29 @@ function creatures:register_mob(name, def)
 					if self.following:get_wielded_item():get_name() ~= self.follow and not
 					(not self.tamed and creatures:alliance(self.object, self.following) >= 0) then
 						self.following = nil
-						self.state = "stand"
 					end
 				end
 			end
-			
+
 			-- carry out mob actions
-			if self.state == "stand" then
-				if self.following then
-					self.state = "follow"
-					return
-				end
-				if math.random(1, 4) == 1 then
-					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
-				end
-				self.set_velocity(self, 0)
-				self.set_animation(self, "stand")
-				if math.random(1, 100) <= 50 then
+			if get_state(self) == "idle" then
+				if self.roam >= math.random() then
+					if math.random(1, 4) == 1 then
+						self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
+					end
+					if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
+						local v = self.object:getvelocity()
+						v.y = self.jump_velocity
+						self.object:setvelocity(v)
+					end
+					self:set_animation("walk")
 					self.set_velocity(self, self.walk_velocity)
-					self.state = "walk"
-					self.set_animation(self, "walk")
-				end
-			elseif self.state == "walk" then
-				if math.random(1, 100) <= 30 then
-					self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
-				end
-				if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-					local v = self.object:getvelocity()
-					v.y = self.jump_velocity
-					self.object:setvelocity(v)
-				end
-				self:set_animation("walk")
-				self.set_velocity(self, self.walk_velocity)
-				if math.random(1, 100) <= 10 then
+				else
 					self.set_velocity(self, 0)
-					self.state = "stand"
-					self:set_animation("stand")
+					self.set_animation(self, "stand")
 				end
-			elseif self.state == "attack" and self.attack_type == "melee" then
+			elseif get_state(self) == "attack" and self.attack_type == "melee" then
 				if not self.attack.entity or not (self.attack.entity:get_luaentity() or self.attack.entity:is_player()) then
-					self.state = "stand"
 					self:set_animation("stand")
 					return
 				end
@@ -360,7 +351,6 @@ function creatures:register_mob(name, def)
 				local p = self.attack.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				if dist > self.view_range or self.attack.entity:get_hp() <= 0 then
-					self.state = "stand"
 					self.v_start = false
 					self.set_velocity(self, 0)
 					self.attack = {player=nil, dist=nil}
@@ -407,9 +397,8 @@ function creatures:register_mob(name, def)
 						}, vec)
 					end
 				end
-			elseif self.state == "attack" and self.attack_type == "shoot" then
+			elseif get_state(self) == "attack" and self.attack_type == "shoot" then
 				if not self.attack.entity or not (self.attack.entity:get_luaentity() or self.attack.entity:is_player()) then
-					self.state = "stand"
 					self:set_animation("stand")
 					return
 				end
@@ -417,7 +406,6 @@ function creatures:register_mob(name, def)
 				local p = self.attack.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				if dist > self.view_range or self.attack.entity:get_hp() <= 0 then
-					self.state = "stand"
 					self.v_start = false
 					self.set_velocity(self, 0)
 					self.attack = {player=nil, dist=nil}
@@ -458,9 +446,8 @@ function creatures:register_mob(name, def)
 					vec.z = vec.z*v/amount
 					obj:setvelocity(vec)
 				end
-			elseif self.state == "follow" then
+			elseif get_state(self) == "follow" then
 				if not self.following or not self.following:is_player() then
-					self.state = "stand"
 					self.v_start = false
 					self.set_velocity(self, 0)
 					self.following = nil
@@ -472,7 +459,6 @@ function creatures:register_mob(name, def)
 				local p = self.following:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				if dist > self.view_range then
-					self.state = "stand"
 					self.v_start = false
 					self.set_velocity(self, 0)
 					self.following = nil
@@ -521,7 +507,6 @@ function creatures:register_mob(name, def)
 		on_activate = function(self, staticdata, dtime_s)
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
-			self.state = "stand"
 			self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
 			if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
@@ -588,7 +573,6 @@ function creatures:register_mob(name, def)
 					local s = self.object:getpos()
 					local p = hitter:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-					self.state = "attack"
 					self.attack.entity = hitter
 					self.attack.dist = dist
 				end

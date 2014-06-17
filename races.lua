@@ -36,6 +36,7 @@ creatures:register_creature("creatures:ghost", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	view_range = 15,
 	damage = 2,
 	drops = {},
@@ -100,6 +101,7 @@ creatures:register_creature("creatures:human", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	view_range = 20,
 	damage = 1,
 	drops = {
@@ -177,6 +179,7 @@ creatures:register_creature("creatures:dirt_monster", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	view_range = 15,
 	damage = 1,
 	drops = {
@@ -246,6 +249,7 @@ creatures:register_creature("creatures:stone_monster", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	view_range = 10,
 	damage = 3,
 	drops = {
@@ -314,6 +318,7 @@ creatures:register_creature("creatures:sand_monster", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	view_range = 20,
 	damage = 2,
 	drops = {
@@ -382,6 +387,7 @@ creatures:register_creature("creatures:tree_monster", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	view_range = 20,
 	damage = 2,
 	drops = {
@@ -454,6 +460,7 @@ creatures:register_creature("creatures:sheep", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	drops = {
 		{name = "creatures:meat_raw",
 		chance = 1,
@@ -564,6 +571,7 @@ creatures:register_creature("creatures:rat", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	drops = {},
 	
 	on_rightclick = function(self, clicker)
@@ -656,6 +664,7 @@ creatures:register_creature("creatures:oerkki", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	view_range = 10,
 	damage = 3,
 	drops = {},
@@ -717,6 +726,7 @@ creatures:register_creature("creatures:dungeon_master", {
 
 	-- Mob properties:
 	think = 1,
+	roam = 0.5,
 	view_range = 15,
 	damage = 4,
 	drops = {
