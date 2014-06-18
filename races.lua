@@ -514,12 +514,12 @@ creatures:register_creature("creatures:sheep", {
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
 		if item:get_name() == "farming:wheat" then
-			if not self.tamed then
+			if not self.actor then
 				if not minetest.setting_getbool("creative_mode") then
 					item:take_item()
 					clicker:set_wielded_item(item)
 				end
-				self.tamed = true
+				self.actor = true
 			elseif self.naked then
 				if not minetest.setting_getbool("creative_mode") then
 					item:take_item()

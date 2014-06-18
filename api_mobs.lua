@@ -42,7 +42,7 @@ function creatures:register_mob(name, def)
 		target_current = nil,
 		v_start = false,
 		old_y = nil,
-		tamed = false,
+		actor = false,
 		
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
@@ -120,7 +120,7 @@ function creatures:register_mob(name, def)
 			
 			-- remove this mob if its lifetime is up and doing so is appropriate
 			self.timer_life = self.timer_life - dtime
-			if self.timer_life <= 0 and not self.tamed then
+			if self.timer_life <= 0 and not self.actor then
 				local player_count = 0
 				for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), 20)) do
 					if obj:is_player() then
@@ -268,7 +268,7 @@ function creatures:register_mob(name, def)
 						elseif relation * self.traits.fear <= -math.random() then
 							self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation) * self.traits.fear}
 						-- follow targets
-						elseif not self.tamed and obj:is_player() and relation * self.traits.loyalty > math.random() then
+						elseif obj:is_player() and relation * self.traits.loyalty > math.random() then
 							self.targets[obj] = {entity = obj, type = "follow", priority = math.abs(relation) * self.traits.loyalty}
 						end
 					end
@@ -449,15 +449,15 @@ function creatures:register_mob(name, def)
 				if tmp and tmp.timer_life then
 					self.timer_life = tmp.timer_life - dtime_s
 				end
-				if tmp and tmp.tamed then
-					self.tamed = tmp.tamed
+				if tmp and tmp.actor then
+					self.actor = tmp.actor
 				end
 				if tmp and tmp.traits then
 					self.traits = tmp.traits
 				end
 			end
 
-			if self.timer_life <= 0 and not self.tamed then
+			if self.timer_life <= 0 and not self.actor then
 				self.object:remove()
 			end
 
@@ -471,11 +471,12 @@ function creatures:register_mob(name, def)
 		end,
 		
 		get_staticdata = function(self)
-			local tmp = {
-				timer_life = self.timer_life,
-				tamed = self.tamed,
-				traits = self.traits,
-			}
+			local tmp = {}
+			tmp.timer_life = self.timer_life
+			tmp.actor = self.actor
+			if self.actor then
+				tmp.traits = self.traits
+			end
 			return minetest.serialize(tmp)
 		end,
 		
@@ -485,7 +486,7 @@ function creatures:register_mob(name, def)
 			if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
 				minetest.sound_play(psettings.sounds.attack, {object = hitter})
 			end
-			if not self.tamed and hitter:is_player() and self.target_current and hitter == self.target_current.entity and psettings.reincarnate then
+			if not self.actor and hitter:is_player() and self.target_current and hitter == self.target_current.entity and psettings.reincarnate then
 				-- handle player possession of mobs
 				hitter:setpos(self.object:getpos())
 				hitter:set_look_yaw(self.object:getyaw())
