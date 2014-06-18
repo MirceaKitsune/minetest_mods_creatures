@@ -497,9 +497,9 @@ function creatures:register_mob(name, def)
 					minetest.sound_play(self.sounds.die, {object = self.object})
 				end
 			else
-				-- decide whether to turn against the creature hitting us
+				-- attack enemies that punch us, but avoid allies who do so
 				if relation <= 1 - math.random() * 2 then
-					if self.attack_type and minetest.setting_getbool("enable_damage") then
+					if relation < 0 and self.attack_type and minetest.setting_getbool("enable_damage") then
 						if not self.targets[hitter] then
 							self.targets[hitter] = {entity = hitter, type = "attack", priority = (1 - relation) * 0.5}
 						else
