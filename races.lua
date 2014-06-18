@@ -32,13 +32,13 @@ creatures:register_creature("creatures:ghost", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 1, people = 1, animals = 1},
+	teams = {monsters = 0.6, people = 0.7, animals = 0.4},
 
 	-- Mob properties:
 	think = 1,
 	roam = 0.5,
 	view_range = 15,
-	damage = 2,
+	damage = 1,
 	drops = {},
 	on_rightclick = nil,
 	attack_type = "melee",
@@ -97,30 +97,30 @@ creatures:register_creature("creatures:human", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.8, people = 1, animals = 0.4},
+	teams = {monsters = -0.4, people = 0.6, animals = 0.1},
 
 	-- Mob properties:
-	think = 1,
-	roam = 0.5,
+	think = 0.5,
+	roam = 0.65,
 	view_range = 20,
 	damage = 1,
 	drops = {
 		{name = "default:sword_bronze",
-		chance = 3,
+		chance = 40,
 		min = 1,
 		max = 1,},
 		{name = "default:sword_steel",
-		chance = 5,
+		chance = 60,
 		min = 1,
 		max = 1,},
 		{name = "default:sword_diamond",
-		chance = 10,
+		chance = 80,
 		min = 1,
 		max = 1,},
 	},
 	on_rightclick = nil,
 	attack_type = "melee",
-	attack_interval = 1,
+	attack_interval = 0.8,
 
 	-- Player properties:
 	menu = true,
@@ -136,6 +136,7 @@ creatures:register_creature("creatures:human", {
 	icon = "mobs_human_icon.png",
 })
 creatures:register_spawn("creatures:human", {"default:dirt_with_grass"}, 20, -1, 9000, 1, 31000)
+creatures:register_spawn("creatures:human", {"default:desert_sand"}, 20, -1, 7000, 3, 28000)
 
 creatures:register_creature("creatures:dirt_monster", {
 	-- Common properties:
@@ -175,11 +176,11 @@ creatures:register_creature("creatures:dirt_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 0.8, people = -0.4, animals = 0},
+	teams = {monsters = 0.4, people = -0.2, animals = 0},
 
 	-- Mob properties:
-	think = 1,
-	roam = 0.5,
+	think = 1.5,
+	roam = 0.35,
 	view_range = 15,
 	damage = 1,
 	drops = {
@@ -190,7 +191,7 @@ creatures:register_creature("creatures:dirt_monster", {
 	},
 	on_rightclick = nil,
 	attack_type = "melee",
-	attack_interval = 1,
+	attack_interval = 1.4,
 
 	-- Player properties:
 	menu = true,
@@ -245,11 +246,11 @@ creatures:register_creature("creatures:stone_monster", {
 		jump = 0.75,
 		gravity = 1.25,
 	},
-	teams = {monsters = 1, people = -0.6, animals = -0.2},
+	teams = {monsters = 0.6, people = -0.4, animals = -0.2},
 
 	-- Mob properties:
 	think = 1,
-	roam = 0.5,
+	roam = 0.35,
 	view_range = 10,
 	damage = 3,
 	drops = {
@@ -259,7 +260,7 @@ creatures:register_creature("creatures:stone_monster", {
 		max = 5,},
 	},
 	attack_type = "melee",
-	attack_interval = 1,
+	attack_interval = 1.2,
 
 	-- Player properties:
 	menu = true,
@@ -314,10 +315,10 @@ creatures:register_creature("creatures:sand_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 0.6, people = -0.2, animals = 0},
+	teams = {monsters = 0.5, people = -0.2, animals = -0.2},
 
 	-- Mob properties:
-	think = 1,
+	think = 1.5,
 	roam = 0.5,
 	view_range = 20,
 	damage = 2,
@@ -328,7 +329,7 @@ creatures:register_creature("creatures:sand_monster", {
 		max = 5,},
 	},
 	attack_type = "melee",
-	attack_interval = 1,
+	attack_interval = 1.3,
 
 	-- Player properties:
 	menu = true,
@@ -383,10 +384,10 @@ creatures:register_creature("creatures:tree_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 0.6, people = -0.4, animals = 0.6},
+	teams = {monsters = 0.5, people = -0.4, animals = 0.6},
 
 	-- Mob properties:
-	think = 1,
+	think = 1.5,
 	roam = 0.5,
 	view_range = 20,
 	damage = 2,
@@ -402,11 +403,11 @@ creatures:register_creature("creatures:tree_monster", {
 	},
 	disable_fall_damage = true,
 	attack_type = "melee",
-	attack_interval = 1,
+	attack_interval = 1.2,
 
 	-- Player properties:
 	menu = true,
-	inventory_main = {x = 8, y = 3},
+	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnate = false,
 	ghost = "",
@@ -447,7 +448,7 @@ creatures:register_creature("creatures:sheep", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 1,
+		water = 0,
 		lava = 5,
 		light = 0,
 	},
@@ -456,11 +457,11 @@ creatures:register_creature("creatures:sheep", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.4, people = 0.6, animals = 1},
+	teams = {monsters = -0.3, people = 0.5, animals = 0.6},
 
 	-- Mob properties:
-	think = 1,
-	roam = 0.5,
+	think = 2,
+	roam = 0.25,
 	drops = {
 		{name = "creatures:meat_raw",
 		chance = 1,
@@ -566,11 +567,11 @@ creatures:register_creature("creatures:rat", {
 		jump = 0.75,
 		gravity = 0.75,
 	},
-	teams = {monsters = 0.4, people = -0.4, animals = 0.6},
+	teams = {monsters = 0.2, people = -0.4, animals = 0.4},
 
 	-- Mob properties:
-	think = 1,
-	roam = 0.5,
+	think = 2,
+	roam = 0.65,
 	drops = {},
 	view_range = 5,
 	
@@ -583,7 +584,7 @@ creatures:register_creature("creatures:rat", {
 
 	-- Player properties:
 	menu = true,
-	inventory_main = {x = 4, y = 1},
+	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	reincarnate = false,
 	ghost = "",
@@ -651,20 +652,20 @@ creatures:register_creature("creatures:oerkki", {
 	},
 	makes_footstep_sound = false,
 	env_damage = {
-		water = 1,
+		water = 0,
 		lava = 1,
-		light = 0,
+		light = 1,
 	},
 	physics = {
 		speed = 1.25,
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 0.6, people = 0.4, animals = 0.4},
+	teams = {monsters = 0.4, people = 0.3, animals = 0.4},
 
 	-- Mob properties:
-	think = 1,
-	roam = 0.5,
+	think = 1.25,
+	roam = 0.35,
 	view_range = 10,
 	damage = 3,
 	drops = {},
@@ -722,11 +723,11 @@ creatures:register_creature("creatures:dungeon_master", {
 		jump = 1.25,
 		gravity = 1.25,
 	},
-	teams = {monsters = 1, people = -1, animals = -0.4},
+	teams = {monsters = 0.8, people = -0.8, animals = -0.4},
 
 	-- Mob properties:
-	think = 1,
-	roam = 0.5,
+	think = 1.5,
+	roam = 0.25,
 	view_range = 15,
 	damage = 4,
 	drops = {
@@ -742,7 +743,7 @@ creatures:register_creature("creatures:dungeon_master", {
 
 	-- Player properties:
 	menu = true,
-	inventory_main = {x = 8, y = 5},
+	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	reincarnate = false,
 	ghost = "",
@@ -758,7 +759,6 @@ creatures:register_spawn("creatures:dungeon_master", {"default:stone"}, 2, -1, 7
 creatures:register_arrow("creatures:fireball", {
 	visual = "sprite",
 	visual_size = {x=1, y=1},
-	--textures = {{name="mobs_fireball.png", animation={type="vertical_frames", aspect_w=16, aspect_h=16, length=0.5}}}, FIXME
 	textures = {"mobs_fireball.png"},
 	velocity = 5,
 	hit_player = function(self, player)
