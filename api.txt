@@ -1,0 +1,63 @@
+* creatures.player_default = "creatures:ghost": Players who aren't part of a race are set to this creature. Typically applies to new players who join the server for the first time.
+
+* creatures:register_creature("creatures:ghost", {..}): Defines a new creature, with the current parameters:
+
+- Common parameters (applied to both creatures and players):
+	hp_max = 20: Mobs and players are born with this amount of health, and cannot gain more than it.
+	armor = 100: Armor decides how much damage gets absorbed.
+	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5}: Collosion box size. (TODO: Currently works only for mobs, engine implementation needed for players!)
+	visual = "sprite": Visual type of the player and mob.
+	mesh = "": 3D model of the player and mob, when mesh visual is used.
+	textures = {"clear.png"}: Textures used by the player and mob.
+	visual_size = {x=1, y=1}: Scales the visual of the player and mob.
+	animation = {speed = 0, stand_start = 1, ...}: List of animations and animation ranges, containing the following values: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end (TODO: Separate run and punch+run animations)
+	sounds = {random = "filename", ...}: A list containing sound effects for various actions. Valid entries: random, attack, damage, die.
+	makes_footstep_sound = false: Whether the player and mob make footstep sounds while walking. (TODO: Currently works only for mobs, engine implementation needed for players!)
+	env_damage = {water = 0, ...}: Enrivonment damage. Valid entries: water, lava, light.
+	physics = {speed = 1, ...}: Modifies player and mob movement, as an offset to the physics settings in minetest.conf. Valid entries: speed, jump, gravity.
+	teams = {monsters = 1, ...}: Contains an interest list, where 1 means "pro" and -1 means "con". Friend or foe relationships are determined based on how many things two creatures have in common here.
+
+- Mob only parameters:
+	drops = {{name = "default:sword_bronze", chance = 40, min = 1, max = 1,}, ...}: Contains a list of items and probabilities, which determines what the player gets after killing a mob.
+	on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
+	attack_damage = 1: How much damage the mob deals each punch or shot.
+	attack_type = "melee": Can be "melee" (mob punches the player) or "shoot" (mob throws projectiles toward the player).
+	traits = {attack_interval = {1, 1}, ...}: Personality traits. Each individual mob gets a value between min and max when it first spawns. Actor mobs persist those settings between server restarts. Valid traits:
+		attack_interval = {1, 1}: How many seconds the mob shoots or punches. Lower means a greater attack skill.
+		think = {1, 1}: How many seconds the mob makes new decisions or takes actions. AI speed is this value when idle, half this value when following or avoiding, and a tenth this value when attacking. Lower values mean smarter mobs. Do not abuse this, low values also mean more server load!
+		vision = {15, 15}: View distance of the mob, and the range in which other creatures are detected and pursued.
+		roam = {0.5, 0.5}: When the mob is idle, this determines how much it's likely to walk around or sit in place.
+		loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them. Note that ghosts can only possess mobs that are following them.
+		fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first).
+		aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first).
+		determination = {0.5, 0.5}: Lower values make it more likely for a mob to drop distant targets and abandon a task.
+
+- Player only parameters:
+	menu = true: Whether players which are part of this race have a formspec inventory menu... containing their inventory, crafting area, etc.
+	inventory_main = {x = 8, y = 4}: Size of the main inventory for players which are part of this race.
+	inventory_craft = {x = 1, y = 1}: Size of the craft area for players which are part of this race.
+	reincarnate = true: Players that are part of this race can possess allied mobs, typically used for ghosts.
+	ghost = "": What creature the player becomes upon death. If blank, creatures.player_default is used.
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}}: Camera offset for 1st and 3rd person views, used to adjust the camera to eye position for creatures of various shapes and sizes.
+	sky = {{r = 0, g = 0, b = 0}, "regular", {}}: If set, these sky settings are applied to players who are part of this race.
+	daytime = 0.15: If set, players who are part of this race see the sun and moon at this time of day.
+	screen = "hud_*.png": If set, this image is applied over the screen. Use a transparent image here, unless you wish to block the player's vision entirely.
+	ambience = "ambient_*": If set, the player will constantly hear this ambiental sound.
+	icon = "mobs_*_icon.png": Icon for this creature, indicating to the player what they currently are. Players see it in the inventory menu or on the HUD.
+
+* creatures:register_spawn("creatures:human", {"default:dirt_with_grass"}, 20, -1, 9000, 1, 31000, nil): Configures a mob to spawn on a given node. Parameters:
+	name: The name of this creature, eg: creatures:human
+	nodes: A list of nodes that this spawn applies for, eg: {"default:dirt_with_grass", ...}
+	max_light: Maximum light value at which the mob spawns.
+	min_light: Minimum light value at which the mob spawns.
+	chance: The greater this value, the lower the chances that this mob will spawn. A good default is 10000.
+	active_object_count: When there are more mobs than this, the spawn will deactivate. Don't abuse this, too many mobs can greatly decrease server performance!
+	max_height: Maximum height this spawner will work at. (TODO: Also add a min_height)
+	spawn_func: Custom spawn function.
+
+* creatures:register_arrow("creatures:fireball", {...}): Defines a projectile, used by mobs with the "shoot" attack type. Parameters:
+	visual = "sprite": Visual type of the projectile.
+	visual_size = {x=1, y=1}: Scale of the projectile visual.
+	textures = {"mobs_fireball.png"}: Texture of the projectile visual.
+	velocity = 5: Velocity at which the projectile travels.
+	hit_player = function(self, player) {...}: Function which executes when the projectile hits a player. Use player:punch to apply damage.

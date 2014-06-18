@@ -19,7 +19,6 @@ function creatures:register_mob(name, def)
 		disable_fall_damage = def.disable_fall_damage,
 		drops = def.drops,
 		armor = def.armor,
-		drawtype = def.drawtype,
 		on_rightclick = def.on_rightclick,
 		attack_damage = def.attack_damage,
 		attack_type = def.attack_type,

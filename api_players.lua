@@ -11,7 +11,6 @@ function creatures:register_player(name, def)
 	creatures.player_settings[name].mesh = def.mesh
 	creatures.player_settings[name].textures = def.textures
 	creatures.player_settings[name].visual_size = def.visual_size
-	creatures.player_settings[name].drawtype = def.drawtype
 	creatures.player_settings[name].animation = def.animation
 	creatures.player_settings[name].sounds = def.sounds
 	creatures.player_settings[name].makes_footstep_sound = def.makes_footstep_sound
@@ -132,7 +131,6 @@ local function apply_settings (player, race)
 	player:set_physics_override({speed = def.physics.speed, jump = def.physics.jump, gravity = def.physics.gravity})
 	player:set_properties({
 		collisionbox = def.collisionbox,
-		drawtype = def.drawtype,
 		mesh = def.mesh,
 		textures = def.textures,
 		visual = def.visual,
