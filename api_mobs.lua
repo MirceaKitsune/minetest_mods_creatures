@@ -277,21 +277,23 @@ function creatures:register_mob(name, def)
 
 			-- targets: scan for targets to remove or modify
 			for obj, target in pairs(self.targets) do
-				if (target.entity:is_player() or target.entity:get_luaentity()) then
-					local s = self.object:getpos()
-					local p = target.entity:getpos() or target.entity.object:getpos()
-					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+				if not target.persist then
+					if (target.entity:is_player() or target.entity:get_luaentity()) then
+						local s = self.object:getpos()
+						local p = target.entity:getpos() or target.entity.object:getpos()
+						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 
-					-- remove targets which are dead or out of interest range
-					local dist_interest = self.traits.vision * math.min(1, self.traits.determination / (1 - math.random()))
-					if dist > dist_interest or target.entity:get_hp() <= 0 then
+						-- remove targets which are dead or out of interest range
+						local dist_interest = self.traits.vision * math.min(1, self.traits.determination / (1 - math.random()))
+						if dist > dist_interest or target.entity:get_hp() <= 0 then
+							self.targets[obj] = nil
+						-- if the mob is no longer fit to fight, change attack targets to avoid
+						elseif target.type == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
+							self.targets[obj].type = "avoid"
+						end
+					else
 						self.targets[obj] = nil
-					-- if the mob is no longer fit to fight, change attack targets to avoid
-					elseif target.type == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
-						self.targets[obj].type = "avoid"
 					end
-				else
-					self.targets[obj] = nil
 				end
 			end
 
@@ -455,6 +457,9 @@ function creatures:register_mob(name, def)
 				if tmp and tmp.traits then
 					self.traits = tmp.traits
 				end
+				if tmp and tmp.targets then
+					self.targets = tmp.targets
+				end
 			end
 
 			if self.timer_life <= 0 and not self.actor then
@@ -475,6 +480,7 @@ function creatures:register_mob(name, def)
 			tmp.timer_life = self.timer_life
 			tmp.actor = self.actor
 			if self.actor then
+				tmp.targets = self.targets
 				tmp.traits = self.traits
 			end
 			return minetest.serialize(tmp)
