@@ -513,14 +513,14 @@ function creatures:register_mob(name, def)
 				end
 			else
 				-- attack enemies that punch us, but avoid allies who do so
-				if self.attack_type and minetest.setting_getbool("enable_damage") and relation * (1 / math.random()) <= (-1 + self.traits.aggressivity) then
+				if self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -math.random() / 2 then
 					if not self.targets[hitter] then
 						self.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation) * self.traits.aggressivity}
 					else
 						self.targets[hitter].type = "attack"
 						self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation) * self.traits.aggressivity
 					end
-				elseif (1 - relation) * (1 / math.random()) > self.traits.fear then
+				elseif (1 - relation) * self.traits.fear > math.random() / 2 then
 					if not self.targets[hitter] then
 						self.targets[hitter] = {entity = hitter, type = "avoid", priority = math.abs(relation) * self.traits.fear}
 					else
