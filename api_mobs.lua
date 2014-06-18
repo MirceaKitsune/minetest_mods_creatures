@@ -15,25 +15,21 @@ function creatures:register_mob(name, def)
 		mesh = def.mesh,
 		textures = def.textures,
 		makes_footstep_sound = def.makes_footstep_sound,
-		think = def.think,
-		roam = def.roam,
-		view_range = def.view_range,
-		damage = def.damage,
 		env_damage = def.env_damage,
 		disable_fall_damage = def.disable_fall_damage,
 		drops = def.drops,
 		armor = def.armor,
 		drawtype = def.drawtype,
 		on_rightclick = def.on_rightclick,
+		attack_damage = def.attack_damage,
 		attack_type = def.attack_type,
-		arrow = def.arrow,
-		attack_interval = def.attack_interval,
+		attack_arrow = def.attack_arrow,
 		sounds = def.sounds,
 		animation = def.animation,
 		jump = def.jump or true,
 		teams = def.teams,
+		personality = def.personality,
 		
-		mob = true,
 		timer_life = 60,
 		timer_think = 0,
 		timer_attack = 0,
@@ -236,18 +232,18 @@ function creatures:register_mob(name, def)
 			
 			self.timer_attack = self.timer_attack+dtime
 
-			-- Apply AI think speed, influenced by the mob's current status
+			-- apply AI think speed, influenced by the mob's current status
 			self.timer_think = self.timer_think+dtime
 			if self.target_current and self.target_current.type == "attack" then
-				if self.timer_think < self.think / 10 then
+				if self.timer_think < self.personality.think / 10 then
 					return
 				end
 			elseif self.target_current and (self.target_current.type == "follow" or self.target_current.type == "avoid") then
-				if self.timer_think < self.think / 2 then
+				if self.timer_think < self.personality.think / 2 then
 					return
 				end
 			else
-				if self.timer_think < self.think then
+				if self.timer_think < self.personality.think then
 					return
 				end
 			end
@@ -258,12 +254,12 @@ function creatures:register_mob(name, def)
 			end
 
 			-- targets: scan for targets to add
-			for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.view_range)) do
-				if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().mob)) and not self.targets[obj] then
+			for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.personality.vision)) do
+				if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().personality)) and not self.targets[obj] then
 					local s = self.object:getpos()
 					local p = obj:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-					if dist < self.view_range then
+					if dist < self.personality.vision then
 						-- the stronger the relation, the more likely it is for the mob to act
 						local relation = creatures:alliance(self.object, obj)
 						if (math.abs(relation) >= math.random()) then
@@ -290,7 +286,7 @@ function creatures:register_mob(name, def)
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 
 					-- remove targets which are dead or out of range
-					if dist > self.view_range or target.entity:get_hp() <= 0 then
+					if dist > self.personality.vision or target.entity:get_hp() <= 0 then
 						self.targets[obj] = nil
 					-- if the mob is no longer fit to fight, change attack targets to avoid
 					elseif target.type == "attack" and self.object:get_hp() <= self.hp_max / 5 then
@@ -313,7 +309,7 @@ function creatures:register_mob(name, def)
 
 			-- carry out mob actions
 			if not self.target_current then
-				if self.roam >= math.random() then
+				if self.personality.roam >= math.random() then
 					if math.random(1, 4) == 1 then
 						self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 					end
@@ -356,14 +352,14 @@ function creatures:register_mob(name, def)
 					self.set_velocity(self, 0)
 					self:set_animation("punch")
 					self.v_start = false
-					if self.timer_attack > self.attack_interval then
+					if self.timer_attack > self.personality.attack_interval then
 						self.timer_attack = 0
 						if self.sounds and self.sounds.attack then
 							minetest.sound_play(self.sounds.attack, {object = self.object})
 						end
 						self.target_current.entity:punch(self.object, 1.0,  {
 							full_punch_interval=1.0,
-							damage_groups = {fleshy=self.damage}
+							damage_groups = {fleshy=self.attack_damage}
 						}, vec)
 					end
 				end
@@ -376,7 +372,7 @@ function creatures:register_mob(name, def)
 				self.object:setyaw(yaw)
 				self.set_velocity(self, 0)
 				
-				if self.timer_attack > self.attack_interval then
+				if self.timer_attack > self.personality.attack_interval then
 					self.timer_attack = 0
 					
 					self:set_animation("punch")
@@ -387,7 +383,7 @@ function creatures:register_mob(name, def)
 					
 					local p = self.object:getpos()
 					p.y = p.y + (self.collisionbox[2]+self.collisionbox[5])/2
-					local obj = minetest.env:add_entity(p, self.arrow)
+					local obj = minetest.env:add_entity(p, self.attack_arrow)
 					local amount = (vec.x^2+vec.y^2+vec.z^2)^0.5
 					local v = obj:get_luaentity().velocity
 					vec.y = vec.y+1
@@ -413,7 +409,7 @@ function creatures:register_mob(name, def)
 				end
 				self.object:setyaw(yaw)
 
-				if dist > self.view_range / 5 or avoid then
+				if dist > self.personality.vision / 5 or avoid then
 					if not self.v_start then
 						self.v_start = true
 					else
@@ -424,8 +420,8 @@ function creatures:register_mob(name, def)
 						end
 					end
 
-					if (not avoid and dist > self.view_range / 2 ) or
-					(avoid and dist <= self.view_range / 2) then
+					if (not avoid and dist > self.personality.vision / 2 ) or
+					(avoid and dist <= self.personality.vision / 2) then
 						self.set_velocity(self, self.run_velocity)
 						self:set_animation("run")
 					else
@@ -449,6 +445,7 @@ function creatures:register_mob(name, def)
 				self.object:remove()
 			end
 			self.timer_life = 600 - dtime_s
+
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
 				if tmp and tmp.timer_life then
@@ -457,9 +454,21 @@ function creatures:register_mob(name, def)
 				if tmp and tmp.tamed then
 					self.tamed = tmp.tamed
 				end
+				if tmp and tmp.personality then
+					self.personality = tmp.personality
+				end
 			end
+
 			if self.timer_life <= 0 and not self.tamed then
 				self.object:remove()
+			end
+
+			-- set personality: each trait is a random value per mob, between the min and max values defined
+			-- on_step must never execute before this is set, the code expects a value for each trait!
+			for trait, entry in pairs(self.personality) do
+				if type(entry) == "table" then
+					self.personality[trait] = math.random() * (entry[2] - entry[1]) + entry[1]
+				end
 			end
 		end,
 		
@@ -467,6 +476,7 @@ function creatures:register_mob(name, def)
 			local tmp = {
 				timer_life = self.timer_life,
 				tamed = self.tamed,
+				personality = self.personality,
 			}
 			return minetest.serialize(tmp)
 		end,

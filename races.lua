@@ -35,14 +35,16 @@ creatures:register_creature("creatures:ghost", {
 	teams = {monsters = 0.6, people = 0.7, animals = 0.4},
 
 	-- Mob properties:
-	think = 1,
-	roam = 0.5,
-	view_range = 15,
-	damage = 1,
 	drops = {},
 	on_rightclick = nil,
+	attack_damage = 1,
 	attack_type = "melee",
-	attack_interval = 1,
+	personality = {
+		attack_interval = {1, 1},
+		think = {1, 1},
+		vision = {15, 15},
+		roam = {0.5, 0.5},
+	},
 
 	-- Player properties:
 	menu = false,
@@ -100,10 +102,6 @@ creatures:register_creature("creatures:human", {
 	teams = {monsters = -0.4, people = 0.6, animals = 0.1},
 
 	-- Mob properties:
-	think = 0.5,
-	roam = 0.65,
-	view_range = 20,
-	damage = 1,
 	drops = {
 		{name = "default:sword_bronze",
 		chance = 40,
@@ -119,8 +117,14 @@ creatures:register_creature("creatures:human", {
 		max = 1,},
 	},
 	on_rightclick = nil,
+	attack_damage = 1,
 	attack_type = "melee",
-	attack_interval = 0.8,
+	personality = {
+		attack_interval = {0.75, 1},
+		think = {0.5, 0.75},
+		vision = {15, 20},
+		roam = {0.5, 0.65},
+	},
 
 	-- Player properties:
 	menu = true,
@@ -179,10 +183,6 @@ creatures:register_creature("creatures:dirt_monster", {
 	teams = {monsters = 0.4, people = -0.2, animals = 0},
 
 	-- Mob properties:
-	think = 1.5,
-	roam = 0.35,
-	view_range = 15,
-	damage = 1,
 	drops = {
 		{name = "default:dirt",
 		chance = 1,
@@ -190,8 +190,14 @@ creatures:register_creature("creatures:dirt_monster", {
 		max = 5,},
 	},
 	on_rightclick = nil,
+	attack_damage = 1,
 	attack_type = "melee",
-	attack_interval = 1.4,
+	personality = {
+		attack_interval = {1.35, 1.65},
+		think = {1.5, 1.65},
+		vision = {10, 15},
+		roam = {0.35, 0.5},
+	},
 
 	-- Player properties:
 	menu = true,
@@ -249,18 +255,20 @@ creatures:register_creature("creatures:stone_monster", {
 	teams = {monsters = 0.6, people = -0.4, animals = -0.2},
 
 	-- Mob properties:
-	think = 1,
-	roam = 0.35,
-	view_range = 10,
-	damage = 3,
 	drops = {
 		{name = "default:mossycobble",
 		chance = 1,
 		min = 3,
 		max = 5,},
 	},
+	attack_damage = 3,
 	attack_type = "melee",
-	attack_interval = 1.2,
+	personality = {
+		attack_interval = {1, 1.25},
+		think = {1, 1.25},
+		vision = {10, 10},
+		roam = {0.5, 0.5},
+	},
 
 	-- Player properties:
 	menu = true,
@@ -318,18 +326,20 @@ creatures:register_creature("creatures:sand_monster", {
 	teams = {monsters = 0.5, people = -0.2, animals = -0.2},
 
 	-- Mob properties:
-	think = 1.5,
-	roam = 0.5,
-	view_range = 20,
-	damage = 2,
 	drops = {
 		{name = "default:sand",
 		chance = 1,
 		min = 3,
 		max = 5,},
 	},
+	attack_damage = 2,
 	attack_type = "melee",
-	attack_interval = 1.3,
+	personality = {
+		attack_interval = {1.25, 1.5},
+		think = {1.35, 1.5},
+		vision = {20, 20},
+		roam = {0.35, 0.5},
+	},
 
 	-- Player properties:
 	menu = true,
@@ -387,10 +397,6 @@ creatures:register_creature("creatures:tree_monster", {
 	teams = {monsters = 0.5, people = -0.4, animals = 0.6},
 
 	-- Mob properties:
-	think = 1.5,
-	roam = 0.5,
-	view_range = 20,
-	damage = 2,
 	drops = {
 		{name = "default:sapling",
 		chance = 3,
@@ -402,8 +408,14 @@ creatures:register_creature("creatures:tree_monster", {
 		max = 2,},
 	},
 	disable_fall_damage = true,
+	attack_damage = 2,
 	attack_type = "melee",
-	attack_interval = 1.2,
+	personality = {
+		attack_interval = {1.25, 1.5},
+		think = {1.15, 1.35},
+		vision = {15, 20},
+		roam = {0.35, 0.65},
+	},
 
 	-- Player properties:
 	menu = true,
@@ -460,15 +472,17 @@ creatures:register_creature("creatures:sheep", {
 	teams = {monsters = -0.3, people = 0.5, animals = 0.6},
 
 	-- Mob properties:
-	think = 2,
-	roam = 0.25,
 	drops = {
 		{name = "creatures:meat_raw",
 		chance = 1,
 		min = 2,
 		max = 3,},
 	},
-	view_range = 5,
+	personality = {
+		think = {1.5, 2},
+		vision = {5, 5},
+		roam = {0.15, 0.25},
+	},
 	
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
@@ -570,10 +584,12 @@ creatures:register_creature("creatures:rat", {
 	teams = {monsters = 0.2, people = -0.4, animals = 0.4},
 
 	-- Mob properties:
-	think = 2,
-	roam = 0.65,
 	drops = {},
-	view_range = 5,
+	personality = {
+		think = {1.5, 1.75},
+		vision = {5, 5},
+		roam = {0.5, 0.75},
+	},
 	
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
@@ -664,13 +680,15 @@ creatures:register_creature("creatures:oerkki", {
 	teams = {monsters = 0.4, people = 0.3, animals = 0.4},
 
 	-- Mob properties:
-	think = 1.25,
-	roam = 0.35,
-	view_range = 10,
-	damage = 3,
 	drops = {},
+	attack_damage = 3,
 	attack_type = "melee",
-	attack_interval = 1,
+	personality = {
+		attack_interval = {0.85, 1.15},
+		think = {0.75, 1.25},
+		vision = {10, 15},
+		roam = {0.35, 0.5},
+	},
 
 	-- Player properties:
 	menu = true,
@@ -726,10 +744,6 @@ creatures:register_creature("creatures:dungeon_master", {
 	teams = {monsters = 0.8, people = -0.8, animals = -0.4},
 
 	-- Mob properties:
-	think = 1.5,
-	roam = 0.25,
-	view_range = 15,
-	damage = 4,
 	drops = {
 		{name = "default:mese",
 		chance = 50,
@@ -737,9 +751,15 @@ creatures:register_creature("creatures:dungeon_master", {
 		max = 2,},
 	},
 	on_rightclick = nil,
+	attack_damage = 4,
 	attack_type = "shoot",
-	arrow = "creatures:fireball",
-	attack_interval = 2.5,
+	attack_arrow = "creatures:fireball",
+	personality = {
+		attack_interval = {2.5, 3},
+		think = {1.25, 1.75},
+		vision = {10, 15},
+		roam = {0.15, 0.25},
+	},
 
 	-- Player properties:
 	menu = true,
