@@ -32,18 +32,22 @@ creatures:register_creature("creatures:ghost", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 0.6, people = 0.7, animals = 0.4},
+	teams = {monsters = 0.8, people = 1, animals = 0.6},
 
 	-- Mob properties:
 	drops = {},
 	on_rightclick = nil,
 	attack_damage = 1,
 	attack_type = "melee",
-	personality = {
+	traits = {
 		attack_interval = {1, 1},
 		think = {1, 1},
 		vision = {15, 15},
 		roam = {0.5, 0.5},
+		loyalty = {0.5, 0.5},
+		fear = {0.5, 0.5},
+		aggressivity = {0.5, 0.5},
+		determination = {0.5, 0.5},
 	},
 
 	-- Player properties:
@@ -119,11 +123,15 @@ creatures:register_creature("creatures:human", {
 	on_rightclick = nil,
 	attack_damage = 1,
 	attack_type = "melee",
-	personality = {
+	traits = {
 		attack_interval = {0.75, 1},
 		think = {0.5, 0.75},
 		vision = {15, 20},
 		roam = {0.5, 0.65},
+		loyalty = {0.5, 0.75},
+		fear = {0.25, 0.5},
+		aggressivity = {0.5, 0.75},
+		determination = {0.8, 1},
 	},
 
 	-- Player properties:
@@ -140,7 +148,7 @@ creatures:register_creature("creatures:human", {
 	icon = "mobs_human_icon.png",
 })
 creatures:register_spawn("creatures:human", {"default:dirt_with_grass"}, 20, -1, 9000, 1, 31000)
-creatures:register_spawn("creatures:human", {"default:desert_sand"}, 20, -1, 7000, 3, 28000)
+creatures:register_spawn("creatures:human", {"default:desert_sand"}, 20, -1, 14000, 3, 26000)
 
 creatures:register_creature("creatures:dirt_monster", {
 	-- Common properties:
@@ -192,11 +200,15 @@ creatures:register_creature("creatures:dirt_monster", {
 	on_rightclick = nil,
 	attack_damage = 1,
 	attack_type = "melee",
-	personality = {
+	traits = {
 		attack_interval = {1.35, 1.65},
 		think = {1.5, 1.65},
 		vision = {10, 15},
 		roam = {0.35, 0.5},
+		loyalty = {0.15, 0.3},
+		fear = {0.3, 0.5},
+		aggressivity = {0.7, 0.9},
+		determination = {0.6, 0.8},
 	},
 
 	-- Player properties:
@@ -263,11 +275,15 @@ creatures:register_creature("creatures:stone_monster", {
 	},
 	attack_damage = 3,
 	attack_type = "melee",
-	personality = {
+	traits = {
 		attack_interval = {1, 1.25},
 		think = {1, 1.25},
 		vision = {10, 10},
 		roam = {0.5, 0.5},
+		loyalty = {0.3, 0.5},
+		fear = {0.1, 0.3},
+		aggressivity = {0.8, 1},
+		determination = {0.9, 1},
 	},
 
 	-- Player properties:
@@ -334,11 +350,15 @@ creatures:register_creature("creatures:sand_monster", {
 	},
 	attack_damage = 2,
 	attack_type = "melee",
-	personality = {
+	traits = {
 		attack_interval = {1.25, 1.5},
 		think = {1.35, 1.5},
 		vision = {20, 20},
 		roam = {0.35, 0.5},
+		loyalty = {0.4, 0.7},
+		fear = {0.15, 0.3},
+		aggressivity = {0.7, 0.9},
+		determination = {0.6, 0.8},
 	},
 
 	-- Player properties:
@@ -410,11 +430,15 @@ creatures:register_creature("creatures:tree_monster", {
 	disable_fall_damage = true,
 	attack_damage = 2,
 	attack_type = "melee",
-	personality = {
+	traits = {
 		attack_interval = {1.25, 1.5},
 		think = {1.15, 1.35},
 		vision = {15, 20},
 		roam = {0.35, 0.65},
+		loyalty = {0.5, 0.75},
+		fear = {0.4, 0.6},
+		aggressivity = {0.6, 0.8},
+		determination = {0.7, 0.9},
 	},
 
 	-- Player properties:
@@ -478,10 +502,13 @@ creatures:register_creature("creatures:sheep", {
 		min = 2,
 		max = 3,},
 	},
-	personality = {
+	traits = {
 		think = {1.5, 2},
 		vision = {5, 5},
 		roam = {0.15, 0.25},
+		loyalty = {0.2, 0.4},
+		fear = {0.8, 1},
+		determination = {0.4, 0.6},
 	},
 	
 	on_rightclick = function(self, clicker)
@@ -585,10 +612,13 @@ creatures:register_creature("creatures:rat", {
 
 	-- Mob properties:
 	drops = {},
-	personality = {
+	traits = {
 		think = {1.5, 1.75},
 		vision = {5, 5},
 		roam = {0.5, 0.75},
+		loyalty = {0.15, 0.3},
+		fear = {0.5, 0.7},
+		determination = {0.3, 0.5},
 	},
 	
 	on_rightclick = function(self, clicker)
@@ -683,11 +713,15 @@ creatures:register_creature("creatures:oerkki", {
 	drops = {},
 	attack_damage = 3,
 	attack_type = "melee",
-	personality = {
+	traits = {
 		attack_interval = {0.85, 1.15},
 		think = {0.75, 1.25},
 		vision = {10, 15},
 		roam = {0.35, 0.5},
+		loyalty = {0.3, 0.7},
+		fear = {0.1, 0.4},
+		aggressivity = {0.4, 0.6},
+		determination = {0.6, 0.8},
 	},
 
 	-- Player properties:
@@ -754,11 +788,15 @@ creatures:register_creature("creatures:dungeon_master", {
 	attack_damage = 4,
 	attack_type = "shoot",
 	attack_arrow = "creatures:fireball",
-	personality = {
+	traits = {
 		attack_interval = {2.5, 3},
 		think = {1.25, 1.75},
 		vision = {10, 15},
 		roam = {0.15, 0.25},
+		loyalty = {0.4, 0.7},
+		fear = {0, 0.25},
+		aggressivity = {0.8, 1},
+		determination = {0.5, 0.7},
 	},
 
 	-- Player properties:

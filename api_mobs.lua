@@ -28,7 +28,7 @@ function creatures:register_mob(name, def)
 		animation = def.animation,
 		jump = def.jump or true,
 		teams = def.teams,
-		personality = def.personality,
+		traits = def.traits,
 		
 		timer_life = 60,
 		timer_think = 0,
@@ -235,15 +235,15 @@ function creatures:register_mob(name, def)
 			-- apply AI think speed, influenced by the mob's current status
 			self.timer_think = self.timer_think+dtime
 			if self.target_current and self.target_current.type == "attack" then
-				if self.timer_think < self.personality.think / 10 then
+				if self.timer_think < self.traits.think / 10 then
 					return
 				end
 			elseif self.target_current and (self.target_current.type == "follow" or self.target_current.type == "avoid") then
-				if self.timer_think < self.personality.think / 2 then
+				if self.timer_think < self.traits.think / 2 then
 					return
 				end
 			else
-				if self.timer_think < self.personality.think then
+				if self.timer_think < self.traits.think then
 					return
 				end
 			end
@@ -254,25 +254,22 @@ function creatures:register_mob(name, def)
 			end
 
 			-- targets: scan for targets to add
-			for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.personality.vision)) do
-				if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().personality)) and not self.targets[obj] then
+			for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)) do
+				if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().traits)) and not self.targets[obj] then
 					local s = self.object:getpos()
 					local p = obj:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-					if dist < self.personality.vision then
-						-- the stronger the relation, the more likely it is for the mob to act
+					if dist < self.traits.vision then
 						local relation = creatures:alliance(self.object, obj)
-						if (math.abs(relation) >= math.random()) then
-							-- attack targets
-							if relation < 0 and self.object:get_hp() > self.hp_max / 2.5 and self.attack_type and minetest.setting_getbool("enable_damage") then
-								self.targets[obj] = {entity = obj, type = "attack", priority = math.abs(relation)}
-							-- avoid targets
-							elseif relation < 0 then
-								self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation)}
-							-- follow targets
-							elseif relation > 0 and not self.tamed and obj:is_player() then
-								self.targets[obj] = {entity = obj, type = "follow", priority = math.abs(relation) / 2}
-							end
+						-- attack targets
+						if self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -math.random() then
+							self.targets[obj] = {entity = obj, type = "attack", priority = math.abs(relation) * self.traits.aggressivity}
+						-- avoid targets
+						elseif relation * self.traits.fear <= -math.random() then
+							self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation) * self.traits.fear}
+						-- follow targets
+						elseif not self.tamed and obj:is_player() and relation * self.traits.loyalty > math.random() then
+							self.targets[obj] = {entity = obj, type = "follow", priority = math.abs(relation) * self.traits.loyalty}
 						end
 					end
 				end
@@ -285,11 +282,12 @@ function creatures:register_mob(name, def)
 					local p = target.entity:getpos() or target.entity.object:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 
-					-- remove targets which are dead or out of range
-					if dist > self.personality.vision or target.entity:get_hp() <= 0 then
+					-- remove targets which are dead or out of interest range
+					local dist_interest = self.traits.vision * math.min(1, self.traits.determination / (1 - math.random()))
+					if dist > dist_interest or target.entity:get_hp() <= 0 then
 						self.targets[obj] = nil
 					-- if the mob is no longer fit to fight, change attack targets to avoid
-					elseif target.type == "attack" and self.object:get_hp() <= self.hp_max / 5 then
+					elseif target.type == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
 						self.targets[obj].type = "avoid"
 					end
 				else
@@ -309,7 +307,7 @@ function creatures:register_mob(name, def)
 
 			-- carry out mob actions
 			if not self.target_current then
-				if self.personality.roam >= math.random() then
+				if self.traits.roam >= math.random() then
 					if math.random(1, 4) == 1 then
 						self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
 					end
@@ -352,7 +350,7 @@ function creatures:register_mob(name, def)
 					self.set_velocity(self, 0)
 					self:set_animation("punch")
 					self.v_start = false
-					if self.timer_attack > self.personality.attack_interval then
+					if self.timer_attack > self.traits.attack_interval then
 						self.timer_attack = 0
 						if self.sounds and self.sounds.attack then
 							minetest.sound_play(self.sounds.attack, {object = self.object})
@@ -372,7 +370,7 @@ function creatures:register_mob(name, def)
 				self.object:setyaw(yaw)
 				self.set_velocity(self, 0)
 				
-				if self.timer_attack > self.personality.attack_interval then
+				if self.timer_attack > self.traits.attack_interval then
 					self.timer_attack = 0
 					
 					self:set_animation("punch")
@@ -409,7 +407,7 @@ function creatures:register_mob(name, def)
 				end
 				self.object:setyaw(yaw)
 
-				if dist > self.personality.vision / 5 or avoid then
+				if dist > self.traits.vision / 5 or avoid then
 					if not self.v_start then
 						self.v_start = true
 					else
@@ -420,8 +418,8 @@ function creatures:register_mob(name, def)
 						end
 					end
 
-					if (not avoid and dist > self.personality.vision / 2 ) or
-					(avoid and dist <= self.personality.vision / 2) then
+					if (not avoid and dist > self.traits.vision / 2 ) or
+					(avoid and dist <= self.traits.vision / 2) then
 						self.set_velocity(self, self.run_velocity)
 						self:set_animation("run")
 					else
@@ -454,8 +452,8 @@ function creatures:register_mob(name, def)
 				if tmp and tmp.tamed then
 					self.tamed = tmp.tamed
 				end
-				if tmp and tmp.personality then
-					self.personality = tmp.personality
+				if tmp and tmp.traits then
+					self.traits = tmp.traits
 				end
 			end
 
@@ -465,9 +463,9 @@ function creatures:register_mob(name, def)
 
 			-- set personality: each trait is a random value per mob, between the min and max values defined
 			-- on_step must never execute before this is set, the code expects a value for each trait!
-			for trait, entry in pairs(self.personality) do
+			for trait, entry in pairs(self.traits) do
 				if type(entry) == "table" then
-					self.personality[trait] = math.random() * (entry[2] - entry[1]) + entry[1]
+					self.traits[trait] = math.random() * (entry[2] - entry[1]) + entry[1]
 				end
 			end
 		end,
@@ -476,7 +474,7 @@ function creatures:register_mob(name, def)
 			local tmp = {
 				timer_life = self.timer_life,
 				tamed = self.tamed,
-				personality = self.personality,
+				traits = self.traits,
 			}
 			return minetest.serialize(tmp)
 		end,
@@ -508,21 +506,19 @@ function creatures:register_mob(name, def)
 				end
 			else
 				-- attack enemies that punch us, but avoid allies who do so
-				if relation <= 1 - math.random() * 2 then
-					if relation < 0 and self.attack_type and minetest.setting_getbool("enable_damage") then
-						if not self.targets[hitter] then
-							self.targets[hitter] = {entity = hitter, type = "attack", priority = (1 - relation) * 0.5}
-						else
-							self.targets[hitter].type = "attack"
-							self.targets[hitter].priority = self.targets[hitter].priority + (1 - relation) * 0.5
-						end
+				if self.attack_type and minetest.setting_getbool("enable_damage") and relation * (1 / math.random()) <= (-1 + self.traits.aggressivity) then
+					if not self.targets[hitter] then
+						self.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation) * self.traits.aggressivity}
 					else
-						if not self.targets[hitter] then
-							self.targets[hitter] = {entity = hitter, type = "avoid", priority = (1 - relation) * 0.5}
-						else
-							self.targets[hitter].type = "aviod"
-							self.targets[hitter].priority = self.targets[hitter].priority + (1 - relation) * 0.5
-						end
+						self.targets[hitter].type = "attack"
+						self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation) * self.traits.aggressivity
+					end
+				elseif (1 - relation) * (1 / math.random()) > self.traits.fear then
+					if not self.targets[hitter] then
+						self.targets[hitter] = {entity = hitter, type = "avoid", priority = math.abs(relation) * self.traits.fear}
+					else
+						self.targets[hitter].type = "aviod"
+						self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation) * self.traits.fear
 					end
 				end
 
