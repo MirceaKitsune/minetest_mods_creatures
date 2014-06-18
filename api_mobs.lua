@@ -259,7 +259,7 @@ function creatures:register_mob(name, def)
 
 			-- targets: scan for targets to add
 			for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.view_range)) do
-				if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().mob)) then
+				if (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().mob)) and not self.targets[obj] then
 					local s = self.object:getpos()
 					local p = obj:getpos()
 					local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
@@ -269,19 +269,13 @@ function creatures:register_mob(name, def)
 						if (math.abs(relation) >= math.random()) then
 							-- attack targets
 							if relation < 0 and self.object:get_hp() > self.hp_max / 2.5 and self.attack_type and minetest.setting_getbool("enable_damage") then
-								if not self.targets[obj] then
-									self.targets[obj] = {entity = obj, type = "attack", priority = math.abs(relation)}
-								end
+								self.targets[obj] = {entity = obj, type = "attack", priority = math.abs(relation)}
 							-- avoid targets
 							elseif relation < 0 then
-								if not self.targets[obj] then
-									self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation)}
-								end
+								self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation)}
 							-- follow targets
 							elseif relation > 0 and not self.tamed and obj:is_player() then
-								if not self.targets[obj] then
-									self.targets[obj] = {entity = obj, type = "follow", priority = math.abs(relation) / 2}
-								end
+								self.targets[obj] = {entity = obj, type = "follow", priority = math.abs(relation) / 2}
 							end
 						end
 					end
@@ -490,13 +484,6 @@ function creatures:register_mob(name, def)
 				hitter:set_look_pitch(0)
 				creatures:set_race(hitter, name)
 				self.object:remove()
-			elseif self.attack_type and hitter:is_player() and relation >= 0 then
-				-- warn and punish the player if hitting an ally
-				minetest.chat_send_player(hitter:get_player_name(), "Don't hit your allies!")
-				hitter:set_hp(hitter:get_hp() - 1)
-				if self.sounds and self.sounds.damage then
-					minetest.sound_play(self.sounds.damage, {object = self.object})
-				end
 			elseif self.object:get_hp() <= 0 then
 				-- handle mob death
 				if hitter and hitter:is_player() and hitter:get_inventory() then
@@ -510,12 +497,22 @@ function creatures:register_mob(name, def)
 					minetest.sound_play(self.sounds.die, {object = self.object})
 				end
 			else
-				-- if the creature hitting us is an enemy, start attacking or increase attack priority
-				if self.attack_type and minetest.setting_getbool("enable_damage") then
-					if not self.targets[hitter] then
-						self.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation)}
+				-- decide whether to turn against the creature hitting us
+				if relation <= 1 - math.random() * 2 then
+					if self.attack_type and minetest.setting_getbool("enable_damage") then
+						if not self.targets[hitter] then
+							self.targets[hitter] = {entity = hitter, type = "attack", priority = (1 - relation) * 0.5}
+						else
+							self.targets[hitter].type = "attack"
+							self.targets[hitter].priority = self.targets[hitter].priority + (1 - relation) * 0.5
+						end
 					else
-						self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation)
+						if not self.targets[hitter] then
+							self.targets[hitter] = {entity = hitter, type = "avoid", priority = (1 - relation) * 0.5}
+						else
+							self.targets[hitter].type = "aviod"
+							self.targets[hitter].priority = self.targets[hitter].priority + (1 - relation) * 0.5
+						end
 					end
 				end
 
