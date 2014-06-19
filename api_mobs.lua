@@ -46,6 +46,7 @@ function creatures:register_mob(name, def)
 		gravity = tonumber(minetest.setting_get("movement_gravity")) * def.physics.gravity,
 		targets = {},
 		target_current = nil,
+		in_liquid = false,
 		v_start = false,
 		old_y = nil,
 		actor = false,
@@ -140,6 +141,12 @@ function creatures:register_mob(name, def)
 			else
 				self.object:setacceleration({x=0, y=-self.gravity, z=0})
 			end
+
+			-- make mobs tend to stay at the water surface
+			if self.in_liquid then
+				local v = self.object:getvelocity()
+				self.object:setacceleration({x=0, y=self.gravity/(math.max(1, v.y)^2), z=0})
+			end
 			
 			-- handle fall damage
 			if self.disable_fall_damage and self.object:getvelocity().y == 0 then
@@ -169,14 +176,14 @@ function creatures:register_mob(name, def)
 			self.timer_env_damage = self.timer_env_damage + dtime
 			if self.timer_env_damage > 1 then
 				self.timer_env_damage = 0
-				local pos = self.object:getpos()
-				pos.y = pos.y - 1 -- exclude player offset
-				local n = minetest.env:get_node(pos)
+				local s = self.object:getpos()
+				s.y = s.y - 1 -- exclude player offset
+				local n = minetest.env:get_node(s)
 				
 				if self.env_damage.light and self.env_damage.light ~= 0
-					and pos.y>0
-					and minetest.env:get_node_light(pos)
-					and minetest.env:get_node_light(pos) > 4
+					and s.y>0
+					and minetest.env:get_node_light(s)
+					and minetest.env:get_node_light(s) > 4
 					and minetest.env:get_timeofday() > 0.2
 					and minetest.env:get_timeofday() < 0.8
 				then
@@ -206,6 +213,13 @@ function creatures:register_mob(name, def)
 						if self.sounds and self.sounds.damage then
 							minetest.sound_play(self.sounds.damage, {object = self.object})
 						end
+						
+						-- jump if we're standing on something solid
+						local v = self.object:getvelocity()
+						if self.jump and v.y == 0 then
+							v.y = self.jump_velocity
+							self.object:setvelocity(v)
+						end
 					end
 				end
 				
@@ -221,6 +235,13 @@ function creatures:register_mob(name, def)
 					else
 						if self.sounds and self.sounds.damage then
 							minetest.sound_play(self.sounds.damage, {object = self.object})
+						end
+						
+						-- jump if we're standing on something solid
+						local v = self.object:getvelocity()
+						if self.jump and v.y == 0 then
+							v.y = self.jump_velocity
+							self.object:setvelocity(v)
 						end
 					end
 				end
@@ -247,6 +268,16 @@ function creatures:register_mob(name, def)
 			
 			if self.sounds and self.sounds.random and math.random(1, 50) <= 1 then
 				minetest.sound_play(self.sounds.random, {object = self.object})
+			end
+
+			-- determine if this mob is in a liquid
+			local pos = self.object:getpos()
+			local node = minetest.env:get_node(pos)
+			local liquidtype = minetest.registered_nodes[node.name].liquidtype
+			if (liquidtype == "source" or liquidtype == "flowing") then
+				self.in_liquid = true
+			else
+				self.in_liquid = false
 			end
 
 			-- targets: scan for targets to add
