@@ -1,5 +1,7 @@
 -- Creature registration - Mobs:
 
+local highest_vision = 0
+
 function creatures:register_mob(name, def)
 	-- Players are offset by 1 node in the Minetest code. In order for mobs to have the same height, we must apply a similar offset to them
 	-- This is a bad choice, as the real position of mobs will be off by one unit. But it's the only way to make players and mobs work with the same models
@@ -472,6 +474,10 @@ function creatures:register_mob(name, def)
 					self.traits[trait] = math.random() * (entry[2] - entry[1]) + entry[1]
 				end
 			end
+
+			if self.traits.vision > highest_vision then
+				highest_vision = self.traits.vision
+			end
 		end,
 		
 		get_staticdata = function(self)
@@ -525,6 +531,39 @@ function creatures:register_mob(name, def)
 					else
 						self.targets[hitter].type = "aviod"
 						self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation) * self.traits.fear
+					end
+				end
+
+				-- make other mobs who see this mob fighting take action
+				for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), highest_vision)) do
+					if obj ~= self.object and obj:get_luaentity() and obj:get_luaentity().traits then
+						local other = obj:get_luaentity()
+						local s = self.object:getpos()
+						local p = obj:getpos()
+						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+						if dist < other.traits.vision and other.attack_type and minetest.setting_getbool("enable_damage") then
+							local relation_other_self = creatures:alliance(obj, self.object)
+							local relation_other_hitter = creatures:alliance(obj, hitter)
+							if relation_other_self ~= 0 and relation_other_hitter ~= 0 then
+								-- if this is an ally who was hit by an enemy, attack the hitter
+								if (math.max(0, relation_other_self) * other.traits.loyalty) / (-relation_other_hitter * other.traits.aggressivity) >= math.random() then
+									if not other.targets[hitter] then
+										other.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation_other_hitter) * other.traits.aggressivity}
+									else
+										other.targets[hitter].type = "attack"
+										other.targets[hitter].priority = other.targets[hitter].priority + math.abs(relation_other_hitter) * other.traits.aggressivity
+									end
+								-- if this is an enemy who was hit by an ally, attack the victim
+								elseif (math.max(0, relation_other_hitter) * other.traits.loyalty) / (-relation_other_self * other.traits.aggressivity) >= math.random() then
+									if not other.targets[self.object] then
+										other.targets[self.object] = {entity = self.object, type = "attack", priority = math.abs(relation_other_self) * other.traits.aggressivity}
+									else
+										other.targets[self.object].type = "attack"
+										other.targets[self.object].priority = other.targets[self.object].priority + math.abs(relation_other_self) * other.traits.aggressivity
+									end
+								end
+							end
+						end
 					end
 				end
 
