@@ -131,8 +131,15 @@ function creatures:register_mob(name, def)
 					self.timer_life = 60
 				end
 			end
+
+			-- physics: make mobs jump when they're stuck
+			if self.jump and self.v_start and self.get_velocity(self) <= 1 and self.object:getvelocity().y == 0 then
+				local v = self.object:getvelocity()
+				v.y = self.jump_velocity
+				self.object:setvelocity(v)
+			end
 			
-			-- make mobs push forward while jumping and apply gravity
+			-- physics: make mobs push forward while jumping and apply gravity
 			if self.object:getvelocity().y > 0.1 then
 				local yaw = self.object:getyaw()
 				local x = math.sin(yaw) * -2
@@ -142,7 +149,7 @@ function creatures:register_mob(name, def)
 				self.object:setacceleration({x=0, y=-self.gravity, z=0})
 			end
 
-			-- make mobs tend to stay at the water surface
+			-- physics: make mobs tend to stay at the water surface
 			if self.in_liquid then
 				local v = self.object:getvelocity()
 				self.object:setacceleration({x=0, y=self.gravity/(math.max(1, v.y)^2), z=0})
@@ -366,23 +373,19 @@ function creatures:register_mob(name, def)
 				end
 			end
 
-			-- carry out mob actions
+			-- state: idle
 			if not self.target_current then
+				self.object:setyaw(self.object:getyaw()+(0.5-math.random())*math.pi*self.traits.roam)
 				if self.traits.roam >= math.random() then
-					if math.random(1, 4) == 1 then
-						self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/180*math.pi))
-					end
-					if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-						local v = self.object:getvelocity()
-						v.y = self.jump_velocity
-						self.object:setvelocity(v)
-					end
-					self:set_animation("walk")
 					self.set_velocity(self, self.walk_velocity)
+					self:set_animation("walk")
+					self.v_start = true
 				else
 					self.set_velocity(self, 0)
 					self.set_animation(self, "stand")
+					self.v_start = false
 				end
+			-- state: attacking, melee
 			elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
 				local s = self.object:getpos()
 				local p = self.target_current.entity:getpos() or self.target_current.entity.object:getpos()
@@ -396,17 +399,9 @@ function creatures:register_mob(name, def)
 				self.object:setyaw(yaw)
 				
 				if dist > 2 then
-					if not self.v_start then
-						self.v_start = true
-					else
-						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-							local v = self.object:getvelocity()
-							v.y = self.jump_velocity
-							self.object:setvelocity(v)
-						end
-					end
 					self.set_velocity(self, self.run_velocity)
 					self:set_animation("walk_punch")
+					self.v_start = true
 				else
 					self.set_velocity(self, 0)
 					self:set_animation("punch")
@@ -422,6 +417,7 @@ function creatures:register_mob(name, def)
 						}, vec)
 					end
 				end
+			-- state: attacking, shoot
 			elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
@@ -451,6 +447,7 @@ function creatures:register_mob(name, def)
 					vec.z = vec.z*v/amount
 					obj:setvelocity(vec)
 				end
+			-- state: following or avoiding
 			elseif self.target_current.objective == "follow" or self.target_current.objective == "avoid" then
 				local avoid = self.target_current.objective == "avoid"
 
@@ -469,16 +466,6 @@ function creatures:register_mob(name, def)
 				self.object:setyaw(yaw)
 
 				if dist > self.traits.vision / 5 or avoid then
-					if not self.v_start then
-						self.v_start = true
-					else
-						if self.jump and self.get_velocity(self) <= 0.5 and self.object:getvelocity().y == 0 then
-							local v = self.object:getvelocity()
-							v.y = self.jump_velocity
-							self.object:setvelocity(v)
-						end
-					end
-
 					if (not avoid and dist > self.traits.vision / 2 ) or
 					(avoid and dist <= self.traits.vision / 2) then
 						self.set_velocity(self, self.run_velocity)
@@ -486,10 +473,11 @@ function creatures:register_mob(name, def)
 						self.set_velocity(self, self.walk_velocity)
 					end
 					self:set_animation("walk")
+					self.v_start = true
 				else
-					self.v_start = false
 					self.set_velocity(self, 0)
 					self:set_animation("stand")
+					self.v_start = false
 				end
 			end
 		end,
