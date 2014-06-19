@@ -69,30 +69,30 @@ local function set_animation(player, type, speed)
 	end
 
 	if type == "stand" then
-		if animation.stand_start and animation.stand_end then
+		if animation.stand then
 			player:set_animation(
-				{x=animation.stand_start, y=animation.stand_end},
+				{x=animation.stand[1], y=animation.stand[2]},
 				speed, 0)
 			player_data[name].animation = "stand"
 		end
 	elseif type == "walk" then
-		if animation.walk_start and animation.walk_end then
+		if animation.walk then
 			player:set_animation(
-				{x=animation.walk_start, y=animation.walk_end},
+				{x=animation.walk[1], y=animation.walk[2]},
 				speed, 0)
 			player_data[name].animation = "walk"
 		end
 	elseif type == "walk_punch" then
-		if animation.walk_punch_start and animation.walk_punch_end then
+		if animation.walk_punch then
 			player:set_animation(
-				{x=animation.walk_punch_start, y=animation.walk_punch_end},
+				{x=animation.walk_punch[1], y=animation.walk_punch[2]},
 				speed, 0)
 			player_data[name].animation = "walk_punch"
 		end
 	elseif type == "punch" then
-		if animation.punch_start and animation.punch_end then
+		if animation.punch then
 			player:set_animation(
-				{x=animation.punch_start, y=animation.punch_end},
+				{x=animation.punch[1], y=animation.punch[2]},
 				speed, 0)
 			player_data[name].animation = "punch"
 		end
@@ -166,10 +166,10 @@ local function apply_settings (player, race)
 
 	-- set local animations
 	if def.animation and def.animation.speed then
-		player:set_local_animation({x = def.animation.stand_start, y = def.animation.stand_end},
-			{x = def.animation.walk_start, y = def.animation.walk_end},
-			{x = def.animation.punch_start, y = def.animation.punch_end},
-			{x = def.animation.walk_punch_start, y = def.animation.walk_punch_end},
+		player:set_local_animation({x = def.animation.stand[1], y = def.animation.stand[2]},
+			{x = def.animation.walk[1], y = def.animation.walk[2]},
+			{x = def.animation.punch[1], y = def.animation.punch[2]},
+			{x = def.animation.walk_punch[1], y = def.animation.walk_punch[2]},
 			def.animation.speed)
 	end
 end

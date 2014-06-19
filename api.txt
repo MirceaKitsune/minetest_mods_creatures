@@ -10,7 +10,7 @@
 	mesh = "": 3D model of the player and mob, when mesh visual is used.
 	textures = {"clear.png"}: Textures used by the player and mob.
 	visual_size = {x=1, y=1}: Scales the visual of the player and mob.
-	animation = {speed = 0, stand_start = 1, ...}: List of animations and animation ranges, containing the following values: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end.
+	animation = {speed = 0, stand = {1, 31}, ...}: List of animation ranges, containing the following entries: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end.
 	sounds = {random = "filename", ...}: A list containing sound effects for various actions. Valid entries: random, attack, damage, die.
 	makes_footstep_sound = false: Whether the player and mob make footstep sounds while walking. (TODO: Currently works only for mobs, engine implementation needed for players!)
 	env_damage = {water = 0, ...}: Enrivonment damage. Valid entries: water, lava, light.

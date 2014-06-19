@@ -74,47 +74,31 @@ function creatures:register_mob(name, def)
 			end
 
 			if type == "stand" then
-				if
-					self.animation.stand_start
-					and self.animation.stand_end
-				then
+				if self.animation.stand then
 					self.object:set_animation(
-						{x=self.animation.stand_start,y=self.animation.stand_end},
-						speed, 0
-					)
+						{x=self.animation.stand[1], y=self.animation.stand[2]},
+						speed, 0)
 					self.animation.current = "stand"
 				end
 			elseif type == "walk" then
-				if
-					self.animation.walk_start
-					and self.animation.walk_end
-				then
+				if self.animation.walk then
 					self.object:set_animation(
-						{x=self.animation.walk_start,y=self.animation.walk_end},
-						speed, 0
-					)
+						{x=self.animation.walk[1], y=self.animation.walk[2]},
+						speed, 0)
 					self.animation.current = "walk"
 				end
 			elseif type == "walk_punch" then
-				if
-					self.animation.walk_punch_start
-					and self.animation.walk_punch_end
-				then
+				if self.animation.walk_punch then
 					self.object:set_animation(
-						{x=self.animation.walk_punch_start,y=self.animation.walk_punch_end},
-						speed, 0
-					)
+						{x=self.animation.walk_punch[1], y=self.animation.walk_punch[2]},
+						speed, 0)
 					self.animation.current = "walk_punch"
 				end
 			elseif type == "punch" then
-				if
-					self.animation.punch_start
-					and self.animation.punch_end
-				then
+				if self.animation.punch then
 					self.object:set_animation(
-						{x=self.animation.punch_start,y=self.animation.punch_end},
-						speed, 0
-					)
+						{x=self.animation.punch[1], y=self.animation.punch[2]},
+						speed, 0)
 					self.animation.current = "punch"
 				end
 			end
