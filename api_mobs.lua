@@ -1,3 +1,8 @@
+-- Creature settings - Mobs:
+
+-- prints details about mob targets
+local DEBUG_AI_TARGETS = false
+
 -- Creature registration - Mobs:
 
 local highest_vision = 0
@@ -225,11 +230,11 @@ function creatures:register_mob(name, def)
 
 			-- apply AI think speed, influenced by the mob's current status
 			self.timer_think = self.timer_think+dtime
-			if self.target_current and self.target_current.type == "attack" then
+			if self.target_current and self.target_current.objective == "attack" then
 				if self.timer_think < self.traits.think / 10 then
 					return
 				end
-			elseif self.target_current and (self.target_current.type == "follow" or self.target_current.type == "avoid") then
+			elseif self.target_current and (self.target_current.objective == "follow" or self.target_current.objective == "avoid") then
 				if self.timer_think < self.traits.think / 2 then
 					return
 				end
@@ -254,13 +259,26 @@ function creatures:register_mob(name, def)
 						local relation = creatures:alliance(self.object, obj)
 						-- attack targets
 						if self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -math.random() then
-							self.targets[obj] = {entity = obj, type = "attack", priority = math.abs(relation) * self.traits.aggressivity}
+							self.targets[obj] = {entity = obj, objective = "attack", priority = math.abs(relation) * self.traits.aggressivity}
 						-- avoid targets
 						elseif relation * self.traits.fear <= -math.random() then
-							self.targets[obj] = {entity = obj, type = "avoid", priority = math.abs(relation) * self.traits.fear}
+							self.targets[obj] = {entity = obj, objective = "avoid", priority = math.abs(relation) * self.traits.fear}
 						-- follow targets
 						elseif obj:is_player() and relation * self.traits.loyalty > math.random() then
-							self.targets[obj] = {entity = obj, type = "follow", priority = math.abs(relation) * self.traits.loyalty}
+							self.targets[obj] = {entity = obj, objective = "follow", priority = math.abs(relation) * self.traits.loyalty}
+						end
+
+						if DEBUG_AI_TARGETS and self.targets[obj] then
+							local name2 = "creature"
+							if obj:is_player() then
+								name2 = obj:get_player_name()
+							elseif obj:get_luaentity() then
+								name2 = obj:get_luaentity().name
+							end
+							print("Creatures: "..name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
+							" set "..name2.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
+							" as an \""..self.targets[obj].objective.."\" target with priority "..self.targets[obj].priority..
+							" because self spotted the target")
 						end
 					end
 				end
@@ -269,6 +287,7 @@ function creatures:register_mob(name, def)
 			-- targets: scan for targets to remove or modify
 			for obj, target in pairs(self.targets) do
 				if not target.persist then
+					local target_old = target
 					if (target.entity:is_player() or target.entity:get_luaentity()) then
 						local s = self.object:getpos()
 						local p = target.entity:getpos() or target.entity.object:getpos()
@@ -279,11 +298,29 @@ function creatures:register_mob(name, def)
 						if dist > dist_interest or target.entity:get_hp() <= 0 then
 							self.targets[obj] = nil
 						-- if the mob is no longer fit to fight, change attack targets to avoid
-						elseif target.type == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
-							self.targets[obj].type = "avoid"
+						elseif target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
+							self.targets[obj].objective = "avoid"
 						end
 					else
+						-- remove players that disconnected or mobs that were removed from the world
 						self.targets[obj] = nil
+					end
+
+					if DEBUG_AI_TARGETS then
+						local s = self.object:getpos()
+						local name2 = "creature"
+						if target.entity:is_player() then
+							name2 = target.entity:get_player_name()
+						elseif target.entity:get_luaentity() then
+							name2 = target.entity:get_luaentity().name
+						end
+						if not self.targets[obj] then
+							print("Creatures: "..name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z).." dropped "..name2..
+							" because the target was no longer relevant")
+						elseif self.targets[obj].objective ~= target_old.objective then
+							print("Creatures: "..name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
+							" switched "..name2.." from type "..target_old.objective.." to type \""..self.targets[obj].objective.."\"")
+						end
 					end
 				end
 			end
@@ -315,7 +352,7 @@ function creatures:register_mob(name, def)
 					self.set_velocity(self, 0)
 					self.set_animation(self, "stand")
 				end
-			elseif self.target_current.type == "attack" and self.attack_type == "melee" then
+			elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
 				local s = self.object:getpos()
 				local p = self.target_current.entity:getpos() or self.target_current.entity.object:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
@@ -354,7 +391,7 @@ function creatures:register_mob(name, def)
 						}, vec)
 					end
 				end
-			elseif self.target_current.type == "attack" and self.attack_type == "shoot" then				
+			elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
 				if p.x > s.x then
@@ -383,8 +420,8 @@ function creatures:register_mob(name, def)
 					vec.z = vec.z*v/amount
 					obj:setvelocity(vec)
 				end
-			elseif self.target_current.type == "follow" or self.target_current.type == "avoid" then
-				local avoid = self.target_current.type == "avoid"
+			elseif self.target_current.objective == "follow" or self.target_current.objective == "avoid" then
+				local avoid = self.target_current.objective == "avoid"
 
 				local s = self.object:getpos()
 				local p = self.target_current.entity:getpos() or self.target_current.entity.object:getpos()
@@ -507,19 +544,37 @@ function creatures:register_mob(name, def)
 				end
 			else
 				-- attack enemies that punch us, but avoid allies who do so
-				if self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -math.random() / 2 then
-					if not self.targets[hitter] then
-						self.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation) * self.traits.aggressivity}
-					else
-						self.targets[hitter].type = "attack"
-						self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation) * self.traits.aggressivity
+				if hitter:is_player() or (hitter:get_luaentity() and hitter:get_luaentity().traits) then
+					local target_old = self.targets[hitter]
+					if self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -math.random() / 2 then
+						if not self.targets[hitter] then
+							self.targets[hitter] = {entity = hitter, objective = "attack", priority = math.abs(relation) * self.traits.aggressivity}
+						else
+							self.targets[hitter].objective = "attack"
+							self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation) * self.traits.aggressivity
+						end
+					elseif (1 - relation) * self.traits.fear > math.random() / 2 then
+						if not self.targets[hitter] then
+							self.targets[hitter] = {entity = hitter, objective = "avoid", priority = math.abs(relation) * self.traits.fear}
+						else
+							self.targets[hitter].objective = "aviod"
+							self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation) * self.traits.fear
+						end
 					end
-				elseif (1 - relation) * self.traits.fear > math.random() / 2 then
-					if not self.targets[hitter] then
-						self.targets[hitter] = {entity = hitter, type = "avoid", priority = math.abs(relation) * self.traits.fear}
-					else
-						self.targets[hitter].type = "aviod"
-						self.targets[hitter].priority = self.targets[hitter].priority + math.abs(relation) * self.traits.fear
+
+					if DEBUG_AI_TARGETS and self.targets[hitter] and (not target_old or self.targets[hitter].objective ~= target_old.objective) then
+						local s = self.object:getpos()
+						local p = hitter:getpos()
+						local name2 = "hitter"
+						if hitter:is_player() then
+							name2 = hitter:get_player_name()
+						elseif hitter:get_luaentity() then
+							name2 = hitter:get_luaentity().name
+						end
+						print("Creatures: "..name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
+						" set "..name2.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
+						" as an \""..self.targets[hitter].objective.."\" target with priority "..self.targets[hitter].priority..
+						" because the target hit them")
 					end
 				end
 
@@ -529,26 +584,50 @@ function creatures:register_mob(name, def)
 						local other = obj:get_luaentity()
 						local s = self.object:getpos()
 						local p = obj:getpos()
+						local h = hitter:getpos()
 						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 						if dist < other.traits.vision and other.attack_type and minetest.setting_getbool("enable_damage") then
+							local target_old_hitter = other.targets[hitter]
+							local target_old_self = other.targets[self.object]
 							local relation_other_self = creatures:alliance(obj, self.object)
 							local relation_other_hitter = creatures:alliance(obj, hitter)
 							if relation_other_self ~= 0 and relation_other_hitter ~= 0 then
 								-- if this is an ally who was hit by an enemy, attack the hitter
 								if (math.max(0, relation_other_self) * other.traits.loyalty) / (-relation_other_hitter * other.traits.aggressivity) >= math.random() then
 									if not other.targets[hitter] then
-										other.targets[hitter] = {entity = hitter, type = "attack", priority = math.abs(relation_other_hitter) * other.traits.aggressivity}
+										other.targets[hitter] = {entity = hitter, objective = "attack", priority = math.abs(relation_other_hitter) * other.traits.aggressivity}
 									else
-										other.targets[hitter].type = "attack"
+										other.targets[hitter].objective = "attack"
 										other.targets[hitter].priority = other.targets[hitter].priority + math.abs(relation_other_hitter) * other.traits.aggressivity
 									end
 								-- if this is an enemy who was hit by an ally, attack the victim
 								elseif (math.max(0, relation_other_hitter) * other.traits.loyalty) / (-relation_other_self * other.traits.aggressivity) >= math.random() then
 									if not other.targets[self.object] then
-										other.targets[self.object] = {entity = self.object, type = "attack", priority = math.abs(relation_other_self) * other.traits.aggressivity}
+										other.targets[self.object] = {entity = self.object, objective = "attack", priority = math.abs(relation_other_self) * other.traits.aggressivity}
 									else
-										other.targets[self.object].type = "attack"
+										other.targets[self.object].objective = "attack"
 										other.targets[self.object].priority = other.targets[self.object].priority + math.abs(relation_other_self) * other.traits.aggressivity
+									end
+								end
+
+								if DEBUG_AI_TARGETS then
+									local name2 = "witness"
+									if hitter:is_player() then
+										name2 = hitter:get_player_name()
+									elseif hitter:get_luaentity() then
+										name2 = hitter:get_luaentity().name
+									end
+									if other.targets[hitter] and (not target_old_hitter or other.targets[hitter].objective ~= target_old_hitter.objective) then
+										print("Creatures: "..name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
+										" caused "..other.name.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
+										" to set "..name2.." at "..math.floor(h.x)..","..math.floor(h.y)..","..math.floor(h.z)..
+										" as an \""..other.targets[hitter].objective.."\" target with priority "..other.targets[hitter].priority..
+										" because the target is an enemy and hit self who is an ally")
+									elseif other.targets[self.object] and (not target_old_self or other.targets[self.object].objective ~= target_old_self.objective) then
+										print("Creatures: "..name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
+										" was set by "..other.name.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
+										" as an \""..other.targets[self.object].objective.."\" target with priority "..other.targets[self.object].priority..
+										" because "..name2.." at "..math.floor(h.x)..","..math.floor(h.y)..","..math.floor(h.z).." is an ally and hit self who is an enemy")
 									end
 								end
 							end
