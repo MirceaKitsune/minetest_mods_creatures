@@ -67,6 +67,12 @@ function creatures:register_mob(name, def)
 			if type == self.animation.current then
 				return
 			end
+
+			local speed = self.animation.speed
+			if self.get_velocity(self) >= (self.walk_velocity + self.run_velocity) / 2 then
+				speed = self.animation.speed * 2
+			end
+
 			if type == "stand" then
 				if
 					self.animation.stand_start
@@ -74,7 +80,7 @@ function creatures:register_mob(name, def)
 				then
 					self.object:set_animation(
 						{x=self.animation.stand_start,y=self.animation.stand_end},
-						self.animation.speed, 0
+						speed, 0
 					)
 					self.animation.current = "stand"
 				end
@@ -85,20 +91,20 @@ function creatures:register_mob(name, def)
 				then
 					self.object:set_animation(
 						{x=self.animation.walk_start,y=self.animation.walk_end},
-						self.animation.speed, 0
+						speed, 0
 					)
 					self.animation.current = "walk"
 				end
-			elseif type == "run" then
+			elseif type == "walk_punch" then
 				if
-					self.animation.run_start
-					and self.animation.run_end
+					self.animation.walk_punch_start
+					and self.animation.walk_punch_end
 				then
 					self.object:set_animation(
-						{x=self.animation.run_start,y=self.animation.run_end},
-						self.animation.speed * 2, 0
+						{x=self.animation.walk_punch_start,y=self.animation.walk_punch_end},
+						speed, 0
 					)
-					self.animation.current = "run"
+					self.animation.current = "walk_punch"
 				end
 			elseif type == "punch" then
 				if
@@ -107,7 +113,7 @@ function creatures:register_mob(name, def)
 				then
 					self.object:set_animation(
 						{x=self.animation.punch_start,y=self.animation.punch_end},
-						self.animation.speed, 0
+						speed, 0
 					)
 					self.animation.current = "punch"
 				end
@@ -348,7 +354,7 @@ function creatures:register_mob(name, def)
 						end
 					end
 					self.set_velocity(self, self.run_velocity)
-					self:set_animation("run")
+					self:set_animation("walk_punch")
 				else
 					self.set_velocity(self, 0)
 					self:set_animation("punch")
@@ -424,11 +430,10 @@ function creatures:register_mob(name, def)
 					if (not avoid and dist > self.traits.vision / 2 ) or
 					(avoid and dist <= self.traits.vision / 2) then
 						self.set_velocity(self, self.run_velocity)
-						self:set_animation("run")
 					else
 						self.set_velocity(self, self.walk_velocity)
-						self:set_animation("walk")
 					end
+					self:set_animation("walk")
 				else
 					self.v_start = false
 					self.set_velocity(self, 0)

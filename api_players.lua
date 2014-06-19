@@ -82,12 +82,12 @@ local function set_animation(player, type, speed)
 				speed, 0)
 			player_data[name].animation = "walk"
 		end
-	elseif type == "run" then
-		if animation.run_start and animation.run_end then
+	elseif type == "walk_punch" then
+		if animation.walk_punch_start and animation.walk_punch_end then
 			player:set_animation(
-				{x=animation.run_start, y=animation.run_end},
+				{x=animation.walk_punch_start, y=animation.walk_punch_end},
 				speed, 0)
-			player_data[name].animation = "run"
+			player_data[name].animation = "walk_punch"
 		end
 	elseif type == "punch" then
 		if animation.punch_start and animation.punch_end then
@@ -169,7 +169,7 @@ local function apply_settings (player, race)
 		player:set_local_animation({x = def.animation.stand_start, y = def.animation.stand_end},
 			{x = def.animation.walk_start, y = def.animation.walk_end},
 			{x = def.animation.punch_start, y = def.animation.punch_end},
-			{x = def.animation.walk_start, y = def.animation.walk_end},
+			{x = def.animation.walk_punch_start, y = def.animation.walk_punch_end},
 			def.animation.speed)
 	end
 end
@@ -194,7 +194,9 @@ minetest.register_globalstep(function(dtime)
 
 			-- apply animations based on what the player is doing
 			if player:get_hp() == 0 then
-				-- mobs don't have a death animation, make the player invisible here perhaps?
+				-- TODO: mobs don't have a death animation, make the player invisible here
+			elseif walking and controls.LMB then
+				set_animation(player, "walk_punch", speed)
 			elseif walking then
 				set_animation(player, "walk", speed)
 			elseif controls.LMB then
