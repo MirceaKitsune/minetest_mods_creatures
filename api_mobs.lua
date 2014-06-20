@@ -44,6 +44,7 @@ function creatures:register_mob(name, def)
 		run_velocity = tonumber(minetest.setting_get("movement_speed_fast")) * def.physics.speed,
 		jump_velocity = tonumber(minetest.setting_get("movement_speed_jump")) * def.physics.jump,
 		gravity = tonumber(minetest.setting_get("movement_gravity")) * def.physics.gravity,
+		skin = nil,
 		targets = {},
 		target_current = nil,
 		in_liquid = false,
@@ -504,6 +505,9 @@ function creatures:register_mob(name, def)
 
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
+				if tmp and tmp.skin then
+					self.skin = tmp.skin
+				end
 				if tmp and tmp.timer_life then
 					self.timer_life = tmp.timer_life - dtime_s
 				end
@@ -536,6 +540,15 @@ function creatures:register_mob(name, def)
 				end
 			end
 
+			-- if the textures field contains tables, we have multiple texture sets
+			if self.textures and type(self.textures[1]) == "table" then
+				if not self.skin or not self.textures[self.skin] then
+					self.skin = math.random(1, #self.textures)
+				end
+				self.textures = self.textures[self.skin]
+				self.object:set_properties({textures = self.textures})
+			end
+
 			-- we want to note what's the furthest distance a mob can see
 			if self.traits.vision > highest_vision then
 				highest_vision = self.traits.vision
@@ -544,6 +557,7 @@ function creatures:register_mob(name, def)
 		
 		get_staticdata = function(self)
 			local tmp = {}
+			tmp.skin = self.skin
 			tmp.timer_life = self.timer_life
 			tmp.actor = self.actor
 			if self.actor then
@@ -554,7 +568,7 @@ function creatures:register_mob(name, def)
 		end,
 		
 		on_punch = function(self, hitter)
-			local psettings = creatures.player_settings[creatures:get_race(hitter)]
+			local psettings = creatures.player_def[creatures:player_get(hitter)]
 			local relation = creatures:alliance(self.object, hitter)
 
 			-- trigger the player's attack sound
@@ -566,7 +580,7 @@ function creatures:register_mob(name, def)
 				hitter:setpos(self.object:getpos())
 				hitter:set_look_yaw(self.object:getyaw())
 				hitter:set_look_pitch(0)
-				creatures:set_race(hitter, name, {hp = self.object:get_hp()})
+				creatures:player_set(hitter, {name = name, skin = self.skin, hp = self.object:get_hp()})
 				self.object:remove()
 			-- handle mob death
 			elseif self.object:get_hp() <= 0 then

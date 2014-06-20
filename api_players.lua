@@ -1,33 +1,33 @@
 -- Creature registration - Players:
 
-creatures.player_settings = {}
+creatures.player_def = {}
 
 function creatures:register_player(name, def)
-	creatures.player_settings[name] = {}
-	creatures.player_settings[name].hp_max = def.hp_max
-	creatures.player_settings[name].armor = def.armor
-	creatures.player_settings[name].collisionbox = def.collisionbox
-	creatures.player_settings[name].visual = def.visual
-	creatures.player_settings[name].mesh = def.mesh
-	creatures.player_settings[name].textures = def.textures
-	creatures.player_settings[name].visual_size = def.visual_size
-	creatures.player_settings[name].animation = def.animation
-	creatures.player_settings[name].sounds = def.sounds
-	creatures.player_settings[name].makes_footstep_sound = def.makes_footstep_sound
-	creatures.player_settings[name].env_damage = def.env_damage
-	creatures.player_settings[name].teams = def.teams
-	creatures.player_settings[name].physics = def.physics
-	creatures.player_settings[name].menu = def.menu
-	creatures.player_settings[name].inventory_main = def.inventory_main
-	creatures.player_settings[name].inventory_craft = def.inventory_craft
-	creatures.player_settings[name].reincarnate = def.reincarnate
-	creatures.player_settings[name].ghost = def.ghost
-	creatures.player_settings[name].eye_offset = def.eye_offset
-	creatures.player_settings[name].sky = def.sky
-	creatures.player_settings[name].daytime = def.daytime
-	creatures.player_settings[name].screen = def.screen
-	creatures.player_settings[name].ambience = def.ambience
-	creatures.player_settings[name].icon = def.icon
+	creatures.player_def[name] = {}
+	creatures.player_def[name].hp_max = def.hp_max
+	creatures.player_def[name].armor = def.armor
+	creatures.player_def[name].collisionbox = def.collisionbox
+	creatures.player_def[name].visual = def.visual
+	creatures.player_def[name].mesh = def.mesh
+	creatures.player_def[name].textures = def.textures
+	creatures.player_def[name].visual_size = def.visual_size
+	creatures.player_def[name].animation = def.animation
+	creatures.player_def[name].sounds = def.sounds
+	creatures.player_def[name].makes_footstep_sound = def.makes_footstep_sound
+	creatures.player_def[name].env_damage = def.env_damage
+	creatures.player_def[name].teams = def.teams
+	creatures.player_def[name].physics = def.physics
+	creatures.player_def[name].menu = def.menu
+	creatures.player_def[name].inventory_main = def.inventory_main
+	creatures.player_def[name].inventory_craft = def.inventory_craft
+	creatures.player_def[name].reincarnate = def.reincarnate
+	creatures.player_def[name].ghost = def.ghost
+	creatures.player_def[name].eye_offset = def.eye_offset
+	creatures.player_def[name].sky = def.sky
+	creatures.player_def[name].daytime = def.daytime
+	creatures.player_def[name].screen = def.screen
+	creatures.player_def[name].ambience = def.ambience
+	creatures.player_def[name].icon = def.icon
 end
 
 -- Functions to handle player settings:
@@ -61,8 +61,8 @@ local function set_animation(player, type, speed)
 		return
 	end
 
-	local race = creatures.player_races[name]
-	local race_settings = creatures.player_settings[race]
+	local race = creatures:player_get(name)
+	local race_settings = creatures.player_def[race]
 	local animation = race_settings.animation
 	if not animation.speed then
 		return
@@ -99,25 +99,37 @@ local function set_animation(player, type, speed)
 	end
 end
 
-local function apply_settings (player, race, settings)
+local function apply_settings (player, settings)
+	if not settings then
+		return
+	end
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
-	local def = creatures.player_settings[race]
+	local def = creatures.player_def[settings.name or creatures.player_default]
+	-- allow custom settings to overwrite anything in def
+	for entry, value in pairs(settings) do
+		def[entry] = value
+	end
 
-	-- if settings are specified, apply them, otherwise use the defaults
-	if settings then
+	-- set HP accordingly
+	if def.hp then
 		minetest.sound_play("creatures_possess", {toplayer = player})
-		for entry, value in pairs(settings) do
-			def[entry] = value
-		end
-		if settings.hp then
-			player:set_hp(settings.hp)
+		if def.hp > 0 then
+			player:set_hp(def.hp)
 		else
 			player:set_hp(def.hp_max)
 		end
 	end
 
-	-- configure inventory
+	-- if the textures field contains tables, we have multiple texture sets
+	if def.textures and type(def.textures[1]) == "table" then
+		if not def.skin or not def.textures[def.skin] then
+			def.skin = math.random(1, #def.textures)
+		end
+		def.textures = def.textures[def.skin]
+	end
+
+	-- player: configure inventory
 	local inv_main = def.inventory_main.x * def.inventory_main.y
 	if inv:get_size("main") ~= inv_main then
 		inv:set_size("main", inv_main)
@@ -137,7 +149,7 @@ local function apply_settings (player, race, settings)
 		end
 	end
 
-	-- configure properties
+	-- player: configure properties
 	player:set_armor_groups({fleshy = def.armor})
 	player:set_physics_override({speed = def.physics.speed, jump = def.physics.jump, gravity = def.physics.gravity})
 	player:set_properties({
@@ -149,7 +161,7 @@ local function apply_settings (player, race, settings)
 		makes_footstep_sound = def.makes_footstep_sound,
 	})
 
-	-- configure visual effects
+	-- player: configure visual effects
 	player:set_eye_offset(def.eye_offset[1], def.eye_offset[2])
 	player:override_day_night_ratio(def.daytime)
 	player:set_sky(def.sky[1], def.sky[2], def.sky[3])
@@ -167,7 +179,7 @@ local function apply_settings (player, race, settings)
 		player_data[name].hud = nil
 	end
 
-	-- configure sound effects
+	-- player: configure sound effects
 	if def.ambience and def.ambience ~= "" then
 		player_data[name].ambience = minetest.sound_play(def.ambience, {toplayer = name, loop = true})
 	elseif player_data[name].ambience then
@@ -175,7 +187,7 @@ local function apply_settings (player, race, settings)
 		player_data[name].ambience = nil
 	end
 
-	-- set local animations
+	-- player: set local animations
 	if def.animation and def.animation.speed then
 		player:set_local_animation({x = def.animation.stand[1], y = def.animation.stand[2]},
 			{x = def.animation.walk[1], y = def.animation.walk[2]},
@@ -188,8 +200,8 @@ end
 minetest.register_globalstep(function(dtime)
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
-		local race = creatures.player_races[name]
-		local race_settings = creatures.player_settings[race]
+		local race = creatures:player_get(name)
+		local race_settings = creatures.player_def[race]
 
 		-- handle player animations
 		if race_settings.mesh and race_settings.animation then
@@ -272,8 +284,8 @@ end)
 
 -- handle player death
 minetest.register_on_dieplayer(function(player)
-	local race = creatures.player_races[player:get_player_name()]
-	local race_settings = creatures.player_settings[race]
+	local race = creatures:player_get(player:get_player_name())
+	local race_settings = creatures.player_def[race]
 
 	if race_settings.sounds and race_settings.sounds.die then
 		minetest.sound_play(race_settings.sounds.die, {object = player})
@@ -283,15 +295,15 @@ end)
 -- turn the player into its ghost upon respawn
 minetest.register_on_respawnplayer(function(player)
 	local name = player:get_player_name()
-	local race = creatures.player_races[name]
-	local race_settings = creatures.player_settings[race]
+	local race = creatures:player_get(name)
+	local race_settings = creatures.player_def[race]
 	local ghost = race_settings.ghost
 	if not ghost or ghost == "" then
 		ghost = creatures.player_default
 	end
 
 	if race ~= ghost then
-		creatures:set_race (player, ghost, {})
+		creatures:player_set (player, {name = ghost, hp = 0})
 		minetest.sound_play("creatures_ghost", {toplayer = name})
 		return true
 	end
@@ -300,33 +312,40 @@ end)
 -- set player race and data upon joining
 minetest.register_on_joinplayer(function(player)
 	player_data[player:get_player_name()] = {}
-	local race = creatures:get_race(player)
-	if not race then
-		creatures:set_race(player, creatures.player_default, {})
-	else
-		creatures:set_race(player, race, nil)
-	end
+	local get_name, get_skin = creatures:player_get(player)
+	creatures:player_set(player, {name = get_name, skin = get_skin})
 end)
 
 -- Global functions to get or set player races:
 
-creatures.player_races = {}
+creatures.player_settings = {}
 
-function creatures:set_race (player, race, settings)
+function creatures:player_set (player, settings)
 	local pname = player
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-	apply_settings(player, race, settings)
-	creatures.player_races[pname] = race
+	apply_settings(player, settings)
+
+	-- structure: [1] = name, [2] = skin
+	creatures.player_settings[pname] = {}
+	creatures.player_settings[pname][1] = settings.name or creatures.player_default
+	creatures.player_settings[pname][2] = settings.skin or 1
 end
 
-function creatures:get_race (player)
+function creatures:player_get (player)
 	local pname = player
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-	return creatures.player_races[pname]
+
+	-- structure: [1] = name, [2] = skin
+	if type(creatures.player_settings[pname]) == "table" then
+		return creatures.player_settings[pname][1], creatures.player_settings[pname][2]
+	-- old format which contained only the name
+	else
+		return creatures.player_settings[pname]
+	end
 end
 
 -- Save and load player races to and from file:
@@ -335,7 +354,7 @@ local file = io.open(minetest:get_worldpath().."/races.txt", "r")
 if file then
 	local table = minetest.deserialize(file:read("*all"))
 	if type(table) == "table" then
-		creatures.player_races = table
+		creatures.player_settings = table
 	else
 		minetest.log("error", "Corrupted player races file")
 	end
@@ -345,7 +364,7 @@ end
 local function save_races()
 	local file = io.open(minetest:get_worldpath().."/races.txt", "w")
 	if file then
-		file:write(minetest.serialize(creatures.player_races))
+		file:write(minetest.serialize(creatures.player_settings))
 		file:close()
 	else
 		minetest.log("error", "Can't save player races to file")

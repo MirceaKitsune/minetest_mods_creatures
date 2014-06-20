@@ -6,16 +6,16 @@ function creatures:alliance(creature1, creature2)
 	if creature1:get_luaentity() then
 		creature1_teams = creature1:get_luaentity().teams
 	elseif creature1:is_player() then
-		local race = creatures:get_race(creature1)
-		creature1_teams = creatures.player_settings[race].teams
+		local race = creatures:player_get(creature1)
+		creature1_teams = creatures.player_def[race].teams
 	end
 
 	local creature2_teams = {}
 	if creature2:get_luaentity() then
 		creature2_teams = creature2:get_luaentity().teams
 	elseif creature2:is_player() then
-		local race = creatures:get_race(creature2)
-		creature2_teams = creatures.player_settings[race].teams
+		local race = creatures:player_get(creature2)
+		creature2_teams = creatures.player_def[race].teams
 	end
 
 	local common = 0
