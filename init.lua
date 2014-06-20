@@ -25,6 +25,7 @@ function creatures:alliance(creature1, creature2)
 			common = common + (element1 * element2)
 		end
 	end
+	common = math.min(1, math.max(-1, common))
 
 	return common
 end
