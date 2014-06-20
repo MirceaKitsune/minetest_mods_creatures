@@ -302,7 +302,7 @@ function creatures:register_mob(name, def)
 						elseif relation * self.traits.fear <= -math.random() then
 							self.targets[obj] = {entity = obj, objective = "avoid", priority = math.abs(relation) * self.traits.fear}
 						-- follow targets
-						elseif obj:is_player() and relation * self.traits.loyalty > math.random() then
+						elseif relation * self.traits.loyalty > math.random() and not (obj:get_luaentity() and obj:get_luaentity().targets[self.object]) then
 							self.targets[obj] = {entity = obj, objective = "follow", priority = math.abs(relation) * self.traits.loyalty}
 						end
 
@@ -388,8 +388,13 @@ function creatures:register_mob(name, def)
 			-- state: attacking, melee
 			elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
 				local s = self.object:getpos()
-				local p = self.target_current.entity:getpos() or self.target_current.entity.object:getpos()
+				local p = self.target_current.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+				
+				-- an engine bug can occasionally cause self and object positions to be the same
+				if dist == 0 then
+					return
+				end
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
@@ -452,8 +457,13 @@ function creatures:register_mob(name, def)
 				local avoid = self.target_current.objective == "avoid"
 
 				local s = self.object:getpos()
-				local p = self.target_current.entity:getpos() or self.target_current.entity.object:getpos()
+				local p = self.target_current.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+
+				-- an engine bug can occasionally cause self and object positions to be the same
+				if dist == 0 then
+					return
+				end
 
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
