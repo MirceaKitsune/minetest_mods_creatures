@@ -566,7 +566,7 @@ function creatures:register_mob(name, def)
 				hitter:setpos(self.object:getpos())
 				hitter:set_look_yaw(self.object:getyaw())
 				hitter:set_look_pitch(0)
-				creatures:set_race(hitter, name, true)
+				creatures:set_race(hitter, name, {hp = self.object:get_hp()})
 				self.object:remove()
 			-- handle mob death
 			elseif self.object:get_hp() <= 0 then

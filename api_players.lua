@@ -99,15 +99,22 @@ local function set_animation(player, type, speed)
 	end
 end
 
-local function apply_settings (player, race, new)
-	local def = creatures.player_settings[race]
+local function apply_settings (player, race, settings)
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
+	local def = creatures.player_settings[race]
 
-	-- only set these if the player became a new creature
-	if new then
+	-- if settings are specified, apply them, otherwise use the defaults
+	if settings then
 		minetest.sound_play("creatures_possess", {toplayer = player})
-		player:set_hp(def.hp_max)
+		for entry, value in pairs(settings) do
+			def[entry] = value
+		end
+		if settings.hp then
+			player:set_hp(settings.hp)
+		else
+			player:set_hp(def.hp_max)
+		end
 	end
 
 	-- configure inventory
@@ -284,7 +291,7 @@ minetest.register_on_respawnplayer(function(player)
 	end
 
 	if race ~= ghost then
-		creatures:set_race (player, ghost, true)
+		creatures:set_race (player, ghost, {})
 		minetest.sound_play("creatures_ghost", {toplayer = name})
 		return true
 	end
@@ -295,9 +302,9 @@ minetest.register_on_joinplayer(function(player)
 	player_data[player:get_player_name()] = {}
 	local race = creatures:get_race(player)
 	if not race then
-		creatures:set_race(player, creatures.player_default, false)
+		creatures:set_race(player, creatures.player_default, {})
 	else
-		creatures:set_race(player, race, false)
+		creatures:set_race(player, race, nil)
 	end
 end)
 
@@ -305,12 +312,12 @@ end)
 
 creatures.player_races = {}
 
-function creatures:set_race (player, race, new)
+function creatures:set_race (player, race, settings)
 	local pname = player
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-	apply_settings(player, race, new)
+	apply_settings(player, race, settings)
 	creatures.player_races[pname] = race
 end
 
