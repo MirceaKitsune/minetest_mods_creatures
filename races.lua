@@ -84,9 +84,9 @@ creatures:register_creature("creatures:human", {
 		punch = {189, 198},
 	},
 	sounds = {
-		attack = "creatures_human_attack",
-		damage = "creatures_human_damage",
-		die = "creatures_human_die",
+		attack = "creatures_human_male_attack",
+		damage = "creatures_human_male_damage",
+		die = "creatures_human_male_die",
 	},
 	makes_footstep_sound = true,
 	env_damage = {
@@ -664,9 +664,9 @@ creatures:register_creature("creatures:oerkki", {
 		punch = {37, 49},
 	},
 	sounds = {
-		attack = "creatures_human_attack",
-		damage = "creatures_human_damage",
-		die = "creatures_human_die",
+		attack = "creatures_human_male_attack",
+		damage = "creatures_human_male_damage",
+		die = "creatures_human_male_die",
 	},
 	makes_footstep_sound = false,
 	env_damage = {
