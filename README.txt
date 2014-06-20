@@ -22,6 +22,13 @@ Models: WTFPL (by Pavel_S, see below)
 See also:
 http://minetest.net/
 
+=== Character skins ====
+
+Jordach (CC BY-SA 3.0)
+jmf (WTFPL)
+Chinchow (WTFPL)
+Stuart Jones (WTFPL)
+
 === WTFPL ===
          DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
                     Version 2, December 2004

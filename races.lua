@@ -73,7 +73,17 @@ creatures:register_creature("creatures:human", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_human.x",
-	textures = {"mobs_human.png"},
+	textures = {
+		{"mobs_human_1.png"},
+		{"mobs_human_2.png"},
+		{"mobs_human_3.png"},
+		{"mobs_human_4.png"},
+		{"mobs_human_9.png"},
+		{"mobs_human_10.png"},
+		{"mobs_human_11.png"},
+		{"mobs_human_12.png"},
+		{"mobs_human_13.png"},
+	},
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
@@ -143,8 +153,83 @@ creatures:register_creature("creatures:human", {
 	ambience = "",
 	icon = "mobs_human_icon.png",
 })
-creatures:register_spawn("creatures:human", {"default:dirt_with_grass"}, 20, -1, 9000, 1, 31000)
-creatures:register_spawn("creatures:human", {"default:desert_sand"}, 20, -1, 14000, 3, 26000)
+creatures:register_spawn("creatures:human", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 9000, 1, 31000)
+
+creatures:register_creature("creatures:human_f", {
+	-- Common properties:
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_human.x",
+	textures = {
+		{"mobs_human_5.png"},
+		{"mobs_human_6.png"},
+		{"mobs_human_7.png"},
+		{"mobs_human_8.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_female_attack",
+		damage = "creatures_human_female_damage",
+		die = "creatures_human_female_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 1,
+	},
+	teams = {monsters = -0.3, people = 0.6, animals = 0.2},
+
+	-- Mob properties:
+	drops = {
+		{name = "farming:bread",
+		chance = 30,
+		min = 1,
+		max = 1,},
+	},
+	on_rightclick = nil,
+	attack_damage = 1,
+	attack_type = "melee",
+	traits = {
+		attack_interval = {0.5, 0.75},
+		think = {0.65, 0.85},
+		vision = {15, 20},
+		roam = {0.4, 0.7},
+		loyalty = {0.6, 0.8},
+		fear = {0.35, 0.65},
+		aggressivity = {0.25, 0.5},
+		determination = {0.8, 1},
+	},
+
+	-- Player properties:
+	menu = true,
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	reincarnate = false,
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
+	ambience = "",
+	icon = "mobs_human_icon.png",
+})
+creatures:register_spawn("creatures:human_f", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 13000, 1, 31000)
 
 creatures:register_creature("creatures:dirt_monster", {
 	-- Common properties:
