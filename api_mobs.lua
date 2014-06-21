@@ -509,13 +509,11 @@ function creatures:register_mob(name, def)
 				if tmp and tmp.actor then
 					self.actor = tmp.actor
 				end
-				if self.actor then
-					if tmp and tmp.traits then
-						self.traits = tmp.traits
-					end
-					if tmp and tmp.targets then
-						self.targets = tmp.targets
-					end
+				if tmp and tmp.traits then
+					self.traits = tmp.traits
+				end
+				if tmp and tmp.targets then
+					self.targets = tmp.targets
 				end
 			end
 
@@ -554,9 +552,13 @@ function creatures:register_mob(name, def)
 			tmp.skin = self.skin
 			tmp.timer_life = self.timer_life
 			tmp.actor = self.actor
-			if self.actor then
-				tmp.targets = self.targets
-				tmp.traits = self.traits
+			tmp.traits = self.traits
+			-- only add persistent targets
+			tmp.targets = {}
+			for obj, target in pairs(self.targets) do
+				if target.persist then
+					tmp.targets[obj] = target
+				end
 			end
 			return minetest.serialize(tmp)
 		end,
@@ -590,7 +592,7 @@ function creatures:register_mob(name, def)
 				end
 			else
 				-- targets: take action toward the creature who hit us
-				if hitter:is_player() or (hitter:get_luaentity() and hitter:get_luaentity().traits) then
+				if not (self.targets[hitter] and self.targets[hitter].persist) and (hitter:is_player() or (hitter:get_luaentity() and hitter:get_luaentity().traits)) then
 					local target_old = self.targets[hitter]
 					local importance = (1 - relation) * 0.5
 					local action = math.random()
@@ -637,7 +639,6 @@ function creatures:register_mob(name, def)
 						if dist ~= 0 and dist < other.traits.vision then
 							local relation_other_self = creatures:alliance(obj, self.object)
 							local relation_other_hitter = creatures:alliance(obj, hitter)
-							
 							-- determine who the bad guy is, and how important it is to interfere
 							local relation_min = math.min(relation_other_hitter, relation_other_self)
 							local relation_max = math.max(relation_other_hitter, relation_other_self)
@@ -647,48 +648,50 @@ function creatures:register_mob(name, def)
 							if relation_other_self < relation_other_hitter then
 								enemy = self.object
 							end
-							local target_old = other.targets[enemy]
 							
-							-- if we are loyal and eager enough to fight, attack our ally's enemy
-							if other.attack_type and minetest.setting_getbool("enable_damage") and
-							importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5) >= action then
-								if not other.targets[enemy] then
-									other.targets[enemy] = {entity = enemy, objective = "attack", priority = importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)}
-								else
-									other.targets[enemy].objective = "attack"
-									other.targets[enemy].priority = other.targets[enemy].priority + importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)
-								end
-							-- if we are loyal but won't fight, follow our ally instead
-							elseif importance * other.traits.loyalty >= action then
-								if not other.targets[enemy] then
-									other.targets[enemy] = {entity = enemy, objective = "follow", priority = importance * other.traits.loyalty}
-								else
-									other.targets[enemy].objective = "follow"
-									other.targets[enemy].priority = other.targets[enemy].priority + importance * other.traits.loyalty
-								end
-							-- if we're afraid instead, avoid the side we're least comfortable with
-							elseif importance * self.traits.fear >= action then
-								if not other.targets[enemy] then
-									other.targets[enemy] = {entity = enemy, objective = "avoid", priority = importance * self.traits.fear}
-								else
-									other.targets[enemy].objective = "avoid"
-									other.targets[enemy].priority = other.targets[enemy].priority + importance * self.traits.fear
-								end
-							end
-
-							if DEBUG_AI_TARGETS then
-								local name2 = "witness"
-								if hitter:is_player() then
-									name2 = hitter:get_player_name()
-								elseif hitter:get_luaentity() then
-									name2 = hitter:get_luaentity().name
+							if not (other.targets[enemy] and other.targets[enemy].persist) then
+								local target_old = other.targets[enemy]
+								-- if we are loyal and eager enough to fight, attack our ally's enemy
+								if other.attack_type and minetest.setting_getbool("enable_damage") and
+								importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5) >= action then
+									if not other.targets[enemy] then
+										other.targets[enemy] = {entity = enemy, objective = "attack", priority = importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)}
+									else
+										other.targets[enemy].objective = "attack"
+										other.targets[enemy].priority = other.targets[enemy].priority + importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)
+									end
+								-- if we are loyal but won't fight, follow our ally instead
+								elseif importance * other.traits.loyalty >= action then
+									if not other.targets[enemy] then
+										other.targets[enemy] = {entity = enemy, objective = "follow", priority = importance * other.traits.loyalty}
+									else
+										other.targets[enemy].objective = "follow"
+										other.targets[enemy].priority = other.targets[enemy].priority + importance * other.traits.loyalty
+									end
+								-- if we're afraid instead, avoid the side we're least comfortable with
+								elseif importance * self.traits.fear >= action then
+									if not other.targets[enemy] then
+										other.targets[enemy] = {entity = enemy, objective = "avoid", priority = importance * self.traits.fear}
+									else
+										other.targets[enemy].objective = "avoid"
+										other.targets[enemy].priority = other.targets[enemy].priority + importance * self.traits.fear
+									end
 								end
 
-								if self.targets[enemy] and (not target_old or self.targets[enemy].objective ~= target_old.objective) then
-									print("Creatures: "..name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
-									" and "..name2.." at "..math.floor(h.x)..","..math.floor(h.y)..","..math.floor(h.z)..
-									" caused "..other.name.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
-									" to set hitter or self as an \""..other.targets[enemy].objective.."\" target with priority "..other.targets[enemy].priority)
+								if DEBUG_AI_TARGETS then
+									local name2 = "witness"
+									if hitter:is_player() then
+										name2 = hitter:get_player_name()
+									elseif hitter:get_luaentity() then
+										name2 = hitter:get_luaentity().name
+									end
+
+									if self.targets[enemy] and (not target_old or self.targets[enemy].objective ~= target_old.objective) then
+										print("Creatures: "..name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
+										" and "..name2.." at "..math.floor(h.x)..","..math.floor(h.y)..","..math.floor(h.z)..
+										" caused "..other.name.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
+										" to set hitter or self as an \""..other.targets[enemy].objective.."\" target with priority "..other.targets[enemy].priority)
+									end
 								end
 							end
 						end
