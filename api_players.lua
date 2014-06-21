@@ -100,12 +100,9 @@ local function set_animation(player, type, speed)
 end
 
 local function apply_settings (player, settings)
-	if not settings then
-		return
-	end
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
-	local def = creatures.player_def[settings.name or creatures.player_default]
+	local def = creatures.player_def[settings.name]
 	-- allow custom settings to overwrite anything in def
 	for entry, value in pairs(settings) do
 		def[entry] = value
@@ -119,14 +116,6 @@ local function apply_settings (player, settings)
 		else
 			player:set_hp(def.hp_max)
 		end
-	end
-
-	-- if the textures field contains tables, we have multiple texture sets
-	if def.textures and type(def.textures[1]) == "table" then
-		if not def.skin or not def.textures[def.skin] then
-			def.skin = math.random(1, #def.textures)
-		end
-		def.textures = def.textures[def.skin]
 	end
 
 	-- player: configure inventory
@@ -155,7 +144,7 @@ local function apply_settings (player, settings)
 	player:set_properties({
 		collisionbox = def.collisionbox,
 		mesh = def.mesh,
-		textures = def.textures,
+		textures = def.textures[def.skin] or def.textures,
 		visual = def.visual,
 		visual_size = def.visual_size,
 		makes_footstep_sound = def.makes_footstep_sound,
@@ -325,12 +314,27 @@ function creatures:player_set (player, settings)
 	if type(pname) ~= "string" then
 		pname = player:get_player_name()
 	end
-	apply_settings(player, settings)
 
+	-- use the default race if no valid creature is specified
+	if not creatures.player_def[settings.name] then
+		settings.name = creatures.player_default
+		settings.hp = 0
+	end
+	-- make sure the skin is valid
+	local textures = creatures.player_def[settings.name].textures
+	if textures and type(textures[1]) == "table" then
+		if not settings.skin or settings.skin == 0 or not textures[settings.skin] then
+			settings.skin = math.random(1, #textures)
+		end
+	else
+		settings.skin = 0
+	end
+
+	apply_settings(player, settings)
 	-- structure: [1] = name, [2] = skin
 	creatures.player_settings[pname] = {}
 	creatures.player_settings[pname][1] = settings.name or creatures.player_default
-	creatures.player_settings[pname][2] = settings.skin or 1
+	creatures.player_settings[pname][2] = settings.skin or 0
 end
 
 function creatures:player_get (player)

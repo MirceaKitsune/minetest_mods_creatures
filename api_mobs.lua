@@ -44,7 +44,7 @@ function creatures:register_mob(name, def)
 		run_velocity = tonumber(minetest.setting_get("movement_speed_fast")) * def.physics.speed,
 		jump_velocity = tonumber(minetest.setting_get("movement_speed_jump")) * def.physics.jump,
 		gravity = tonumber(minetest.setting_get("movement_gravity")) * def.physics.gravity,
-		skin = nil,
+		skin = 0,
 		targets = {},
 		target_current = nil,
 		in_liquid = false,
@@ -537,11 +537,10 @@ function creatures:register_mob(name, def)
 
 			-- if the textures field contains tables, we have multiple texture sets
 			if self.textures and type(self.textures[1]) == "table" then
-				if not self.skin or not self.textures[self.skin] then
+				if self.skin == 0 or not self.textures[self.skin] then
 					self.skin = math.random(1, #self.textures)
 				end
-				self.textures = self.textures[self.skin]
-				self.object:set_properties({textures = self.textures})
+				self.object:set_properties({textures = self.textures[self.skin]})
 			end
 
 			-- we want to note what's the furthest distance a mob can see
