@@ -297,6 +297,7 @@ function creatures:register_mob(name, def)
 					if dist < self.traits.vision then
 						local relation = creatures:alliance(self.object, obj)
 						local action = math.random()
+
 						-- attack targets
 						if self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -action then
 							self.targets[obj] = {entity = obj, objective = "attack", priority = math.abs(relation) * self.traits.aggressivity}
@@ -304,7 +305,7 @@ function creatures:register_mob(name, def)
 						elseif relation * self.traits.fear <= -action then
 							self.targets[obj] = {entity = obj, objective = "avoid", priority = math.abs(relation) * self.traits.fear}
 						-- follow targets
-						elseif relation * self.traits.loyalty >= action and not (obj:get_luaentity() and obj:get_luaentity().targets[self.object]) then
+						elseif relation * self.traits.loyalty >= action then
 							self.targets[obj] = {entity = obj, objective = "follow", priority = math.abs(relation) * self.traits.loyalty}
 						end
 
@@ -339,6 +340,9 @@ function creatures:register_mob(name, def)
 						-- if the mob is no longer fit to fight, change attack targets to avoid
 						elseif target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
 							self.targets[obj].objective = "avoid"
+						-- don't keep following mobs who have other business to attend to
+						elseif target.objective == "follow" and target.entity:get_luaentity() and target.entity:get_luaentity().target_current then
+							self.targets[obj] = nil
 						end
 					else
 						-- remove players that disconnected or mobs that were removed from the world
