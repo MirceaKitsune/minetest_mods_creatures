@@ -373,7 +373,8 @@ function creatures:register_mob(name, def)
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				local interest = (self.traits.vision * self.traits.determination) / dist
 
-				if target.priority * interest > best_priority then
+				-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
+				if dist ~= 0 and target.priority * interest > best_priority then
 					best_priority = target.priority * interest
 					self.target_current = target
 				end
@@ -396,11 +397,6 @@ function creatures:register_mob(name, def)
 				local s = self.object:getpos()
 				local p = self.target_current.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-				
-				-- an engine bug can occasionally cause self and object positions to be the same
-				if dist == 0 then
-					return
-				end
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
@@ -464,12 +460,7 @@ function creatures:register_mob(name, def)
 				local s = self.object:getpos()
 				local p = self.target_current.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-
-				-- an engine bug can occasionally cause self and object positions to be the same
-				if dist == 0 then
-					return
-				end
-
+			
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
 				if p.x > s.x then
