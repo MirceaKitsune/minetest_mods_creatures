@@ -32,7 +32,7 @@ creatures:register_creature("creatures:ghost", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 1, people = 1, animals = 1},
+	teams = {monsters = 0.6, people = 0.8, animals = 0.4},
 
 	-- Mob properties:
 	drops = {},
@@ -554,7 +554,7 @@ creatures:register_creature("creatures:sheep", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.3, people = 0.5, animals = 0.6},
+	teams = {monsters = -0.2, people = 0.2, animals = 0.6},
 
 	-- Mob properties:
 	drops = {
