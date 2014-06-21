@@ -66,7 +66,7 @@ creatures:register_creature("creatures:ghost", {
 
 -- Creature definitions:
 
-creatures:register_creature("creatures:human", {
+creatures:register_creature("creatures:human_male", {
 	-- Common properties:
 	hp_max = 20,
 	armor = 100,
@@ -78,6 +78,7 @@ creatures:register_creature("creatures:human", {
 		{"mobs_human_2.png"},
 		{"mobs_human_3.png"},
 		{"mobs_human_4.png"},
+		{"mobs_human_6.png"},
 		{"mobs_human_9.png"},
 		{"mobs_human_10.png"},
 		{"mobs_human_11.png"},
@@ -153,9 +154,9 @@ creatures:register_creature("creatures:human", {
 	ambience = "",
 	icon = "mobs_human_icon.png",
 })
-creatures:register_spawn("creatures:human", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 9000, 1, 31000)
+creatures:register_spawn("creatures:human_male", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 9000, 1, 31000)
 
-creatures:register_creature("creatures:human_f", {
+creatures:register_creature("creatures:human_female", {
 	-- Common properties:
 	hp_max = 20,
 	armor = 100,
@@ -164,7 +165,6 @@ creatures:register_creature("creatures:human_f", {
 	mesh = "mobs_human.x",
 	textures = {
 		{"mobs_human_5.png"},
-		{"mobs_human_6.png"},
 		{"mobs_human_7.png"},
 		{"mobs_human_8.png"},
 	},
@@ -229,7 +229,7 @@ creatures:register_creature("creatures:human_f", {
 	ambience = "",
 	icon = "mobs_human_icon.png",
 })
-creatures:register_spawn("creatures:human_f", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 13000, 1, 31000)
+creatures:register_spawn("creatures:human_female", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 13000, 1, 31000)
 
 creatures:register_creature("creatures:dirt_monster", {
 	-- Common properties:
