@@ -429,7 +429,9 @@ function creatures:register_mob(name, def)
 					end
 				end
 			-- state: attacking, shoot
-			elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then				
+			elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then
+				local s = self.object:getpos()
+				local p = self.target_current.entity:getpos()
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
 				if p.x > s.x then
@@ -446,9 +448,8 @@ function creatures:register_mob(name, def)
 						minetest.sound_play(self.sounds.attack, {object = self.object})
 					end
 					
-					local p = self.object:getpos()
-					p.y = p.y + (self.collisionbox[2]+self.collisionbox[5])/2
-					local obj = minetest.env:add_entity(p, self.attack_arrow)
+					s.y = s.y + (self.collisionbox[2]+self.collisionbox[5])/2
+					local obj = minetest.env:add_entity(s, self.attack_arrow)
 					local amount = (vec.x^2+vec.y^2+vec.z^2)^0.5
 					local v = obj:get_luaentity().velocity
 					vec.y = vec.y+1
