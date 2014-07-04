@@ -353,8 +353,11 @@ function creatures:register_mob(name, def)
 						elseif target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
 							self.targets[obj].objective = "avoid"
 						-- don't keep following mobs who have other business to attend to
-						elseif target.objective == "follow" and target.entity and target.entity:get_luaentity() and target.entity:get_luaentity().target_current then
-							self.targets[obj] = nil
+						elseif target.objective == "follow" and target.entity and target.entity:get_luaentity() then
+							local ent = target.entity:get_luaentity()
+							if ent.target_current and ent.target_current.priority > 0 then
+								self.targets[obj] = nil
+							end
 						end
 					else
 						-- remove players that disconnected or mobs that were removed from the world
