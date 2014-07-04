@@ -456,15 +456,8 @@ function AI_punch (self, hitter)
 	if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
 		minetest.sound_play(psettings.sounds.attack, {object = hitter})
 	end
-	-- handle player possession of mobs
-	if not self.actor and hitter:is_player() and psettings.reincarnate and self.target_current and hitter == self.target_current.entity then
-		hitter:setpos(self.object:getpos())
-		hitter:set_look_yaw(self.object:getyaw())
-		hitter:set_look_pitch(0)
-		creatures:player_set(hitter, {name = self.name, skin = self.skin, hp = self.object:get_hp()})
-		self.object:remove()
 	-- handle mob death
-	elseif self.object:get_hp() <= 0 then
+	if self.object:get_hp() <= 0 then
 		if hitter and hitter:is_player() and hitter:get_inventory() then
 			for _,drop in ipairs(self.drops) do
 				if math.random(1, drop.chance) == 1 then
@@ -475,8 +468,8 @@ function AI_punch (self, hitter)
 		if self.sounds and self.sounds.die then
 			minetest.sound_play(self.sounds.die, {object = self.object})
 		end
+	-- targets: take action toward the creature who hit us
 	else
-		-- targets: take action toward the creature who hit us
 		if not (self.targets[hitter] and self.targets[hitter].persist) and (hitter:is_player() or (hitter:get_luaentity() and hitter:get_luaentity().traits)) then
 			local target_old = self.targets[hitter]
 			local importance = (1 - relation) * 0.5
@@ -589,7 +582,14 @@ function AI_punch (self, hitter)
 	end
 end
 
--- AI_rightclick: Executed in on_rightclick, handles: N/A
+-- AI_rightclick: Executed in on_rightclick, handles: possession
 function AI_rightclick (self, clicker)
-	-- currently there is no default on_rightclick function for the AI
+	local psettings = creatures.player_def[creatures:player_get(clicker)]
+	if not self.actor and clicker:is_player() and psettings.reincarnate and self.target_current and clicker == self.target_current.entity then
+		clicker:setpos(self.object:getpos())
+		clicker:set_look_yaw(self.object:getyaw())
+		clicker:set_look_pitch(0)
+		creatures:player_set(clicker, {name = self.name, skin = self.skin, hp = self.object:get_hp()})
+		self.object:remove()
+	end
 end
