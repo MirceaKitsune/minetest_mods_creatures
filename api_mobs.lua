@@ -325,23 +325,34 @@ function creatures:register_mob(name, def)
 				end
 			end
 
+			-- targets: select a random position to walk to when idle
+			if self.traits.roam >= math.random() then
+				local s = self.object:getpos()
+				local p = {
+					x = math.random(math.floor(s.x - self.traits.vision / 4), math.floor(s.x + self.traits.vision / 4)),
+					y = math.floor(s.y),
+					z = math.random(math.floor(s.z - self.traits.vision / 4), math.floor(s.z + self.traits.vision / 4)),
+				}
+				self.targets["idle"] = {position = p, objective = "follow", priority = 0}
+			end
+
 			-- targets: scan for targets to remove or modify
 			for obj, target in pairs(self.targets) do
 				if not target.persist then
 					local target_old = target
-					if (target.entity:is_player() or target.entity:get_luaentity()) then
+					if target.position or (target.entity:is_player() or target.entity:get_luaentity()) then
 						local s = self.object:getpos()
-						local p = target.entity:getpos()
+						local p = target.position or target.entity:getpos()
 						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 
 						-- remove targets which are dead or out of view range
-						if dist > self.traits.vision or target.entity:get_hp() <= 0 then
+						if dist > self.traits.vision or (target.entity and target.entity:get_hp() <= 0) then
 							self.targets[obj] = nil
 						-- if the mob is no longer fit to fight, change attack targets to avoid
 						elseif target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
 							self.targets[obj].objective = "avoid"
 						-- don't keep following mobs who have other business to attend to
-						elseif target.objective == "follow" and target.entity:get_luaentity() and target.entity:get_luaentity().target_current then
+						elseif target.objective == "follow" and target.entity and target.entity:get_luaentity() and target.entity:get_luaentity().target_current then
 							self.targets[obj] = nil
 						end
 					else
@@ -373,12 +384,12 @@ function creatures:register_mob(name, def)
 			local best_priority = 0
 			for i, target in pairs(self.targets) do
 				local s = self.object:getpos()
-				local p = target.entity:getpos()
+				local p = target.position or target.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				local interest = (self.traits.vision * self.traits.determination) / dist
 
 				-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
-				if dist ~= 0 and target.priority * interest > best_priority then
+				if dist ~= 0 and target.priority * interest >= best_priority then
 					best_priority = target.priority * interest
 					self.target_current = target
 				end
@@ -386,20 +397,13 @@ function creatures:register_mob(name, def)
 
 			-- state: idle
 			if not self.target_current then
-				self.object:setyaw(self.object:getyaw()+((math.random(0,360)*self.traits.roam-180)/180*math.pi))
-				if self.traits.roam >= math.random() then
-					self.set_velocity(self, self.walk_velocity)
-					self:set_animation("walk")
-					self.v_start = true
-				else
-					self.set_velocity(self, 0)
-					self.set_animation(self, "stand")
-					self.v_start = false
-				end
+				self.set_velocity(self, 0)
+				self:set_animation("stand")
+				self.v_start = false
 			-- state: attacking, melee
 			elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
 				local s = self.object:getpos()
-				local p = self.target_current.entity:getpos()
+				local p = self.target_current.position or self.target_current.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
@@ -422,16 +426,18 @@ function creatures:register_mob(name, def)
 						if self.sounds and self.sounds.attack then
 							minetest.sound_play(self.sounds.attack, {object = self.object})
 						end
-						self.target_current.entity:punch(self.object, 1.0,  {
-							full_punch_interval=1.0,
-							damage_groups = {fleshy=self.attack_damage}
-						}, vec)
+						if self.target_current.entity then
+							self.target_current.entity:punch(self.object, 1.0,  {
+								full_punch_interval=1.0,
+								damage_groups = {fleshy=self.attack_damage}
+							}, vec)
+						end
 					end
 				end
 			-- state: attacking, shoot
 			elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then
 				local s = self.object:getpos()
-				local p = self.target_current.entity:getpos()
+				local p = self.target_current.position or self.target_current.entity:getpos()
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
 				if p.x > s.x then
@@ -463,7 +469,7 @@ function creatures:register_mob(name, def)
 				local avoid = self.target_current.objective == "avoid"
 
 				local s = self.object:getpos()
-				local p = self.target_current.entity:getpos()
+				local p = self.target_current.position or self.target_current.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
 			
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
