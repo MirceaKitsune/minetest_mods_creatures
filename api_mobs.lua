@@ -329,9 +329,9 @@ function creatures:register_mob(name, def)
 			if self.traits.roam >= math.random() then
 				local s = self.object:getpos()
 				local p = {
-					x = math.random(math.floor(s.x - self.traits.vision / 4), math.floor(s.x + self.traits.vision / 4)),
+					x = math.random(math.floor(s.x - self.traits.vision / 2), math.floor(s.x + self.traits.vision / 2)),
 					y = math.floor(s.y),
-					z = math.random(math.floor(s.z - self.traits.vision / 4), math.floor(s.z + self.traits.vision / 4)),
+					z = math.random(math.floor(s.z - self.traits.vision / 2), math.floor(s.z + self.traits.vision / 2)),
 				}
 				self.targets["idle"] = {position = p, objective = "follow", priority = 0}
 			end
@@ -344,9 +344,10 @@ function creatures:register_mob(name, def)
 						local s = self.object:getpos()
 						local p = target.position or target.entity:getpos()
 						local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+						local dist_target = target.distance or self.traits.vision
 
-						-- remove targets which are dead or out of view range
-						if dist > self.traits.vision or (target.entity and target.entity:get_hp() <= 0) then
+						-- remove targets which are dead or out of range
+						if dist > dist_target or (target.entity and target.entity:get_hp() <= 0) then
 							self.targets[obj] = nil
 						-- if the mob is no longer fit to fight, change attack targets to avoid
 						elseif target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
@@ -471,7 +472,8 @@ function creatures:register_mob(name, def)
 				local s = self.object:getpos()
 				local p = self.target_current.position or self.target_current.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-			
+				local dist_target = self.target_current.distance or self.traits.vision
+
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
 				if p.x > s.x then
@@ -482,12 +484,12 @@ function creatures:register_mob(name, def)
 				end
 				self.object:setyaw(yaw)
 
-				if (not avoid and dist > self.traits.vision / 2 ) or
-				(avoid and dist <= self.traits.vision / 2) then
+				if (not avoid and dist > dist_target / 2 ) or
+				(avoid and dist <= dist_target / 2) then
 					self.set_velocity(self, self.run_velocity)
 					self:set_animation("walk")
 					self.v_start = true
-				elseif dist > self.traits.vision / 5 then
+				elseif dist > dist_target / 5 then
 					self.set_velocity(self, self.walk_velocity)
 					self:set_animation("walk")
 					self.v_start = true
