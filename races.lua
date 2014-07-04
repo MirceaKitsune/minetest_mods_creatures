@@ -36,7 +36,6 @@ creatures:register_creature("creatures:ghost", {
 
 	-- Mob properties:
 	drops = {},
-	on_rightclick = nil,
 	attack_damage = 1,
 	attack_type = "melee",
 	traits = {
@@ -49,6 +48,18 @@ creatures:register_creature("creatures:ghost", {
 		aggressivity = {0.5, 0.5},
 		determination = {0.5, 0.5},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = false,
@@ -62,6 +73,18 @@ creatures:register_creature("creatures:ghost", {
 	screen = "hud_ghost.png",
 	ambience = "creatures_ambient_ghost",
 	icon = "mobs_ghost_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 
 -- Creature definitions:
@@ -127,7 +150,6 @@ creatures:register_creature("creatures:human_male", {
 		min = 1,
 		max = 1,},
 	},
-	on_rightclick = nil,
 	attack_damage = 1,
 	attack_type = "melee",
 	traits = {
@@ -140,6 +162,18 @@ creatures:register_creature("creatures:human_male", {
 		aggressivity = {0.5, 0.75},
 		determination = {0.8, 1},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = true,
@@ -153,6 +187,18 @@ creatures:register_creature("creatures:human_male", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_human_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:human_male", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 9000, 1, 31000)
 
@@ -202,7 +248,6 @@ creatures:register_creature("creatures:human_female", {
 		min = 1,
 		max = 1,},
 	},
-	on_rightclick = nil,
 	attack_damage = 1,
 	attack_type = "melee",
 	traits = {
@@ -215,6 +260,18 @@ creatures:register_creature("creatures:human_female", {
 		aggressivity = {0.25, 0.5},
 		determination = {0.8, 1},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = true,
@@ -228,6 +285,18 @@ creatures:register_creature("creatures:human_female", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_human_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:human_female", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 13000, 1, 31000)
 
@@ -274,7 +343,6 @@ creatures:register_creature("creatures:dirt_monster", {
 		min = 3,
 		max = 5,},
 	},
-	on_rightclick = nil,
 	attack_damage = 1,
 	attack_type = "melee",
 	traits = {
@@ -287,6 +355,18 @@ creatures:register_creature("creatures:dirt_monster", {
 		aggressivity = {0.7, 0.9},
 		determination = {0.6, 0.8},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = true,
@@ -300,6 +380,18 @@ creatures:register_creature("creatures:dirt_monster", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_dirt_monster_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
@@ -358,6 +450,18 @@ creatures:register_creature("creatures:stone_monster", {
 		aggressivity = {0.8, 1},
 		determination = {0.9, 1},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = true,
@@ -371,6 +475,18 @@ creatures:register_creature("creatures:stone_monster", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_stone_monster_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
 
@@ -429,6 +545,18 @@ creatures:register_creature("creatures:sand_monster", {
 		aggressivity = {0.7, 0.9},
 		determination = {0.6, 0.8},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = true,
@@ -442,6 +570,18 @@ creatures:register_creature("creatures:sand_monster", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_sand_monster_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
@@ -505,6 +645,18 @@ creatures:register_creature("creatures:tree_monster", {
 		aggressivity = {0.6, 0.8},
 		determination = {0.7, 0.9},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = true,
@@ -518,6 +670,18 @@ creatures:register_creature("creatures:tree_monster", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_tree_monster_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
 
@@ -571,7 +735,15 @@ creatures:register_creature("creatures:sheep", {
 		fear = {0.8, 1},
 		determination = {0.4, 0.6},
 	},
-	
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
 		if item:get_name() == "farming:wheat" then
@@ -622,6 +794,18 @@ creatures:register_creature("creatures:sheep", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_sheep_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
 
@@ -681,7 +865,15 @@ creatures:register_creature("creatures:rat", {
 		fear = {0.5, 0.7},
 		determination = {0.3, 0.5},
 	},
-	
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
 			clicker:get_inventory():add_item("main", "creatures:rat")
@@ -701,6 +893,18 @@ creatures:register_creature("creatures:rat", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_rat_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
 
@@ -780,6 +984,18 @@ creatures:register_creature("creatures:oerkki", {
 		aggressivity = {0.4, 0.6},
 		determination = {0.6, 0.8},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = true,
@@ -793,6 +1009,18 @@ creatures:register_creature("creatures:oerkki", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_oerkki_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
@@ -838,7 +1066,6 @@ creatures:register_creature("creatures:dungeon_master", {
 		min = 1,
 		max = 2,},
 	},
-	on_rightclick = nil,
 	attack_damage = 4,
 	attack_type = "shoot",
 	attack_arrow = "creatures:fireball",
@@ -852,6 +1079,18 @@ creatures:register_creature("creatures:dungeon_master", {
 		aggressivity = {0.8, 1},
 		determination = {0.5, 0.7},
 	},
+	on_activate = function(self, staticdata, dtime_s)
+		AI_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		AI_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		AI_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		AI_rightclick(self, clicker)
+	end,
 
 	-- Player properties:
 	menu = true,
@@ -865,6 +1104,18 @@ creatures:register_creature("creatures:dungeon_master", {
 	screen = "",
 	ambience = "",
 	icon = "mobs_dungeon_master_icon.png",
+	player_join = function(player)
+		player_join (player)
+	end,
+	player_step = function(player, dtime)
+		player_step (player, dtime)
+	end,
+	player_die = function(player)
+		player_die (player)
+	end,
+	player_respawn = function(player)
+		player_respawn (player)
+	end,
 })
 creatures:register_spawn("creatures:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
 

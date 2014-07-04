@@ -28,31 +28,17 @@ function creatures:register_player(name, def)
 	creatures.player_def[name].screen = def.screen
 	creatures.player_def[name].ambience = def.ambience
 	creatures.player_def[name].icon = def.icon
+	creatures.player_def[name].player_join = def.player_join
+	creatures.player_def[name].player_step = def.player_step
+	creatures.player_def[name].player_die = def.player_die
+	creatures.player_def[name].player_respawn = def.player_respawn
 end
 
 -- Functions to handle player settings:
 
-local player_data = {}
+player_data = {}
 
-local function get_formspec(size_main, size_craft, icon)
-	local image = icon
-	if not image or image == "" then
-		image = "logo.png"
-	end
-
-	local size = {}
-	size.x = math.max(size_main.x, (size_craft.x + 3))
-	size.y = size_main.y + size_craft.y + 1
-	local formspec =
-		"size["..size.x..","..size.y.."]"
-		.."image[0,0;1,1;"..image.."]"
-		.."list[current_player;craft;"..(size.x - size_craft.x - 2)..",0;"..size_craft.x..","..size_craft.y..";]"
-		.."list[current_player;craftpreview;"..(size.x - 1)..","..math.floor(size_craft.y / 2)..";1,1;]"
-		.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 1)..";"..size_main.x..","..size_main.y..";]"
-	return formspec
-end
-
-local function set_animation(player, type, speed)
+function creatures:set_animation(player, type, speed)
 	local name = player:get_player_name()
 	if not player_data[name].animation then
 		player_data[name].animation = ""
@@ -97,6 +83,24 @@ local function set_animation(player, type, speed)
 			player_data[name].animation = "punch"
 		end
 	end
+end
+
+local function get_formspec(size_main, size_craft, icon)
+	local image = icon
+	if not image or image == "" then
+		image = "logo.png"
+	end
+
+	local size = {}
+	size.x = math.max(size_main.x, (size_craft.x + 3))
+	size.y = size_main.y + size_craft.y + 1
+	local formspec =
+		"size["..size.x..","..size.y.."]"
+		.."image[0,0;1,1;"..image.."]"
+		.."list[current_player;craft;"..(size.x - size_craft.x - 2)..",0;"..size_craft.x..","..size_craft.y..";]"
+		.."list[current_player;craftpreview;"..(size.x - 1)..","..math.floor(size_craft.y / 2)..";1,1;]"
+		.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 1)..";"..size_main.x..","..size_main.y..";]"
+	return formspec
 end
 
 local function apply_settings (player, settings)
@@ -191,121 +195,35 @@ minetest.register_globalstep(function(dtime)
 		local name = player:get_player_name()
 		local race = creatures:player_get(name)
 		local race_settings = creatures.player_def[race]
-		if not race or not race_settings then
-			return
-		end
-
-		-- handle player animations
-		if race_settings.mesh and race_settings.animation then
-			local controls = player:get_player_control()
-			-- determine if the player is walking
-			local walking = controls.up or controls.down or controls.left or controls.right
-			-- determine if the player is sneaking, and reduce animation speed if so
-			-- TODO: Use run animation and speed when player is running (fast mode)
-			local speed = race_settings.animation.speed
-			if controls.sneak then
-				speed = race_settings.animation.speed / 2
-			end
-
-			-- apply animations based on what the player is doing
-			if player:get_hp() == 0 then
-				-- TODO: mobs don't have a death animation, make the player invisible here
-			elseif walking and controls.LMB then
-				set_animation(player, "walk_punch", speed)
-			elseif walking then
-				set_animation(player, "walk", speed)
-			elseif controls.LMB then
-				set_animation(player, "punch", speed)
-			else
-				set_animation(player, "stand", speed)
-			end
-		end
-
-		-- play damage sounds
-		if player_data[name].last_hp and player:get_hp() < player_data[name].last_hp and player:get_hp() > 0 then
-			if race_settings.sounds and race_settings.sounds.damage then
-				minetest.sound_play(race_settings.sounds.damage, {object = player})
-			end
-		end
-		player_data[name].last_hp = player:get_hp()
-
-		-- don't let players have more HP than their race allows
-		if player:get_hp() > race_settings.hp_max then
-			player:set_hp(race_settings.hp_max)
-		end
-
-		-- limit execution of code beyond this point
-		if not player_data[name].timer then
-			player_data[name].timer = 0
-		end
-		player_data[name].timer = player_data[name].timer + dtime
-		if player_data[name].timer < 1 then
-			return
-		end
-		player_data[name].timer = 0
-
-		-- handle player environment damage
-		local pos = player:getpos()
-		local n = minetest.env:get_node(pos)
-		if race_settings.env_damage.light and race_settings.env_damage.light ~= 0
-			and pos.y > 0
-			and minetest.env:get_node_light(pos)
-			and minetest.env:get_node_light(pos) > 4
-			and minetest.env:get_timeofday() > 0.2
-			and minetest.env:get_timeofday() < 0.8
-		then
-			player:set_hp(player:get_hp() - race_settings.env_damage.light)
-		end
-		if race_settings.env_damage.water and race_settings.env_damage.water ~= 0 and
-			minetest.get_item_group(n.name, "water") ~= 0
-		then
-			player:set_hp(player:get_hp() - race_settings.env_damage.water)
-		end
-		-- NOTE: Lava damage is applied on top of normal player lava damage
-		if race_settings.env_damage.lava and race_settings.env_damage.lava ~= 0 and
-			minetest.get_item_group(n.name, "lava") ~= 0
-		then
-			player:set_hp(player:get_hp() - race_settings.env_damage.lava)
-		end
-
-		if race_settings.sounds and race_settings.sounds.random and math.random(1, 50) <= 1 then
-			minetest.sound_play(race_settings.sounds.random, {object = player})
-		end
+		race_settings.player_step(player, dtime)
 	end
 end)
 
--- handle player death
 minetest.register_on_dieplayer(function(player)
-	local race = creatures:player_get(player:get_player_name())
+	local name = player:get_player_name()
+	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
-
-	if race_settings.sounds and race_settings.sounds.die then
-		minetest.sound_play(race_settings.sounds.die, {object = player})
-	end
+	race_settings.player_die(player)
 end)
 
--- turn the player into its ghost upon respawn
 minetest.register_on_respawnplayer(function(player)
 	local name = player:get_player_name()
 	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
-	local ghost = race_settings.ghost
-	if not ghost or ghost == "" then
-		ghost = creatures.player_default
-	end
-
-	if race ~= ghost then
-		creatures:player_set (player, {name = ghost, hp = 0})
-		minetest.sound_play("creatures_ghost", {toplayer = name})
-		return true
-	end
+	race_settings.player_respawn(player)
+	return true
 end)
 
--- set player race and data upon joining
 minetest.register_on_joinplayer(function(player)
+	-- apply persisted player race or set default race
 	player_data[player:get_player_name()] = {}
 	local get_name, get_skin = creatures:player_get(player)
 	creatures:player_set(player, {name = get_name, skin = get_skin})
+
+	local name = player:get_player_name()
+	local race = creatures:player_get(name)
+	local race_settings = creatures.player_def[race]
+	race_settings.player_join(player)
 end)
 
 -- Global functions to get or set player races:
