@@ -406,6 +406,7 @@ function creatures:register_mob(name, def)
 				local s = self.object:getpos()
 				local p = self.target_current.position or self.target_current.entity:getpos()
 				local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
+				local dist_target = self.target_current.distance or self.traits.vision
 				
 				local vec = {x=p.x-s.x, y=p.y-s.y, z=p.z-s.z}
 				local yaw = math.atan(vec.z/vec.x)+math.pi/2
@@ -413,9 +414,13 @@ function creatures:register_mob(name, def)
 					yaw = yaw+math.pi
 				end
 				self.object:setyaw(yaw)
-				
-				if dist > 2 then
+
+				if dist > 2 and dist / dist_target >= 1 - self.target_current.priority then
 					self.set_velocity(self, self.run_velocity)
+					self:set_animation("walk_punch")
+					self.v_start = true
+				elseif dist > 2 then
+					self.set_velocity(self, self.walk_velocity)
 					self:set_animation("walk_punch")
 					self.v_start = true
 				else
@@ -484,8 +489,8 @@ function creatures:register_mob(name, def)
 				end
 				self.object:setyaw(yaw)
 
-				if (not avoid and dist > dist_target / 2 ) or
-				(avoid and dist <= dist_target / 2) then
+				if (not avoid and dist / dist_target >= 1 - self.target_current.priority) or
+				(avoid and dist / dist_target < 1 - self.target_current.priority) then
 					self.set_velocity(self, self.run_velocity)
 					self:set_animation("walk")
 					self.v_start = true
