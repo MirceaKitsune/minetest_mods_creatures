@@ -295,10 +295,6 @@ function AI_step (self, dtime)
 		self.set_velocity(self, 0)
 		self:set_animation("stand")
 		self.v_start = false
-
-		if self.sounds and self.sounds.random_idle and math.random(1, 50) <= 1 then
-			minetest.sound_play(self.sounds.random_idle, {object = self.object})
-		end
 	-- state: attacking, melee
 	elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
 		local s = self.object:getpos()
@@ -411,7 +407,11 @@ function AI_step (self, dtime)
 		end
 
 		if self.sounds and math.random(1, 50) <= 1 then
-			if avoid and self.sounds.random_avoid then
+			if self.target_current.priority == 0 then
+				if self.sounds.random_idle then
+					minetest.sound_play(self.sounds.random_idle, {object = self.object})
+				end
+			elseif avoid and self.sounds.random_avoid then
 				minetest.sound_play(self.sounds.random_avoid, {object = self.object})
 			elseif not avoid and self.sounds.random_follow then
 				minetest.sound_play(self.sounds.random_follow, {object = self.object})
