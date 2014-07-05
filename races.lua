@@ -200,7 +200,7 @@ creatures:register_creature("creatures:human_male", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:human_male", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 9000, 1, 31000)
+creatures:register_spawn("creatures:human_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 9000, 1, 31000)
 
 creatures:register_creature("creatures:human_female", {
 	-- Common properties:
@@ -298,7 +298,7 @@ creatures:register_creature("creatures:human_female", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:human_female", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 13000, 1, 31000)
+creatures:register_spawn("creatures:human_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 13000, 1, 31000)
 
 creatures:register_creature("creatures:dirt_monster", {
 	-- Common properties:
@@ -393,7 +393,7 @@ creatures:register_creature("creatures:dirt_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures:dirt_monster", {"default:dirt", "default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
 creatures:register_creature("creatures:stone_monster", {
 	-- Common properties:
@@ -488,7 +488,7 @@ creatures:register_creature("creatures:stone_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
+creatures:register_spawn("creatures:stone_monster", {"default:stone", "default:cobblestone"}, 3, -1, 7000, 3, 0)
 
 creatures:register_creature("creatures:sand_monster", {
 	-- Common properties:
@@ -583,7 +583,7 @@ creatures:register_creature("creatures:sand_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures:sand_monster", {"default:sand", "default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
 creatures:register_creature("creatures:snow_monster", {
 	-- Common properties:
@@ -623,7 +623,7 @@ creatures:register_creature("creatures:snow_monster", {
 
 	-- Mob properties:
 	drops = {
-		{name = "default:snow",
+		{name = "default:snowblock",
 		chance = 1,
 		min = 3,
 		max = 5,},
@@ -678,7 +678,7 @@ creatures:register_creature("creatures:snow_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:snow_monster", {"default:dirt_with_snow", "default:snow"}, 3, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures:snow_monster", {"default:dirt_with_snow", "default:snowblock"}, 3, -1, 7000, 3, 31000)
 
 creatures:register_creature("creatures:tree_monster", {
 	-- Common properties:
@@ -1001,7 +1001,7 @@ creatures:register_creature("creatures:rat", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
+creatures:register_spawn("creatures:rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 20, -1, 7000, 1, 31000)
 
 minetest.register_craftitem("creatures:rat", {
 	description = "Rat",
