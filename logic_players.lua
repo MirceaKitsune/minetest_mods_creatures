@@ -7,9 +7,6 @@ function logic_player_step (player, dtime)
 	local name = player:get_player_name()
 	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
-	if not race or not race_settings then
-		return
-	end
 
 	-- handle player animations
 	if race_settings.mesh and race_settings.animation then

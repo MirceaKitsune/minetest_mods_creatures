@@ -195,7 +195,9 @@ minetest.register_globalstep(function(dtime)
 		local name = player:get_player_name()
 		local race = creatures:player_get(name)
 		local race_settings = creatures.player_def[race]
-		race_settings.player_step(player, dtime)
+		if race and race_settings then
+			race_settings.player_step(player, dtime)
+		end
 	end
 end)
 
@@ -203,14 +205,18 @@ minetest.register_on_dieplayer(function(player)
 	local name = player:get_player_name()
 	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
-	race_settings.player_die(player)
+	if race and race_settings then
+		race_settings.player_die(player)
+	end
 end)
 
 minetest.register_on_respawnplayer(function(player)
 	local name = player:get_player_name()
 	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
-	race_settings.player_respawn(player)
+	if race and race_settings then
+		race_settings.player_respawn(player)
+	end
 	return true
 end)
 
@@ -223,7 +229,9 @@ minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
-	race_settings.player_join(player)
+	if race and race_settings then
+		race_settings.player_join(player)
+	end
 end)
 
 -- Global functions to get or set player races:
