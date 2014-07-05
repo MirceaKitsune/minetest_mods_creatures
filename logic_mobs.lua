@@ -1,12 +1,12 @@
--- Creature settings - Mobs, AI functions:
+-- Creature settings - Mobs, logics:
 
 -- This file contains the default AI functions for mobs. Advanced users can use a different AI instead of this, or execute additional code.
 
 local DEBUG_AI_TARGETS = false
 local highest_vision = 0
 
--- AI_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
-function AI_step (self, dtime)
+-- logic_mob_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
+function logic_mob_step (self, dtime)
 	if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
 		self.object:remove()
 	end
@@ -420,8 +420,8 @@ function AI_step (self, dtime)
 	end
 end
 
--- AI_activate: Executed in on_activate, handles: initialization, static data management
-function AI_activate (self, staticdata, dtime_s)
+-- logic_mob_activate: Executed in on_activate, handles: initialization, static data management
+function logic_mob_activate (self, staticdata, dtime_s)
 	self.object:set_armor_groups({fleshy=self.armor})
 	self.object:setacceleration({x=0, y=-10, z=0})
 	self.object:setvelocity({x=0, y=self.object:getvelocity().y, z=0})
@@ -463,8 +463,8 @@ function AI_activate (self, staticdata, dtime_s)
 	end
 end
 
--- AI_punch: Executed in on_punch, handles: damage, death, target management
-function AI_punch (self, hitter)
+-- logic_mob_punch: Executed in on_punch, handles: damage, death, target management
+function logic_mob_punch (self, hitter)
 	local psettings = creatures.player_def[creatures:player_get(hitter)]
 	local relation = creatures:alliance(self.object, hitter)
 
@@ -598,8 +598,8 @@ function AI_punch (self, hitter)
 	end
 end
 
--- AI_rightclick: Executed in on_rightclick, handles: possession
-function AI_rightclick (self, clicker)
+-- logic_mob_rightclick: Executed in on_rightclick, handles: possession
+function logic_mob_rightclick (self, clicker)
 	local psettings = creatures.player_def[creatures:player_get(clicker)]
 	if not self.actor and clicker:is_player() and psettings.reincarnate and self.target_current and clicker == self.target_current.entity then
 		clicker:setpos(self.object:getpos())

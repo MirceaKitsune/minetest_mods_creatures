@@ -49,16 +49,16 @@ creatures:register_creature("creatures:ghost", {
 		determination = {0.5, 0.5},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -74,16 +74,16 @@ creatures:register_creature("creatures:ghost", {
 	ambience = "creatures_ambient_ghost",
 	icon = "mobs_ghost_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 
@@ -163,16 +163,16 @@ creatures:register_creature("creatures:human_male", {
 		determination = {0.8, 1},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -188,16 +188,16 @@ creatures:register_creature("creatures:human_male", {
 	ambience = "",
 	icon = "mobs_human_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:human_male", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 9000, 1, 31000)
@@ -261,16 +261,16 @@ creatures:register_creature("creatures:human_female", {
 		determination = {0.8, 1},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -286,16 +286,16 @@ creatures:register_creature("creatures:human_female", {
 	ambience = "",
 	icon = "mobs_human_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:human_female", {"default:dirt_with_grass", "default:desert_sand"}, 20, -1, 13000, 1, 31000)
@@ -356,16 +356,16 @@ creatures:register_creature("creatures:dirt_monster", {
 		determination = {0.6, 0.8},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -381,16 +381,16 @@ creatures:register_creature("creatures:dirt_monster", {
 	ambience = "",
 	icon = "mobs_dirt_monster_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:dirt_monster", {"default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
@@ -451,16 +451,16 @@ creatures:register_creature("creatures:stone_monster", {
 		determination = {0.9, 1},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -476,16 +476,16 @@ creatures:register_creature("creatures:stone_monster", {
 	ambience = "",
 	icon = "mobs_stone_monster_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:stone_monster", {"default:stone"}, 3, -1, 7000, 3, 0)
@@ -546,16 +546,16 @@ creatures:register_creature("creatures:sand_monster", {
 		determination = {0.6, 0.8},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -571,16 +571,16 @@ creatures:register_creature("creatures:sand_monster", {
 	ambience = "",
 	icon = "mobs_sand_monster_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
@@ -646,16 +646,16 @@ creatures:register_creature("creatures:tree_monster", {
 		determination = {0.7, 0.9},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -671,16 +671,16 @@ creatures:register_creature("creatures:tree_monster", {
 	ambience = "",
 	icon = "mobs_tree_monster_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
@@ -736,13 +736,13 @@ creatures:register_creature("creatures:sheep", {
 		determination = {0.4, 0.6},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
 		local item = clicker:get_wielded_item()
@@ -795,16 +795,16 @@ creatures:register_creature("creatures:sheep", {
 	ambience = "",
 	icon = "mobs_sheep_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
@@ -866,13 +866,13 @@ creatures:register_creature("creatures:rat", {
 		determination = {0.3, 0.5},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
@@ -894,16 +894,16 @@ creatures:register_creature("creatures:rat", {
 	ambience = "",
 	icon = "mobs_rat_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:rat", {"default:dirt_with_grass", "default:stone"}, 20, -1, 7000, 1, 31000)
@@ -985,16 +985,16 @@ creatures:register_creature("creatures:oerkki", {
 		determination = {0.6, 0.8},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -1010,16 +1010,16 @@ creatures:register_creature("creatures:oerkki", {
 	ambience = "",
 	icon = "mobs_oerkki_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
@@ -1080,16 +1080,16 @@ creatures:register_creature("creatures:dungeon_master", {
 		determination = {0.5, 0.7},
 	},
 	on_activate = function(self, staticdata, dtime_s)
-		AI_activate(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
-		AI_step(self, dtime)
+		logic_mob_step(self, dtime)
 	end,
 	on_punch = function(self, hitter)
-		AI_punch(self, hitter)
+		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
-		AI_rightclick(self, clicker)
+		logic_mob_rightclick(self, clicker)
 	end,
 
 	-- Player properties:
@@ -1105,16 +1105,16 @@ creatures:register_creature("creatures:dungeon_master", {
 	ambience = "",
 	icon = "mobs_dungeon_master_icon.png",
 	player_join = function(player)
-		player_join (player)
+		logic_player_join (player)
 	end,
 	player_step = function(player, dtime)
-		player_step (player, dtime)
+		logic_player_step (player, dtime)
 	end,
 	player_die = function(player)
-		player_die (player)
+		logic_player_die (player)
 	end,
 	player_respawn = function(player)
-		player_respawn (player)
+		logic_player_respawn (player)
 	end,
 })
 creatures:register_spawn("creatures:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)

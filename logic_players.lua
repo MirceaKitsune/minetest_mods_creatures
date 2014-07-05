@@ -1,9 +1,9 @@
--- Creature settings - Players, functions:
+-- Creature settings - Players, logics:
 
 -- This file contains the default functions for players. Advanced users can use a different function set instead of this, or execute additional code.
 
--- player_step: Executed in minetest.register_globalstep, handles: animations, movement, damage
-function player_step (player, dtime)
+-- logic_player_step: Executed in minetest.register_globalstep, handles: animations, movement, damage
+function logic_player_step (player, dtime)
 	local name = player:get_player_name()
 	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
@@ -85,8 +85,8 @@ function player_step (player, dtime)
 	end
 end
 
--- player_die: Executed in minetest.register_on_dieplayer, handles: death
-function player_die (player)
+-- logic_player_die: Executed in minetest.register_on_dieplayer, handles: death
+function logic_player_die (player)
 	local race = creatures:player_get(player:get_player_name())
 	local race_settings = creatures.player_def[race]
 
@@ -95,8 +95,8 @@ function player_die (player)
 	end
 end
 
--- player_respawn: Executed in minetest.register_on_respawnplayer, handles: respawn, creature settings
-function player_respawn (player)
+-- logic_player_respawn: Executed in minetest.register_on_respawnplayer, handles: respawn, creature settings
+function logic_player_respawn (player)
 	local name = player:get_player_name()
 	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
@@ -111,7 +111,7 @@ function player_respawn (player)
 	end
 end
 
--- player_join: Executed in minetest.register_on_joinplayer, handles: N/A
-function player_join (player)
+-- logic_player_join: Executed in minetest.register_on_joinplayer, handles: N/A
+function logic_player_join (player)
 	-- currently there is no default on_joinplayer function
 end

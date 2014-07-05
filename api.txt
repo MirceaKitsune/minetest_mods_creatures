@@ -32,10 +32,10 @@
 		fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first).
 		aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first).
 		determination = {0.5, 0.5}: Lower values make it more likely for a mob to drop distant targets and abandon a task.
-	on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the AI_activate function.
-	on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the AI_step function.
-	on_punch = function(self, hitter) ... end: Function executed when the mob is punched. By default, this should call the AI_punch function.
-	on_rightclick = function(self, clicker) ... end: Function executed when the mob is right-clicked. By default, this should call the AI_rightclick function.
+	on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the logic_mob_activate function.
+	on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the logic_mob_step function.
+	on_punch = function(self, hitter) ... end: Function executed when the mob is punched. By default, this should call the logic_mob_punch function.
+	on_rightclick = function(self, clicker) ... end: Function executed when the mob is right-clicked. By default, this should call the logic_mob_rightclick function.
 
 - Player only parameters:
 	menu = true: Whether players which are part of this race have a formspec inventory menu... containing their inventory, crafting area, etc.
@@ -49,10 +49,10 @@
 	screen = "hud_*.png": If set, this image is applied over the screen. Use a transparent image here, unless you wish to block the player's vision entirely.
 	ambience = "ambient_*": If set, the player will constantly hear this ambiental sound.
 	icon = "mobs_*_icon.png": Icon for this creature, indicating to the player what they currently are. Players see it in the inventory menu or on the HUD.
-	player_join = function(player) ... end: Function executed when a player joins. By default, this should call the player_join function.
-	player_step = function(player, dtime) ... end: Function executed each step. By default, this should call the player_step function.
-	player_die = function(player) ... end: Function executed when the player dies. By default, this should call the player_die function.
-	player_respawn = function(player) ... end: Function executed when the player respawns. By default, this should call the player_respawn function.
+	player_join = function(player) ... end: Function executed when a player joins. By default, this should call the logic_player_join function.
+	player_step = function(player, dtime) ... end: Function executed each step. By default, this should call the logic_player_step function.
+	player_die = function(player) ... end: Function executed when the player dies. By default, this should call the logic_player_die function.
+	player_respawn = function(player) ... end: Function executed when the player respawns. By default, this should call the logic_player_respawn function.
 
 * creatures:register_spawn("creatures:human", {"default:dirt_with_grass"}, 20, -1, 9000, 1, 31000, nil): Configures a mob to spawn on a given node. Parameters:
 	name: The name of this creature, eg: creatures:human

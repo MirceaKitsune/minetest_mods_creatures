@@ -38,9 +38,9 @@ end
 
 -- Load files
 dofile(minetest.get_modpath("creatures").."/api_players.lua")
-dofile(minetest.get_modpath("creatures").."/api_players_functions.lua")
 dofile(minetest.get_modpath("creatures").."/api_mobs.lua")
-dofile(minetest.get_modpath("creatures").."/api_mobs_functions.lua")
+dofile(minetest.get_modpath("creatures").."/logic_players.lua")
+dofile(minetest.get_modpath("creatures").."/logic_mobs.lua")
 dofile(minetest.get_modpath("creatures").."/races.lua")
 
 -- Log mod
