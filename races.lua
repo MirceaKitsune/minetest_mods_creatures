@@ -585,6 +585,101 @@ creatures:register_creature("creatures:sand_monster", {
 })
 creatures:register_spawn("creatures:sand_monster", {"default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
+creatures:register_creature("creatures:snow_monster", {
+	-- Common properties:
+	hp_max = 5,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_sand_monster.x",
+	textures = {"mobs_snow_monster.png"},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 20,
+		stand = {0, 39},
+		walk = {41, 72},
+		walk_punch = {74, 105},
+		punch = {74, 105},
+	},
+	sounds = {
+		random_idle = "creatures_monster_random",
+		attack = "creatures_monster_attack",
+		damage = "creatures_monster_damage",
+		die = "creatures_monster_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 3,
+		lava = 5,
+		light = 1,
+	},
+	physics = {
+		speed = 0.5,
+		jump = 1,
+		gravity = 1,
+	},
+	teams = {monsters = 0.5, people = -0.2, animals = -0.2},
+
+	-- Mob properties:
+	drops = {
+		{name = "default:snow",
+		chance = 1,
+		min = 3,
+		max = 5,},
+	},
+	attack_damage = 2,
+	attack_type = "melee",
+	traits = {
+		attack_interval = {1, 1.25},
+		think = {0.75, 1.25},
+		vision = {10, 15},
+		roam = {0.25, 0.35},
+		loyalty = {0.3, 0.6},
+		fear = {0.1, 0.25},
+		aggressivity = {0.5, 0.7},
+		determination = {0.5, 0.6},
+	},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter)
+		logic_mob_punch(self, hitter)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+	end,
+
+	-- Player properties:
+	menu = true,
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
+	reincarnate = false,
+	ghost = "",
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
+	sky = {{}, "regular", {}},
+	daytime = nil,
+	screen = "",
+	ambience = "",
+	icon = "mobs_snow_monster_icon.png",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+})
+creatures:register_spawn("creatures:snow_monster", {"default:dirt_with_snow", "default:snow"}, 3, -1, 7000, 3, 31000)
+
 creatures:register_creature("creatures:tree_monster", {
 	-- Common properties:
 	hp_max = 10,
