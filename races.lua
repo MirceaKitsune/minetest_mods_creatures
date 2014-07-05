@@ -16,7 +16,7 @@ creatures:register_creature("creatures:ghost", {
 	drawtype = "front",
 	animation = nil,
 	sounds = {
-		random = "creatures_ghost_random",
+		random_idle = "creatures_ghost_random",
 		attack = "creatures_ghost_attack",
 		damage = "creatures_ghost_damage",
 		die = "creatures_ghost_die",
@@ -318,7 +318,7 @@ creatures:register_creature("creatures:dirt_monster", {
 		punch = {40, 63},
 	},
 	sounds = {
-		random = "creatures_monster_random",
+		random_idle = "creatures_monster_random",
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -413,7 +413,7 @@ creatures:register_creature("creatures:stone_monster", {
 		punch = {40, 63},
 	},
 	sounds = {
-		random = "creatures_monster_random",
+		random_idle = "creatures_monster_random",
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -508,7 +508,7 @@ creatures:register_creature("creatures:sand_monster", {
 		punch = {74, 105},
 	},
 	sounds = {
-		random = "creatures_monster_random",
+		random_idle = "creatures_monster_random",
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -603,7 +603,7 @@ creatures:register_creature("creatures:tree_monster", {
 		punch = {48, 62},
 	},
 	sounds = {
-		random = "creatures_monster_random",
+		random_idle = "creatures_monster_random",
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -703,7 +703,7 @@ creatures:register_creature("creatures:sheep", {
 		punch = {81, 100},
 	},
 	sounds = {
-		random = "creatures_sheep_random",
+		random_idle = "creatures_sheep_random",
 		damage = "creatures_sheep_damage",
 		die = "creatures_sheep_die",
 	},
@@ -838,7 +838,7 @@ creatures:register_creature("creatures:rat", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	sounds = {
-		random = "creatures_rat_random",
+		random_idle = "creatures_rat_random",
 		damage = "creatures_rat_damage",
 		die = "creatures_rat_die",
 	},
@@ -953,7 +953,7 @@ creatures:register_creature("creatures:oerkki", {
 		punch = {37, 49},
 	},
 	sounds = {
-		attack = "creatures_human_male_attack",
+		random_idle = "creatures_human_male_attack",
 		damage = "creatures_human_male_damage",
 		die = "creatures_human_male_die",
 	},
@@ -1041,7 +1041,7 @@ creatures:register_creature("creatures:dungeon_master", {
 		punch = {36, 48},
 	},
 	sounds = {
-		random = "creatures_monster_large_random",
+		random_idle = "creatures_monster_large_random",
 		attack = "creatures_fireball",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",

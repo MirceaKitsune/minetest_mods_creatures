@@ -168,10 +168,6 @@ function AI_step (self, dtime)
 		end
 	end
 	self.timer_think = 0
-	
-	if self.sounds and self.sounds.random and math.random(1, 50) <= 1 then
-		minetest.sound_play(self.sounds.random, {object = self.object})
-	end
 
 	-- determine if this mob is in a liquid
 	local pos = self.object:getpos()
@@ -299,6 +295,10 @@ function AI_step (self, dtime)
 		self.set_velocity(self, 0)
 		self:set_animation("stand")
 		self.v_start = false
+
+		if self.sounds and self.sounds.random_idle and math.random(1, 50) <= 1 then
+			minetest.sound_play(self.sounds.random_idle, {object = self.object})
+		end
 	-- state: attacking, melee
 	elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
 		local s = self.object:getpos()
@@ -338,6 +338,10 @@ function AI_step (self, dtime)
 				end
 			end
 		end
+
+		if self.sounds and self.sounds.random_attack and math.random(1, 50) <= 1 then
+			minetest.sound_play(self.sounds.random_attack, {object = self.object})
+		end
 	-- state: attacking, shoot
 	elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then
 		local s = self.object:getpos()
@@ -367,6 +371,10 @@ function AI_step (self, dtime)
 			vec.y = vec.y*v/amount
 			vec.z = vec.z*v/amount
 			obj:setvelocity(vec)
+		end
+
+		if self.sounds and self.sounds.random_attack and math.random(1, 50) <= 1 then
+			minetest.sound_play(self.sounds.random_attack, {object = self.object})
 		end
 	-- state: following or avoiding
 	elseif self.target_current.objective == "follow" or self.target_current.objective == "avoid" then
@@ -400,6 +408,14 @@ function AI_step (self, dtime)
 			self.set_velocity(self, 0)
 			self:set_animation("stand")
 			self.v_start = false
+		end
+
+		if self.sounds and math.random(1, 50) <= 1 then
+			if avoid and self.sounds.random_avoid then
+				minetest.sound_play(self.sounds.random_avoid, {object = self.object})
+			elseif not avoid and self.sounds.random_follow then
+				minetest.sound_play(self.sounds.random_follow, {object = self.object})
+			end
 		end
 	end
 end

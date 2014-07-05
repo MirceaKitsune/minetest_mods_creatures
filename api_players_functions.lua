@@ -83,10 +83,6 @@ function player_step (player, dtime)
 	then
 		player:set_hp(player:get_hp() - race_settings.env_damage.lava)
 	end
-
-	if race_settings.sounds and race_settings.sounds.random and math.random(1, 50) <= 1 then
-		minetest.sound_play(race_settings.sounds.random, {object = player})
-	end
 end
 
 -- player_die: Executed in minetest.register_on_dieplayer, handles: death
