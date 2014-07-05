@@ -186,7 +186,7 @@ creatures:register_creature("creatures:human_male", {
 	daytime = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_human_icon.png",
+	icon = "mobs_human_male_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -284,7 +284,7 @@ creatures:register_creature("creatures:human_female", {
 	daytime = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_human_icon.png",
+	icon = "mobs_human_female_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
