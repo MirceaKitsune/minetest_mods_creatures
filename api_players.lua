@@ -23,8 +23,7 @@ function creatures:register_player(name, def)
 	creatures.player_def[name].reincarnate = def.reincarnate
 	creatures.player_def[name].ghost = def.ghost
 	creatures.player_def[name].eye_offset = def.eye_offset
-	creatures.player_def[name].sky = def.sky
-	creatures.player_def[name].daytime = def.daytime
+	creatures.player_def[name].fog = def.fog
 	creatures.player_def[name].screen = def.screen
 	creatures.player_def[name].ambience = def.ambience
 	creatures.player_def[name].icon = def.icon
@@ -156,8 +155,11 @@ local function apply_settings (player, settings)
 
 	-- player: configure visual effects
 	player:set_eye_offset(def.eye_offset[1], def.eye_offset[2])
-	player:override_day_night_ratio(def.daytime)
-	player:set_sky(def.sky[1], def.sky[2], def.sky[3])
+	if def.fog then
+		player:set_sky(def.fog, "plain", {})
+	else
+		player:set_sky({}, "regular", {})
+	end
 	if def.screen and def.screen ~= "" then
 		player_data[name].hud = player:hud_add({
 			hud_elem_type = "image",

@@ -44,8 +44,7 @@
 	reincarnate = true: Players that are part of this race can possess allied mobs, typically used for ghosts.
 	ghost = "": What creature the player becomes upon death. If blank, creatures.player_default is used.
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}}: Camera offset for 1st and 3rd person views, used to adjust the camera to eye position for creatures of various shapes and sizes.
-	sky = {{r = 0, g = 0, b = 0}, "regular", {}}: If set, these sky settings are applied to players who are part of this race.
-	daytime = 0.15: If set, players who are part of this race see the sun and moon at this time of day.
+	fog = {r = 0, g = 0, b = 0}: If set, this fog color is seen by players who are part of this race.
 	screen = "hud_*.png": If set, this image is applied over the screen. Use a transparent image here, unless you wish to block the player's vision entirely.
 	ambience = "ambient_*": If set, the player will constantly hear this ambiental sound.
 	icon = "mobs_*_icon.png": Icon for this creature, indicating to the player what they currently are. Players see it in the inventory menu or on the HUD.
