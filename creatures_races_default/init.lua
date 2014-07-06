@@ -1,10 +1,10 @@
 -- Default player definitions:
 
 -- default race for new players
-creatures.player_default = "creatures:ghost"
+creatures.player_default = "creatures_races_default:ghost"
 
 -- player ghost, don't spawn as a mob
-creatures:register_creature("creatures:ghost", {
+creatures:register_creature("creatures_races_default:ghost", {
 	-- Common properties:
 	hp_max = 20,
 	armor = 100,
@@ -88,7 +88,7 @@ creatures:register_creature("creatures:ghost", {
 
 -- Creature definitions:
 
-creatures:register_creature("creatures:human_male", {
+creatures:register_creature("creatures_races_default:human_male", {
 	-- Common properties:
 	hp_max = 20,
 	armor = 100,
@@ -198,9 +198,9 @@ creatures:register_creature("creatures:human_male", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:human_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 9000, 1, 31000)
+creatures:register_spawn("creatures_races_default:human_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 9000, 1, 31000)
 
-creatures:register_creature("creatures:human_female", {
+creatures:register_creature("creatures_races_default:human_female", {
 	-- Common properties:
 	hp_max = 20,
 	armor = 100,
@@ -295,9 +295,9 @@ creatures:register_creature("creatures:human_female", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:human_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 13000, 1, 31000)
+creatures:register_spawn("creatures_races_default:human_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 13000, 1, 31000)
 
-creatures:register_creature("creatures:dirt_monster", {
+creatures:register_creature("creatures_races_default:dirt_monster", {
 	-- Common properties:
 	hp_max = 5,
 	armor = 100,
@@ -389,9 +389,9 @@ creatures:register_creature("creatures:dirt_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:dirt_monster", {"default:dirt", "default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures_races_default:dirt_monster", {"default:dirt", "default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
-creatures:register_creature("creatures:stone_monster", {
+creatures:register_creature("creatures_races_default:stone_monster", {
 	-- Common properties:
 	hp_max = 10,
 	armor = 80,
@@ -483,9 +483,9 @@ creatures:register_creature("creatures:stone_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:stone_monster", {"default:stone", "default:cobblestone"}, 3, -1, 7000, 3, 0)
+creatures:register_spawn("creatures_races_default:stone_monster", {"default:stone", "default:cobblestone"}, 3, -1, 7000, 3, 0)
 
-creatures:register_creature("creatures:sand_monster", {
+creatures:register_creature("creatures_races_default:sand_monster", {
 	-- Common properties:
 	hp_max = 5,
 	armor = 100,
@@ -577,9 +577,9 @@ creatures:register_creature("creatures:sand_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:sand_monster", {"default:sand", "default:desert_sand"}, 20, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures_races_default:sand_monster", {"default:sand", "default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
-creatures:register_creature("creatures:snow_monster", {
+creatures:register_creature("creatures_races_default:snow_monster", {
 	-- Common properties:
 	hp_max = 5,
 	armor = 100,
@@ -671,9 +671,9 @@ creatures:register_creature("creatures:snow_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:snow_monster", {"default:dirt_with_snow", "default:snowblock"}, 3, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures_races_default:snow_monster", {"default:dirt_with_snow", "default:snowblock"}, 3, -1, 7000, 3, 31000)
 
-creatures:register_creature("creatures:tree_monster", {
+creatures:register_creature("creatures_races_default:tree_monster", {
 	-- Common properties:
 	hp_max = 10,
 	armor = 100,
@@ -770,9 +770,9 @@ creatures:register_creature("creatures:tree_monster", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures_races_default:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
 
-creatures:register_creature("creatures:sheep", {
+creatures:register_creature("creatures_races_default:sheep", {
 	-- Common properties:
 	hp_max = 5,
 	armor = 100,
@@ -809,7 +809,7 @@ creatures:register_creature("creatures:sheep", {
 
 	-- Mob properties:
 	drops = {
-		{name = "creatures:meat_raw",
+		{name = "creatures_races_default:meat_raw",
 		chance = 1,
 		min = 2,
 		max = 3,},
@@ -893,14 +893,14 @@ creatures:register_creature("creatures:sheep", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
+creatures:register_spawn("creatures_races_default:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
 
-minetest.register_craftitem("creatures:meat_raw", {
+minetest.register_craftitem("creatures_races_default:meat_raw", {
 	description = "Raw Meat",
 	inventory_image = "mobs_meat_raw.png",
 })
 
-minetest.register_craftitem("creatures:meat", {
+minetest.register_craftitem("creatures_races_default:meat", {
 	description = "Meat",
 	inventory_image = "mobs_meat.png",
 	on_use = minetest.item_eat(8),
@@ -908,12 +908,12 @@ minetest.register_craftitem("creatures:meat", {
 
 minetest.register_craft({
 	type = "cooking",
-	output = "creatures:meat",
-	recipe = "creatures:meat_raw",
+	output = "creatures_races_default:meat",
+	recipe = "creatures_races_default:meat_raw",
 	cooktime = 5,
 })
 
-creatures:register_creature("creatures:rat", {
+creatures:register_creature("creatures_races_default:rat", {
 	-- Common properties:
 	hp_max = 1,
 	armor = 100,
@@ -962,7 +962,7 @@ creatures:register_creature("creatures:rat", {
 	end,
 	on_rightclick = function(self, clicker)
 		if clicker:is_player() and clicker:get_inventory() then
-			clicker:get_inventory():add_item("main", "creatures:rat")
+			clicker:get_inventory():add_item("main", "creatures_races_default:rat")
 			self.object:remove()
 		end
 	end,
@@ -991,22 +991,22 @@ creatures:register_creature("creatures:rat", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 20, -1, 7000, 1, 31000)
+creatures:register_spawn("creatures_races_default:rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 20, -1, 7000, 1, 31000)
 
-minetest.register_craftitem("creatures:rat", {
+minetest.register_craftitem("creatures_races_default:rat", {
 	description = "Rat",
 	inventory_image = "mobs_rat_inventory.png",
 	
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.above then
-			minetest.env:add_entity(pointed_thing.above, "creatures:rat")
+			minetest.env:add_entity(pointed_thing.above, "creatures_races_default:rat")
 			itemstack:take_item()
 		end
 		return itemstack
 	end,
 })
 	
-minetest.register_craftitem("creatures:rat_cooked", {
+minetest.register_craftitem("creatures_races_default:rat_cooked", {
 	description = "Cooked Rat",
 	inventory_image = "mobs_cooked_rat.png",
 	
@@ -1015,12 +1015,12 @@ minetest.register_craftitem("creatures:rat_cooked", {
 
 minetest.register_craft({
 	type = "cooking",
-	output = "creatures:rat_cooked",
-	recipe = "creatures:rat",
+	output = "creatures_races_default:rat_cooked",
+	recipe = "creatures_races_default:rat",
 	cooktime = 5,
 })
 
-creatures:register_creature("creatures:oerkki", {
+creatures:register_creature("creatures_races_default:oerkki", {
 	-- Common properties:
 	hp_max = 10,
 	armor = 100,
@@ -1106,9 +1106,9 @@ creatures:register_creature("creatures:oerkki", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
+creatures:register_spawn("creatures_races_default:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
-creatures:register_creature("creatures:dungeon_master", {
+creatures:register_creature("creatures_races_default:dungeon_master", {
 	-- Common properties:
 	hp_max = 10,
 	armor = 60,
@@ -1152,7 +1152,7 @@ creatures:register_creature("creatures:dungeon_master", {
 	},
 	attack_damage = 4,
 	attack_type = "shoot",
-	attack_arrow = "creatures:fireball",
+	attack_arrow = "creatures_races_default:fireball",
 	traits = {
 		attack_interval = {2.5, 3},
 		think = {1.25, 1.75},
@@ -1200,9 +1200,9 @@ creatures:register_creature("creatures:dungeon_master", {
 		logic_player_respawn (player)
 	end,
 })
-creatures:register_spawn("creatures:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
+creatures:register_spawn("creatures_races_default:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
 
-creatures:register_arrow("creatures:fireball", {
+creatures:register_arrow("creatures_races_default:fireball", {
 	visual = "sprite",
 	visual_size = {x=1, y=1},
 	textures = {"mobs_fireball.png"},
@@ -1248,5 +1248,5 @@ creatures:register_arrow("creatures:fireball", {
 })
 
 if minetest.setting_get("log_mods") then
-	minetest.log("action", "mobs loaded")
+	minetest.log("action", "creatures_races_default loaded")
 end
