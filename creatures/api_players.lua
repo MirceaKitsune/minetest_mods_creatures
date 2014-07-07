@@ -92,13 +92,20 @@ local function get_formspec(size_main, size_craft, icon)
 
 	local size = {}
 	size.x = math.max(size_main.x, (size_craft.x + 3))
-	size.y = size_main.y + size_craft.y + 1
+	size.y = size_main.y + size_craft.y + 1.25
 	local formspec =
 		"size["..size.x..","..size.y.."]"
+		..default.gui_bg
+		..default.gui_bg_img
+		..default.gui_slots
 		.."image[0,0;1,1;"..image.."]"
 		.."list[current_player;craft;"..(size.x - size_craft.x - 2)..",0;"..size_craft.x..","..size_craft.y..";]"
 		.."list[current_player;craftpreview;"..(size.x - 1)..","..math.floor(size_craft.y / 2)..";1,1;]"
-		.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 1)..";"..size_main.x..","..size_main.y..";]"
+		.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 1)..";"..size_main.x..",1;]"
+		.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 2.25)..";"..size_main.x..","..(size_main.y - 1)..";"..size_main.x.."]"
+	for i = 0, size_main.x, 1 do
+		formspec = formspec.."image["..(size.x - size_main.x + i)..","..(size_craft.y + 1)..";1,1;gui_hb_bg.png]"
+	end
 	return formspec
 end
 
@@ -135,9 +142,19 @@ local function apply_settings (player, settings)
 	player:hud_set_hotbar_itemcount(def.inventory_main.x)
 	if not minetest.setting_getbool("creative_mode") and not minetest.setting_getbool("inventory_crafting_full") then
 		if def.menu then
-			player:set_inventory_formspec(get_formspec(def.inventory_main, def.inventory_craft, def.icon))
+			minetest.after(0, function()
+				player:set_inventory_formspec(get_formspec(def.inventory_main, def.inventory_craft, def.icon))
+			end)
 		else
-			player:set_inventory_formspec("size[1,1]image[0,0;1,1;"..def.icon.."]")
+			minetest.after(0, function()
+				player:set_inventory_formspec(
+					"size[1,1]"
+					..default.gui_bg
+					..default.gui_bg_img
+					..default.gui_slots
+					.."image[0,0;1,1;"
+					..def.icon.."]")
+			end)
 		end
 	end
 
