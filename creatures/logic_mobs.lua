@@ -309,7 +309,7 @@ function logic_mob_step (self, dtime)
 		end
 		self.object:setyaw(yaw)
 
-		if dist > 2 and dist / dist_target >= 1 - self.target_current.priority then
+		if minetest.setting_getbool("fast_mobs") and dist > 2 and dist / dist_target >= 1 - self.target_current.priority then
 			self.set_velocity(self, self.run_velocity)
 			self:set_animation("walk_punch")
 			self.v_start = true
@@ -391,7 +391,8 @@ function logic_mob_step (self, dtime)
 		end
 		self.object:setyaw(yaw)
 
-		if (not avoid and dist / dist_target >= 1 - self.target_current.priority) or
+		if minetest.setting_getbool("fast_mobs") and
+		(not avoid and dist / dist_target >= 1 - self.target_current.priority) or
 		(avoid and dist / dist_target < 1 - self.target_current.priority) then
 			self.set_velocity(self, self.run_velocity)
 			self:set_animation("walk")
