@@ -104,7 +104,7 @@ function logic_player_respawn (player)
 
 	if race ~= ghost then
 		creatures:player_set (player, {name = ghost, hp = 0})
-		minetest.sound_play("creatures_ghost", {toplayer = name})
+		minetest.sound_play("creatures_ghost", {to_player = name})
 	end
 end
 

@@ -120,7 +120,7 @@ local function apply_settings (player, settings)
 
 	-- set HP accordingly
 	if def.hp then
-		minetest.sound_play("creatures_possess", {toplayer = player})
+		minetest.sound_play("creatures_possess", {to_player = player})
 		if def.hp > 0 then
 			player:set_hp(def.hp)
 		else
@@ -193,7 +193,7 @@ local function apply_settings (player, settings)
 
 	-- player: configure sound effects
 	if def.ambience and def.ambience ~= "" then
-		player_data[name].ambience = minetest.sound_play(def.ambience, {toplayer = name, loop = true})
+		player_data[name].ambience = minetest.sound_play(def.ambience, {to_player = name, loop = true})
 	elseif player_data[name].ambience then
 		minetest.sound_stop(player_data[name].ambience)
 		player_data[name].ambience = nil
