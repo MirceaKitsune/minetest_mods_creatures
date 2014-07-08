@@ -84,6 +84,9 @@ creatures:register_creature("creatures_races_default:ghost", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 
 -- Creature definitions:
@@ -197,6 +200,9 @@ creatures:register_creature("creatures_races_default:human_male", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:human_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 9000, 1, 31000)
 
@@ -294,6 +300,9 @@ creatures:register_creature("creatures_races_default:human_female", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:human_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 13000, 1, 31000)
 
@@ -388,6 +397,9 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:dirt_monster", {"default:dirt", "default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
 
@@ -482,6 +494,9 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:stone_monster", {"default:stone", "default:cobblestone"}, 3, -1, 7000, 3, 0)
 
@@ -576,6 +591,9 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:sand_monster", {"default:sand", "default:desert_sand"}, 20, -1, 7000, 3, 31000)
 
@@ -670,6 +688,9 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:snow_monster", {"default:dirt_with_snow", "default:snowblock"}, 3, -1, 7000, 3, 31000)
 
@@ -769,6 +790,9 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
 
@@ -892,6 +916,9 @@ creatures:register_creature("creatures_races_default:sheep", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
 
@@ -990,6 +1017,9 @@ creatures:register_creature("creatures_races_default:rat", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 20, -1, 7000, 1, 31000)
 
@@ -1105,6 +1135,9 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
 
@@ -1199,6 +1232,9 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	player_respawn = function(player)
 		logic_player_respawn (player)
 	end,
+
+	-- Module properties:
+	custom = {},
 })
 creatures:register_spawn("creatures_races_default:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
 

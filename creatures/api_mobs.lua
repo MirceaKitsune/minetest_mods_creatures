@@ -27,6 +27,7 @@ function creatures:register_mob(name, def)
 		jump = def.jump or true,
 		teams = def.teams,
 		traits = def.traits,
+		custom = def.custom,
 
 		on_step = def.on_step,
 		on_rightclick = def.on_rightclick,

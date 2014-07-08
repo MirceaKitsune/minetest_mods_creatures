@@ -31,6 +31,7 @@ function creatures:register_player(name, def)
 	creatures.player_def[name].player_step = def.player_step
 	creatures.player_def[name].player_die = def.player_die
 	creatures.player_def[name].player_respawn = def.player_respawn
+	creatures.player_def[name].custom = def.custom
 end
 
 -- Functions to handle player settings:

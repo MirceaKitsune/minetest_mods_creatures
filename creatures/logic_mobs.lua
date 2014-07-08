@@ -443,10 +443,6 @@ function logic_mob_activate (self, staticdata, dtime_s)
 	for trait, entry in pairs(self.traits) do
 		if type(entry) == "table" then
 			self.traits[trait] = math.random() * (entry[2] - entry[1]) + entry[1]
-			-- some traits may only range between 0 and 1
-			if trait == "roam" or trait == "loyalty" or trait == "fear" or trait == "aggressivity" or trait == "determination" then
-				self.traits[trait] = math.min(1, math.max(0, self.traits[trait]))
-			end
 		end
 	end
 
