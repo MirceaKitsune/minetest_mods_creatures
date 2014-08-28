@@ -3,6 +3,7 @@
 	enable_damage = false: When the damage system is off, mobs will not attack. Mobs that would otherwise attack a creature will instead consider avoiding them.
 	only_peaceful_mobs = false: When enabled, only mobs that don't have the ability to attack will spawn.
 	fast_mobs = false: Whether mobs can run. This should only be turned on when players have the "fast" privilege by default, to ensure balanced gameplay.
+	mindless_mobs = false: Disables decision making. Mobs will not add or remove any targets, although they will respect targets added through other means.
 
 * creatures.player_default = "creatures:ghost": Players who aren't part of a race are set to this creature. Typically applies to new players who join the server for the first time.
 
