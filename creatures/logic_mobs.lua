@@ -2,7 +2,6 @@
 
 -- This file contains the default AI functions for mobs. Advanced users can use a different AI instead of this, or execute additional code.
 
-local DEBUG_AI_TARGETS = false
 local highest_vision = 0
 
 -- logic_mob_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
@@ -199,19 +198,6 @@ function logic_mob_step (self, dtime)
 				elseif relation * self.traits.loyalty >= action then
 					self.targets[obj] = {entity = obj, objective = "follow", priority = math.abs(relation) * self.traits.loyalty}
 				end
-
-				if DEBUG_AI_TARGETS and self.targets[obj] then
-					local name2 = "creature"
-					if obj:is_player() then
-						name2 = obj:get_player_name()
-					elseif obj:get_luaentity() then
-						name2 = obj:get_luaentity().name
-					end
-					print("Creatures: "..self.name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
-					" set "..name2.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
-					" as an \""..self.targets[obj].objective.."\" target with priority "..self.targets[obj].priority..
-					" because self spotted the target")
-				end
 			end
 		end
 	end
@@ -251,22 +237,6 @@ function logic_mob_step (self, dtime)
 			else
 				-- remove players that disconnected or mobs that were removed from the world
 				self.targets[obj] = nil
-			end
-
-			if DEBUG_AI_TARGETS then
-				local name2 = "creature"
-				if target.entity:is_player() then
-					name2 = target.entity:get_player_name()
-				elseif target.entity:get_luaentity() then
-					name2 = target.entity:get_luaentity().name
-				end
-				if not self.targets[obj] then
-					print("Creatures: "..self.name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z).." dropped "..name2..
-					" because the target was no longer relevant")
-				elseif self.targets[obj].objective ~= target_old.objective then
-					print("Creatures: "..self.name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
-					" switched "..name2.." from type "..target_old.objective.." to type \""..self.targets[obj].objective.."\"")
-				end
 			end
 		end
 	end
@@ -488,20 +458,6 @@ function logic_mob_punch (self, hitter)
 					self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits.fear
 				end
 			end
-
-			if DEBUG_AI_TARGETS and self.targets[hitter] and (not target_old or self.targets[hitter].objective ~= target_old.objective) then
-				local p = hitter:getpos()
-				local name2 = "hitter"
-				if hitter:is_player() then
-					name2 = hitter:get_player_name()
-				elseif hitter:get_luaentity() then
-					name2 = hitter:get_luaentity().name
-				end
-				print("Creatures: "..self.name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
-				" set "..name2.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
-				" as an \""..self.targets[hitter].objective.."\" target with priority "..self.targets[hitter].priority..
-				" because the target hit self")
-			end
 		end
 
 		-- targets: make other mobs who see this mob fighting take action
@@ -550,22 +506,6 @@ function logic_mob_punch (self, hitter)
 							else
 								other.targets[enemy].objective = "avoid"
 								other.targets[enemy].priority = other.targets[enemy].priority + importance * self.traits.fear
-							end
-						end
-
-						if DEBUG_AI_TARGETS then
-							local name2 = "witness"
-							if hitter:is_player() then
-								name2 = hitter:get_player_name()
-							elseif hitter:get_luaentity() then
-								name2 = hitter:get_luaentity().name
-							end
-
-							if self.targets[enemy] and (not target_old or self.targets[enemy].objective ~= target_old.objective) then
-								print("Creatures: "..self.name.." at "..math.floor(s.x)..","..math.floor(s.y)..","..math.floor(s.z)..
-								" and "..name2.." at "..math.floor(h.x)..","..math.floor(h.y)..","..math.floor(h.z)..
-								" caused "..other.name.." at "..math.floor(p.x)..","..math.floor(p.y)..","..math.floor(p.z)..
-								" to set hitter or self as an \""..other.targets[enemy].objective.."\" target with priority "..other.targets[enemy].priority)
 							end
 						end
 					end
