@@ -169,11 +169,12 @@ function logic_mob_step (self, dtime)
 
 	if not minetest.setting_getbool("mindless_mobs") then
 		-- targets: scan for targets to add
-		for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)) do
+		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)
+		for _, obj in pairs(objects) do
 			if obj ~= self.object and (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().traits)) and not self.targets[obj] then
 				local p = obj:getpos()
 				local dist = vector.distance(s, p)
-				if dist < self.traits.vision then
+				if dist < self.traits.vision and minetest.line_of_sight(s, p, 1) then
 					local relation = creatures:alliance(self.object, obj)
 					local action = math.random()
  
