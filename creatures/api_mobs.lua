@@ -50,6 +50,7 @@ function creatures:register_mob(name, def)
 		v_pos_avoid = false,
 		v_speed = 0,
 		v_start = false,
+		v_path = nil,
 		old_y = nil,
 		actor = false,
 

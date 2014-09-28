@@ -364,18 +364,51 @@ function logic_mob_step (self, dtime)
 	end
 
 	-- handle mob nagivation
-	if self.v_pos then
-		local vec = {x = self.v_pos.x - s.x, y = self.v_pos.y - s.y, z = self.v_pos.z - s.z}
+	local dst = self.v_pos
+	if dst and self.v_speed > 0 then
+		-- handle pathfinding
+		if minetest.setting_getbool("pathfinding") and not self.v_pos_avoid then
+			dst = nil
+			if not self.v_start then
+				self.v_path = nil
+			end
+			-- only calculate path when none exists or the target position changed
+			if not self.v_path or #self.v_path < 1 or
+			vector.distance(self.v_path[#self.v_path], self.v_pos) > 1  then
+				local new_path = minetest.find_path(s, self.v_pos, self.traits.vision, 1, 5, nil)
+				if new_path then
+					self.v_path = new_path
+				end
+			end
+			-- if the next entry is closer than 1 block, it's a destination we have reached, so remove it
+			if self.v_path and #self.v_path >= 1 then
+				if vector.distance(s, self.v_path[1]) <= 1 then
+					table.remove(self.v_path, 1)
+				end
+				if #self.v_path > 0 then
+					dst = self.v_path[1]
+				end
+			end
+		end
+
+		-- handle orientation and movement
+		local vec = {x = dst.x - s.x, y = dst.y - s.y, z = dst.z - s.z}
 		local yaw = math.atan(vec.z / vec.x) + math.pi / 2
-		if self.v_pos.x > s.x then
+		if dst.x > s.x then
 			yaw = yaw + math.pi
 		end
 		if self.v_pos_avoid then
 			yaw = yaw + math.pi
 		end
 		self.object:setyaw(yaw)
+		self.set_velocity(self, self.v_speed)
 	end
-	self.set_velocity(self, self.v_speed)
+	-- if there's nothing to walk to, stop
+	if not dst or self.v_speed == 0 then
+		self.set_velocity(self, 0)
+		self.v_speed = 0
+		self.v_start = false
+	end
 end
 
 -- logic_mob_activate: Executed in on_activate, handles: initialization, static data management
