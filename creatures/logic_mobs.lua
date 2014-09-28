@@ -29,24 +29,12 @@ function logic_mob_step (self, dtime)
 
 	local s = self.object:getpos()
 
-	-- physics: make mobs jump when they're stuck
-	if self.jump and self.v_start and self.get_velocity(self) <= 1 and self.object:getvelocity().y == 0 then
-		local v = self.object:getvelocity()
-		v.y = self.jump_velocity
-		self.object:setvelocity(v)
-	end
-
-	-- physics: make mobs push forward while jumping and apply gravity
+	-- physics: apply gravity
 	if self.object:getvelocity().y > 0.1 then
-		local yaw = self.object:getyaw()
-		local x = math.sin(yaw) * -2
-		local z = math.cos(yaw) * 2
-		self.object:setacceleration({x = x, y= -self.gravity, z = z})
-	else
 		self.object:setacceleration({x = 0, y= -self.gravity, z = 0})
 	end
 
-	-- physics: make mobs tend to stay at the water surface
+	-- physics: float toward the liquid surface
 	if self.in_liquid then
 		local v = self.object:getvelocity()
 		self.object:setacceleration({x = 0, y = self.gravity/(math.max(1, v.y) ^ 2), z = 0})
@@ -184,7 +172,7 @@ function logic_mob_step (self, dtime)
 		for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)) do
 			if obj ~= self.object and (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().traits)) and not self.targets[obj] then
 				local p = obj:getpos()
-				local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
+				local dist = vector.distance(s, p)
 				if dist < self.traits.vision then
 					local relation = creatures:alliance(self.object, obj)
 					local action = math.random()
@@ -219,7 +207,7 @@ function logic_mob_step (self, dtime)
 				local target_old = target
 				if target.position or (target.entity:is_player() or target.entity:get_luaentity()) then
 					local p = target.position or target.entity:getpos()
-					local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
+					local dist = vector.distance(s, p)
 					local dist_target = target.distance or self.traits.vision
 
 					-- remove targets which are dead or out of range
@@ -248,7 +236,7 @@ function logic_mob_step (self, dtime)
 	local best_priority = 0
 	for i, target in pairs(self.targets) do
 		local p = target.position or target.entity:getpos()
-		local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
+		local dist = vector.distance(s, p)
 		local interest = (self.traits.vision * self.traits.determination) / dist
 
 		-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
@@ -262,26 +250,22 @@ function logic_mob_step (self, dtime)
 	if not self.target_current then
 		self:set_animation("stand")
 		self.v_speed = 0
-		self.v_start = false
 	-- state: attacking, melee
 	elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
 		self.v_pos_avoid = false
-		local dist = ((self.v_pos.x - s.x) ^ 2 + (self.v_pos.y - s.y) ^ 2 + (self.v_pos.z - s.z) ^ 2) ^ 0.5
+		local dist = vector.distance(s, self.v_pos)
 		local dist_target = self.target_current.distance or self.traits.vision
 
 		if minetest.setting_getbool("fast_mobs") and dist > 2 and dist / dist_target >= 1 - self.target_current.priority then
 			self:set_animation("walk_punch")
 			self.v_speed = self.run_velocity
-			self.v_start = true
 		elseif dist > 2 then
 			self:set_animation("walk_punch")
 			self.v_speed = self.walk_velocity
-			self.v_start = true
 		else
 			self:set_animation("punch")
 			self.v_speed = 0
-			self.v_start = false
 			if self.timer_attack > self.traits.attack_interval then
 				self.timer_attack = 0
 				if self.sounds and self.sounds.attack then
@@ -305,7 +289,6 @@ function logic_mob_step (self, dtime)
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
 		self.v_pos_avoid = false
 		self.v_speed = 0
-		self.v_start = false
 
 		if self.timer_attack > self.traits.attack_interval then
 			self.timer_attack = 0
@@ -331,7 +314,7 @@ function logic_mob_step (self, dtime)
 	elseif self.target_current.objective == "follow" or self.target_current.objective == "avoid" then
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
 		self.v_pos_avoid = self.target_current.objective == "avoid"
-		local dist = ((self.v_pos.x - s.x) ^ 2 + (self.v_pos.y - s.y) ^ 2 + (self.v_pos.z - s.z) ^ 2) ^ 0.5
+		local dist = vector.distance(s, self.v_pos)
 		local dist_target = self.target_current.distance or self.traits.vision
 
 		if minetest.setting_getbool("fast_mobs") and
@@ -339,15 +322,12 @@ function logic_mob_step (self, dtime)
 		(self.v_pos_avoid and dist / dist_target < 1 - self.target_current.priority) then
 			self:set_animation("walk")
 			self.v_speed = self.run_velocity
-			self.v_start = true
 		elseif dist > dist_target / 5 then
 			self:set_animation("walk")
 			self.v_speed = self.walk_velocity
-			self.v_start = true
 		else
 			self:set_animation("stand")
 			self.v_speed = 0
-			self.v_start = false
 		end
 
 		if self.sounds and math.random(1, 50) <= 1 then
@@ -363,35 +343,41 @@ function logic_mob_step (self, dtime)
 		end
 	end
 
-	-- handle mob nagivation
+	-- movement: jump whenever stuck
+	if self.jump and self.v_start and self.get_velocity(self) <= 1 and self.object:getvelocity().y == 0 then
+		local v = self.object:getvelocity()
+		v.y = self.jump_velocity
+		self.object:setvelocity(v)
+	end
+
+	-- movement: handle pathfinding
 	local dst = self.v_pos
-	if dst and self.v_speed > 0 then
-		-- handle pathfinding
-		if minetest.setting_getbool("pathfinding") and not self.v_pos_avoid then
-			dst = nil
-			if not self.v_start then
-				self.v_path = nil
-			end
-			-- only calculate path when none exists or the target position changed
-			if not self.v_path or #self.v_path < 1 or
-			vector.distance(self.v_path[#self.v_path], self.v_pos) > 1  then
-				local new_path = minetest.find_path(s, self.v_pos, self.traits.vision, 1, 5, nil)
-				if new_path then
-					self.v_path = new_path
-				end
-			end
-			-- if the next entry is closer than 1 block, it's a destination we have reached, so remove it
-			if self.v_path and #self.v_path >= 1 then
-				if vector.distance(s, self.v_path[1]) <= 1 then
-					table.remove(self.v_path, 1)
-				end
-				if #self.v_path > 0 then
-					dst = self.v_path[1]
-				end
+	if dst and self.v_speed > 0 and minetest.setting_getbool("pathfinding") and not self.v_pos_avoid then
+		dst = nil
+		if not self.v_start then
+			self.v_path = nil
+		end
+		-- only calculate path when none exists or the target position changed
+		if not self.v_path or #self.v_path < 1 or
+		vector.distance(self.v_path[#self.v_path], self.v_pos) > 1  then
+			local new_path = minetest.find_path(s, self.v_pos, self.traits.vision, 1, 5, nil)
+			if new_path then
+				self.v_path = new_path
 			end
 		end
+		-- if the next entry is closer than 1 block, it's a destination we have reached, so remove it
+		if self.v_path and #self.v_path >= 1 then
+			if vector.distance(s, self.v_path[1]) <= 1 then
+				table.remove(self.v_path, 1)
+			end
+			if #self.v_path > 0 then
+				dst = self.v_path[1]
+			end
+		end
+	end
 
-		-- handle orientation and movement
+	-- movement: handle orientation and walking
+	if dst and self.v_speed > 0 then
 		local vec = {x = dst.x - s.x, y = dst.y - s.y, z = dst.z - s.z}
 		local yaw = math.atan(vec.z / vec.x) + math.pi / 2
 		if dst.x > s.x then
@@ -402,9 +388,8 @@ function logic_mob_step (self, dtime)
 		end
 		self.object:setyaw(yaw)
 		self.set_velocity(self, self.v_speed)
-	end
-	-- if there's nothing to walk to, stop
-	if not dst or self.v_speed == 0 then
+		self.v_start = true
+	else
 		self.set_velocity(self, 0)
 		self.v_speed = 0
 		self.v_start = false
@@ -502,7 +487,7 @@ function logic_mob_punch (self, hitter)
 					local other = obj:get_luaentity()
 					local p = obj:getpos()
 					local h = hitter:getpos()
-					local dist = ((p.x - s.x) ^ 2 + (p.y - s.y) ^ 2 + (p.z - s.z) ^ 2) ^ 0.5
+					local dist = vector.distance(s, p)
 					if dist ~= 0 and dist < other.traits.vision then
 						local relation_other_self = creatures:alliance(obj, self.object)
 						local relation_other_hitter = creatures:alliance(obj, hitter)
