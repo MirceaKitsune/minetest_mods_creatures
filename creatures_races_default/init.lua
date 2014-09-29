@@ -38,6 +38,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 	drops = {},
 	attack_damage = 1,
 	attack_type = "melee",
+	roam_spots = nil,
 	traits = {
 		attack_interval = {1, 1},
 		think = {1, 1},
@@ -154,6 +155,12 @@ creatures:register_creature("creatures_races_default:human_male", {
 	},
 	attack_damage = 1,
 	attack_type = "melee",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 7,
+		light_max = LIGHT_MAX,
+		priority = 0,
+	},
 	traits = {
 		attack_interval = {0.75, 1},
 		think = {0.5, 0.75},
@@ -254,6 +261,12 @@ creatures:register_creature("creatures_races_default:human_female", {
 	},
 	attack_damage = 1,
 	attack_type = "melee",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 7,
+		light_max = LIGHT_MAX,
+		priority = 0,
+	},
 	traits = {
 		attack_interval = {0.5, 0.75},
 		think = {0.65, 0.85},
@@ -351,6 +364,12 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	},
 	attack_damage = 1,
 	attack_type = "melee",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		priority = 0,
+	},
 	traits = {
 		attack_interval = {1.35, 1.65},
 		think = {1.5, 1.65},
@@ -448,6 +467,12 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	},
 	attack_damage = 3,
 	attack_type = "melee",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		priority = 0,
+	},
 	traits = {
 		attack_interval = {1, 1.25},
 		think = {1, 1.25},
@@ -545,6 +570,12 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	},
 	attack_damage = 2,
 	attack_type = "melee",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = LIGHT_MAX,
+		priority = 0,
+	},
 	traits = {
 		attack_interval = {1.25, 1.5},
 		think = {1.35, 1.5},
@@ -642,6 +673,12 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	},
 	attack_damage = 2,
 	attack_type = "melee",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		priority = 0,
+	},
 	traits = {
 		attack_interval = {1, 1.25},
 		think = {0.75, 1.25},
@@ -744,6 +781,12 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	disable_fall_damage = true,
 	attack_damage = 2,
 	attack_type = "melee",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = LIGHT_MAX,
+		priority = 0,
+	},
 	traits = {
 		attack_interval = {1.25, 1.5},
 		think = {1.15, 1.35},
@@ -837,6 +880,12 @@ creatures:register_creature("creatures_races_default:sheep", {
 		chance = 1,
 		min = 2,
 		max = 3,},
+	},
+	roam_spots = {
+		nodes = {"group:crumbly"},
+		light_min = 7,
+		light_max = LIGHT_MAX,
+		priority = 0,
 	},
 	traits = {
 		think = {1.5, 2},
@@ -970,6 +1019,12 @@ creatures:register_creature("creatures_races_default:rat", {
 
 	-- Mob properties:
 	drops = {},
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		priority = 0,
+	},
 	traits = {
 		think = {1.5, 1.75},
 		vision = {5, 5},
@@ -1089,6 +1144,12 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	drops = {},
 	attack_damage = 3,
 	attack_type = "melee",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		priority = 0,
+	},
 	traits = {
 		attack_interval = {0.85, 1.15},
 		think = {0.75, 1.25},
@@ -1185,6 +1246,12 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	},
 	attack_damage = 4,
 	attack_type = "shoot",
+	roam_spots = {
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		priority = 0,
+	},
 	attack_arrow = "creatures_races_default:fireball",
 	traits = {
 		attack_interval = {2.5, 3},

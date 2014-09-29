@@ -168,6 +168,33 @@ function logic_mob_step (self, dtime)
 	end
 
 	if not minetest.setting_getbool("mindless_mobs") then
+		-- targets: select a random position to walk to when idle
+		if self.roam_spots and self.traits.roam >= math.random() then
+			local corner_start = {x = s.x - self.traits.vision / 2, y = s.y - self.traits.vision / 2, z = s.z - self.traits.vision / 2}
+			local corner_end = {x = s.x + self.traits.vision / 2, y = s.y + self.traits.vision / 2, z = s.z + self.traits.vision / 2}
+			local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, self.roam_spots.nodes)
+			local pos_good = {}
+
+			for _, pos_this in pairs(pos_all) do
+				local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
+				local dist_this_up = vector.distance(s, pos_this_up)
+				if dist_this_up < self.traits.vision and dist_this_up > self.traits.vision / 5 then
+					local node_this_up = minetest.env:get_node(pos_this_up)
+					if node_this_up.name ~= "ignore" and node_this_up.name == "air" then
+						local light_this_up = minetest.get_node_light(pos_this_up, nil)
+						if light_this_up >= self.roam_spots.light_min and light_this_up <= self.roam_spots.light_max then
+							table.insert(pos_good, pos_this_up)
+						end
+					end
+				end
+			end
+
+			if #pos_good > 0 then
+				local pos = pos_good[math.random(1, #pos_good)]
+				self.targets["idle"] = {position = pos, objective = "follow", priority = self.roam_spots.priority}
+			end
+		end
+
 		-- targets: scan for targets to add
 		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)
 		for _, obj in pairs(objects) do
@@ -190,16 +217,6 @@ function logic_mob_step (self, dtime)
 					end
 				end
 			end
-		end
-
-		-- targets: select a random position to walk to when idle
-		if self.traits.roam >= math.random() then
-			local p = {
-				x = math.random(math.floor(s.x - self.traits.vision / 2), math.floor(s.x + self.traits.vision / 2)),
-				y = math.floor(s.y),
-				z = math.random(math.floor(s.z - self.traits.vision / 2), math.floor(s.z + self.traits.vision / 2)),
-			}
-			self.targets["idle"] = {position = p, objective = "follow", priority = 0}
 		end
 
 		-- targets: scan for targets to remove or modify
