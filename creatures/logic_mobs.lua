@@ -250,11 +250,11 @@ function logic_mob_step (self, dtime)
 	-- state: idle
 	if not self.target_current then
 		self:set_animation("stand")
-		self.v_speed = 0
+		self.v_speed = nil
 	-- state: attacking, melee
 	elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
-		self.v_pos_avoid = false
+		self.v_avoid = false
 		local dist = vector.distance(s, self.v_pos)
 		local dist_target = self.target_current.distance or self.traits.vision
 
@@ -288,7 +288,7 @@ function logic_mob_step (self, dtime)
 	elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then
 		self:set_animation("punch")
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
-		self.v_pos_avoid = false
+		self.v_avoid = false
 		self.v_speed = 0
 
 		if self.timer_attack > self.traits.attack_interval then
@@ -314,13 +314,13 @@ function logic_mob_step (self, dtime)
 	-- state: following or avoiding
 	elseif self.target_current.objective == "follow" or self.target_current.objective == "avoid" then
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
-		self.v_pos_avoid = self.target_current.objective == "avoid"
+		self.v_avoid = self.target_current.objective == "avoid"
 		local dist = vector.distance(s, self.v_pos)
 		local dist_target = self.target_current.distance or self.traits.vision
 
 		if minetest.setting_getbool("fast_mobs") and
-		(not self.v_pos_avoid and dist / dist_target >= 1 - self.target_current.priority) or
-		(self.v_pos_avoid and dist / dist_target < 1 - self.target_current.priority) then
+		(not self.v_avoid and dist / dist_target >= 1 - self.target_current.priority) or
+		(self.v_avoid and dist / dist_target < 1 - self.target_current.priority) then
 			self:set_animation("walk")
 			self.v_speed = self.run_velocity
 		elseif dist > dist_target / 5 then
@@ -328,7 +328,7 @@ function logic_mob_step (self, dtime)
 			self.v_speed = self.walk_velocity
 		else
 			self:set_animation("stand")
-			self.v_speed = 0
+			self.v_speed = nil
 		end
 
 		if self.sounds and math.random(1, 50) <= 1 then
@@ -336,9 +336,9 @@ function logic_mob_step (self, dtime)
 				if self.sounds.random_idle then
 					minetest.sound_play(self.sounds.random_idle, {object = self.object})
 				end
-			elseif self.v_pos_avoid and self.sounds.random_avoid then
+			elseif self.v_avoid and self.sounds.random_avoid then
 				minetest.sound_play(self.sounds.random_avoid, {object = self.object})
-			elseif not self.v_pos_avoid and self.sounds.random_follow then
+			elseif not self.v_avoid and self.sounds.random_follow then
 				minetest.sound_play(self.sounds.random_follow, {object = self.object})
 			end
 		end
@@ -353,7 +353,7 @@ function logic_mob_step (self, dtime)
 
 	-- movement: handle pathfinding
 	local pos = self.v_pos
-	if pos and self.v_speed > 0 and minetest.setting_getbool("pathfinding") and not self.v_pos_avoid then
+	if pos and self.v_speed and self.v_speed > 0 and minetest.setting_getbool("pathfinding") and not self.v_avoid then
 		pos = nil
 		if not self.v_start or (self.v_path and #self.v_path == 0) then
 			self.v_path = nil
@@ -379,21 +379,21 @@ function logic_mob_step (self, dtime)
 	end
 
 	-- movement: handle orientation and walking
-	if pos and self.v_speed > 0 then
+	if pos and self.v_speed then
 		local vec = {x = pos.x - s.x, y = pos.y - s.y, z = pos.z - s.z}
 		local yaw = math.atan(vec.z / vec.x) + math.pi / 2
 		if pos.x > s.x then
 			yaw = yaw + math.pi
 		end
-		if self.v_pos_avoid then
+		if self.v_avoid then
 			yaw = yaw + math.pi
 		end
 		self.object:setyaw(yaw)
 		self.set_velocity(self, self.v_speed)
-		self.v_start = true
+		self.v_start = self.v_speed > 0
 	else
 		self.set_velocity(self, 0)
-		self.v_speed = 0
+		self.v_speed = nil
 		self.v_start = false
 	end
 end
