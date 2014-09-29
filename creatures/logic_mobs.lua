@@ -168,34 +168,41 @@ function logic_mob_step (self, dtime)
 	end
 
 	if not minetest.setting_getbool("mindless_mobs") then
-		-- targets: select a random position to walk to when idle
-		if self.roam_spots and self.traits.roam >= math.random() then
+		-- targets: add or remove node targets
+		if self.roam_spots and #self.roam_spots > 0 and self.traits.roam >= math.random() then
 			local corner_start = {x = s.x - self.traits.vision / 2, y = s.y - self.traits.vision / 2, z = s.z - self.traits.vision / 2}
 			local corner_end = {x = s.x + self.traits.vision / 2, y = s.y + self.traits.vision / 2, z = s.z + self.traits.vision / 2}
-			local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, self.roam_spots.nodes)
-			local pos_good = {}
+			for i, roam_spot in pairs(self.roam_spots) do
+				local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, roam_spot.nodes)
+				local pos_all_good = {}
 
-			for _, pos_this in pairs(pos_all) do
-				local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
-				local dist_this_up = vector.distance(s, pos_this_up)
-				if dist_this_up < self.traits.vision and dist_this_up > self.traits.vision / 5 then
-					local node_this_up = minetest.env:get_node(pos_this_up)
-					if node_this_up.name ~= "ignore" and node_this_up.name == "air" then
-						local light_this_up = minetest.get_node_light(pos_this_up, nil)
-						if light_this_up >= self.roam_spots.light_min and light_this_up <= self.roam_spots.light_max then
-							table.insert(pos_good, pos_this_up)
+				for _, pos_this in pairs(pos_all) do
+					local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
+					if vector.distance(s, pos_this_up) < self.traits.vision then
+						local node_this_up = minetest.env:get_node(pos_this_up)
+						if node_this_up.name == "air" then
+							local light_this_up = minetest.get_node_light(pos_this_up, nil)
+							if light_this_up >= roam_spot.light_min and light_this_up <= roam_spot.light_max then
+								table.insert(pos_all_good, pos_this_up)
+							end
 						end
 					end
 				end
-			end
 
-			if #pos_good > 0 then
-				local pos = pos_good[math.random(1, #pos_good)]
-				self.targets["idle"] = {position = pos, objective = "follow", priority = self.roam_spots.priority}
+				if #pos_all_good > 0 then
+					local pos = pos_all_good[math.random(#pos_all_good)]
+					local obj = "follow"
+					if roam_spot.avoid then
+						obj = "avoid"
+					end
+					self.targets["roam"..i] = {position = pos, objective = obj, priority = roam_spot.priority}
+				else
+					self.targets["roam"..i] = nil
+				end
 			end
 		end
 
-		-- targets: scan for targets to add
+		-- targets: add player or mob targets
 		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)
 		for _, obj in pairs(objects) do
 			if obj ~= self.object and (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().traits)) and not self.targets[obj] then
@@ -219,7 +226,7 @@ function logic_mob_step (self, dtime)
 			end
 		end
 
-		-- targets: scan for targets to remove or modify
+		-- targets: remove or modify player or mob targets
 		for obj, target in pairs(self.targets) do
 			if not target.persist then
 				local target_old = target

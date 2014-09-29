@@ -38,7 +38,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 	drops = {},
 	attack_damage = 1,
 	attack_type = "melee",
-	roam_spots = nil,
+	roam_spots = {},
 	traits = {
 		attack_interval = {1, 1},
 		think = {1, 1},
@@ -156,10 +156,11 @@ creatures:register_creature("creatures_races_default:human_male", {
 	attack_damage = 1,
 	attack_type = "melee",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 7,
 		light_max = LIGHT_MAX,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		attack_interval = {0.75, 1},
@@ -262,10 +263,11 @@ creatures:register_creature("creatures_races_default:human_female", {
 	attack_damage = 1,
 	attack_type = "melee",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 7,
 		light_max = LIGHT_MAX,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		attack_interval = {0.5, 0.75},
@@ -365,10 +367,11 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	attack_damage = 1,
 	attack_type = "melee",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		attack_interval = {1.35, 1.65},
@@ -468,10 +471,11 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	attack_damage = 3,
 	attack_type = "melee",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
@@ -571,10 +575,11 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	attack_damage = 2,
 	attack_type = "melee",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = LIGHT_MAX,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		attack_interval = {1.25, 1.5},
@@ -674,10 +679,11 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	attack_damage = 2,
 	attack_type = "melee",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
@@ -782,10 +788,11 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	attack_damage = 2,
 	attack_type = "melee",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = LIGHT_MAX,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		attack_interval = {1.25, 1.5},
@@ -882,10 +889,11 @@ creatures:register_creature("creatures_races_default:sheep", {
 		max = 3,},
 	},
 	roam_spots = {
-		nodes = {"group:crumbly"},
+		{nodes = {"group:crumbly"},
 		light_min = 7,
 		light_max = LIGHT_MAX,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		think = {1.5, 2},
@@ -1020,10 +1028,11 @@ creatures:register_creature("creatures_races_default:rat", {
 	-- Mob properties:
 	drops = {},
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		think = {1.5, 1.75},
@@ -1145,10 +1154,11 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	attack_damage = 3,
 	attack_type = "melee",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	traits = {
 		attack_interval = {0.85, 1.15},
@@ -1247,10 +1257,11 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	attack_damage = 4,
 	attack_type = "shoot",
 	roam_spots = {
-		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		priority = 0,
+		avoid = false,
+		priority = 0,},
 	},
 	attack_arrow = "creatures_races_default:fireball",
 	traits = {

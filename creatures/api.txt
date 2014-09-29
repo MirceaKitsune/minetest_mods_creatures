@@ -31,11 +31,12 @@
 	on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
 	attack_damage = 1: How much damage the mob deals each punch or shot.
 	attack_type = "melee": Can be "melee" (mob punches the player) or "shoot" (mob throws projectiles toward the player).
-	roam_spots = {nodes = {"default:dirt", ...}, ...}: What nodes mobs will try to walk to, and under what circumstances. Parameters include:
-		nodes = {"default:dirt", ...}: List of nodes or node groups that mobs will scan for.
+	roam_spots = {{nodes = "default:dirt", ...}, ...}: A list of parameters, which specifies how mobs react to certain nodes. Each entry represents one target per mob. Parameters include:
+		nodes = {"default:dirt", ...}: List of nodes or node groups that mobs will search for.
 		light_min = 0: Minimum light level the node most have to be considered an objective.
 		light_max = 15: Maximum light level the node most have to be considered an objective.
-		priority = 0: Target priority, 0 is recommended.
+		avoid = false: If true, the mob avoids this node opposed to walking toward it.
+		priority = 0: Target priority. The higher, the more importance the mob will give to this node.
 	traits = {attack_interval = {1, 1}, ...}: Personality traits. Each individual mob gets a value between min and max when it first spawns. Actor mobs persist those settings between server restarts. Default traits:
 		attack_interval = {1, 1}: How many seconds the mob shoots or punches. Lower means a greater attack skill.
 		think = {1, 1}: How many seconds the mob makes new decisions or takes actions. AI speed is this value when idle, half this value when following or avoiding, and a tenth this value when attacking. Lower values mean smarter mobs. Do not abuse this, low values also mean more server load!
