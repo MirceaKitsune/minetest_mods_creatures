@@ -352,36 +352,37 @@ function logic_mob_step (self, dtime)
 	end
 
 	-- movement: handle pathfinding
-	local dst = self.v_pos
-	if dst and self.v_speed > 0 and minetest.setting_getbool("pathfinding") and not self.v_pos_avoid then
-		dst = nil
-		if not self.v_start then
+	local pos = self.v_pos
+	if pos and self.v_speed > 0 and minetest.setting_getbool("pathfinding") and not self.v_pos_avoid then
+		pos = nil
+		if not self.v_start or (self.v_path and #self.v_path == 0) then
 			self.v_path = nil
 		end
 		-- only calculate path when none exists or the target position changed
-		if not self.v_path or #self.v_path < 1 or
-		vector.distance(self.v_path[#self.v_path], self.v_pos) > 1  then
-			local new_path = minetest.find_path(s, self.v_pos, self.traits.vision, 1, 5, nil)
-			if new_path then
+		if not self.v_path or vector.distance(self.v_path[#self.v_path], self.v_pos) > 1 then
+			local p1 = {x = math.floor(s.x), y = math.floor(s.y), z = math.floor(s.z)}
+			local p2 = {x = math.floor(self.v_pos.x), y = math.floor(self.v_pos.y), z = math.floor(self.v_pos.z)}
+			local new_path = minetest.find_path(p1, p2, self.traits.vision, 1, 5, nil)
+			if new_path and #new_path > 0 then
 				self.v_path = new_path
 			end
 		end
 		-- if the next entry is closer than 1 block, it's a destination we have reached, so remove it
-		if self.v_path and #self.v_path >= 1 then
+		if self.v_path then
 			if vector.distance(s, self.v_path[1]) <= 1 then
 				table.remove(self.v_path, 1)
 			end
 			if #self.v_path > 0 then
-				dst = self.v_path[1]
+				pos = self.v_path[1]
 			end
 		end
 	end
 
 	-- movement: handle orientation and walking
-	if dst and self.v_speed > 0 then
-		local vec = {x = dst.x - s.x, y = dst.y - s.y, z = dst.z - s.z}
+	if pos and self.v_speed > 0 then
+		local vec = {x = pos.x - s.x, y = pos.y - s.y, z = pos.z - s.z}
 		local yaw = math.atan(vec.z / vec.x) + math.pi / 2
-		if dst.x > s.x then
+		if pos.x > s.x then
 			yaw = yaw + math.pi
 		end
 		if self.v_pos_avoid then
