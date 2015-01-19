@@ -19,6 +19,7 @@ function creatures:register_mob(name, def)
 		disable_fall_damage = def.disable_fall_damage,
 		drops = def.drops,
 		armor = def.armor,
+		icon = def.icon,
 		roam_spots = def.roam_spots,
 		attack_damage = def.attack_damage,
 		attack_type = def.attack_type,
@@ -233,3 +234,46 @@ function creatures:register_arrow(name, def)
 		end
 	})
 end
+
+-- Checks if a player can possess a mob:
+
+function creatures:can_possess(player, creature)
+	local psettings = creatures.player_def[creatures:player_get(player)]
+	if creature and not creature.actor and player:is_player() and psettings.reincarnate and
+	creature.target_current and player == creature.target_current.entity then
+		return true
+	end
+	return false
+end
+
+-- Causes a player to possess a mob:
+
+function creatures:possess(player, creature)
+	if creatures:can_possess(player, creature) then
+		player:setpos(creature.object:getpos())
+		player:set_look_yaw(creature.object:getyaw())
+		player:set_look_pitch(0)
+		creatures:player_set(player, {name = creature.name, skin = creature.skin, hp = creature.object:get_hp()})
+		creature.object:remove()
+	end
+end
+
+-- Interaction: This field is set when a player interacts with a mob, and indicates the last mob clicked:
+
+creatures.selected = {}
+minetest.register_on_leaveplayer(function(player)
+	creatures.selected[player] = nil
+end)
+
+-- Interaction: Handle the default formspec commands:
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname == "creatures:formspec" then
+		local creature = creatures.selected[player]
+
+		-- Handle possession:
+		if fields["possess"] then
+			creatures:possess(player, creature)
+		end
+	end
+end)

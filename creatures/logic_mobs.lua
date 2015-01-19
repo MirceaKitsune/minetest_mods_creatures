@@ -567,14 +567,7 @@ function logic_mob_punch (self, hitter)
 	end
 end
 
--- logic_mob_rightclick: Executed in on_rightclick, handles: possession
+-- logic_mob_rightclick: Executed in on_rightclick, handles: selection
 function logic_mob_rightclick (self, clicker)
-	local psettings = creatures.player_def[creatures:player_get(clicker)]
-	if not self.actor and clicker:is_player() and psettings.reincarnate and self.target_current and clicker == self.target_current.entity then
-		clicker:setpos(self.object:getpos())
-		clicker:set_look_yaw(self.object:getyaw())
-		clicker:set_look_pitch(0)
-		creatures:player_set(clicker, {name = self.name, skin = self.skin, hp = self.object:get_hp()})
-		self.object:remove()
-	end
+	creatures.selected[clicker] = self
 end

@@ -1,11 +1,35 @@
--- Default player definitions:
+-- Default mob formspec:
 
--- default race for new players
+local function formspec(self, clicker)
+	local label = "("..creatures:alliance(clicker, self.object)..")"
+	local formspec =
+		"size[4,2]"
+		..default.gui_bg
+		..default.gui_bg_img
+		..default.gui_slots
+		.."image[0,0;1,1;"..self.icon.."]"
+		.."label[1,0;"..label.."]"
+	-- Possession is possible
+	if creatures:can_possess(clicker, self) then
+		formspec = formspec.."button_exit[0,1;2,1;possess;Possess]"
+		formspec = formspec.."button_exit[2,1;2,1;quit;Exit]"
+	-- Possession isn't possible
+	else
+		formspec = formspec.."button_exit[0,1;4,1;quit;Exit]"
+	end
+
+	minetest.show_formspec(clicker:get_player_name(), "creatures:formspec", formspec)
+end
+
+-- Default race for new players:
 creatures.player_default = "creatures_races_default:ghost"
+
+-- Default player definitions:
 
 -- player ghost, don't spawn as a mob
 creatures:register_creature("creatures_races_default:ghost", {
 	-- Common properties:
+	icon = "mobs_ghost_icon.png",
 	hp_max = 20,
 	armor = 100,
 	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5},
@@ -72,7 +96,6 @@ creatures:register_creature("creatures_races_default:ghost", {
 	fog = {r = 64, g = 0, b = 128},
 	screen = "hud_ghost.png",
 	ambience = "creatures_ambient_ghost",
-	icon = "mobs_ghost_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -94,6 +117,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 
 creatures:register_creature("creatures_races_default:human_male", {
 	-- Common properties:
+	icon = "mobs_human_male_icon.png",
 	hp_max = 20,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -183,6 +207,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -195,7 +220,6 @@ creatures:register_creature("creatures_races_default:human_male", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_human_male_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -216,6 +240,7 @@ creatures:register_spawn("creatures_races_default:human_male", {"default:dirt", 
 
 creatures:register_creature("creatures_races_default:human_female", {
 	-- Common properties:
+	icon = "mobs_human_female_icon.png",
 	hp_max = 20,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -290,6 +315,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -302,7 +328,6 @@ creatures:register_creature("creatures_races_default:human_female", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_human_female_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -323,6 +348,7 @@ creatures:register_spawn("creatures_races_default:human_female", {"default:dirt"
 
 creatures:register_creature("creatures_races_default:dirt_monster", {
 	-- Common properties:
+	icon = "mobs_dirt_monster_icon.png",
 	hp_max = 5,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -394,6 +420,7 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -406,7 +433,6 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_dirt_monster_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -427,6 +453,7 @@ creatures:register_spawn("creatures_races_default:dirt_monster", {"default:dirt"
 
 creatures:register_creature("creatures_races_default:stone_monster", {
 	-- Common properties:
+	icon = "mobs_stone_monster_icon.png",
 	hp_max = 10,
 	armor = 80,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -498,6 +525,7 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -510,7 +538,6 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_stone_monster_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -531,6 +558,7 @@ creatures:register_spawn("creatures_races_default:stone_monster", {"default:ston
 
 creatures:register_creature("creatures_races_default:sand_monster", {
 	-- Common properties:
+	icon = "mobs_sand_monster_icon.png",
 	hp_max = 5,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -602,6 +630,7 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -614,7 +643,6 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_sand_monster_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -635,6 +663,7 @@ creatures:register_spawn("creatures_races_default:sand_monster", {"default:sand"
 
 creatures:register_creature("creatures_races_default:snow_monster", {
 	-- Common properties:
+	icon = "mobs_snow_monster_icon.png",
 	hp_max = 5,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -706,6 +735,7 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -718,7 +748,6 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_snow_monster_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -739,6 +768,7 @@ creatures:register_spawn("creatures_races_default:snow_monster", {"default:dirt_
 
 creatures:register_creature("creatures_races_default:tree_monster", {
 	-- Common properties:
+	icon = "mobs_tree_monster_icon.png",
 	hp_max = 10,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -815,6 +845,7 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -827,7 +858,6 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_tree_monster_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -848,6 +878,7 @@ creatures:register_spawn("creatures_races_default:tree_monster", {"default:leave
 
 creatures:register_creature("creatures_races_default:sheep", {
 	-- Common properties:
+	icon = "mobs_sheep_icon.png",
 	hp_max = 5,
 	armor = 100,
 	collisionbox = {-0.5, -0.01, -0.5, 0.65, 1, 0.5},
@@ -913,6 +944,8 @@ creatures:register_creature("creatures_races_default:sheep", {
 		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+
 		local item = clicker:get_wielded_item()
 		if item:get_name() == "farming:wheat" then
 			if not self.actor then
@@ -960,7 +993,6 @@ creatures:register_creature("creatures_races_default:sheep", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_sheep_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -999,6 +1031,7 @@ minetest.register_craft({
 
 creatures:register_creature("creatures_races_default:rat", {
 	-- Common properties:
+	icon = "mobs_rat_icon.png",
 	hp_max = 1,
 	armor = 100,
 	collisionbox = {-0.2, -0.01, -0.2, 0.2, 0.2, 0.2},
@@ -1052,6 +1085,8 @@ creatures:register_creature("creatures_races_default:rat", {
 		logic_mob_punch(self, hitter)
 	end,
 	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+
 		if clicker:is_player() and clicker:get_inventory() then
 			clicker:get_inventory():add_item("main", "creatures_races_default:rat")
 			self.object:remove()
@@ -1068,7 +1103,6 @@ creatures:register_creature("creatures_races_default:rat", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_rat_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -1116,6 +1150,7 @@ minetest.register_craft({
 
 creatures:register_creature("creatures_races_default:oerkki", {
 	-- Common properties:
+	icon = "mobs_oerkki_icon.png",
 	hp_max = 10,
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
@@ -1181,6 +1216,7 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -1193,7 +1229,6 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_oerkki_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,
@@ -1214,6 +1249,7 @@ creatures:register_spawn("creatures_races_default:oerkki", {"default:stone"}, 2,
 
 creatures:register_creature("creatures_races_default:dungeon_master", {
 	-- Common properties:
+	icon = "mobs_dungeon_master_icon.png",
 	hp_max = 10,
 	armor = 60,
 	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
@@ -1285,6 +1321,7 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -1297,7 +1334,6 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	fog = nil,
 	screen = "",
 	ambience = "",
-	icon = "mobs_dungeon_master_icon.png",
 	player_join = function(player)
 		logic_player_join (player)
 	end,

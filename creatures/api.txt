@@ -11,6 +11,7 @@
 * creatures:register_creature("creatures:ghost", {..}): Defines a new creature, with the current parameters:
 
 - Common parameters (applied to both creatures and players):
+	icon = "mobs_*_icon.png": Icon for this creature, indicating what a player or mob is. Players see it in the inventory menu or the HUD.
 	hp_max = 20: Mobs and players are born with this amount of health, and cannot gain more than it.
 	armor = 100: Armor decides how much damage gets absorbed.
 	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5}: Collosion box size. (TODO: Currently works only for mobs, engine implementation needed for players!)
@@ -61,7 +62,6 @@
 	fog = {r = 0, g = 0, b = 0}: If set, this fog color is seen by players who are part of this race.
 	screen = "hud_*.png": If set, this image is applied over the screen. Use a transparent image here, unless you wish to block the player's vision entirely.
 	ambience = "ambient_*": If set, the player will constantly hear this ambiental sound.
-	icon = "mobs_*_icon.png": Icon for this creature, indicating to the player what they currently are. Players see it in the inventory menu or on the HUD.
 	player_join = function(player) ... end: Function executed when a player joins. By default, this should call the logic_player_join function.
 	player_step = function(player, dtime) ... end: Function executed each step. By default, this should call the logic_player_step function.
 	player_die = function(player) ... end: Function executed when the player dies. By default, this should call the logic_player_die function.
