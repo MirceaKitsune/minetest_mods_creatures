@@ -2,8 +2,6 @@
 
 -- This file contains the default AI functions for mobs. Advanced users can use a different AI instead of this, or execute additional code.
 
-local highest_vision = 0
-
 -- logic_mob_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
 function logic_mob_step (self, dtime)
 	if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
@@ -453,17 +451,18 @@ function logic_mob_activate (self, staticdata, dtime_s)
 		end
 	end
 
+	-- set name: choose one name from all potential names
+	-- on_step must never execute before this is set, the code expects a single value for the name!
+	if type(self.names) == "table" and #self.names > 0 then
+		self.names = self.names[math.random(#self.names)]
+	end
+
 	-- if the textures field contains tables, we have multiple texture sets
 	if self.textures and type(self.textures[1]) == "table" then
 		if self.skin == 0 or not self.textures[self.skin] then
 			self.skin = math.random(1, #self.textures)
 		end
 		self.object:set_properties({textures = self.textures[self.skin]})
-	end
-
-	-- we want to note what's the furthest distance a mob can see
-	if self.traits.vision > highest_vision then
-		highest_vision = self.traits.vision
 	end
 end
 

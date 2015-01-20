@@ -29,7 +29,8 @@ function creatures:register_mob(name, def)
 		jump = def.jump or true,
 		teams = def.teams,
 		teams_target = def.teams_target or {attack = true, avoid = true, follow = true},
-		traits = def.traits,
+		traits = def.traits, -- set in on_activate
+		names = def.names, -- set in on_activate
 		custom = def.custom,
 
 		on_step = def.on_step,
@@ -122,6 +123,7 @@ function creatures:register_mob(name, def)
 			tmp.timer_life = self.timer_life
 			tmp.actor = self.actor
 			tmp.traits = self.traits
+			tmp.names = self.names
 			-- only add persistent targets
 			tmp.targets = {}
 			for obj, target in pairs(self.targets) do
@@ -146,6 +148,9 @@ function creatures:register_mob(name, def)
 				end
 				if tmp and tmp.traits then
 					self.traits = tmp.traits
+				end
+				if tmp and tmp.names then
+					self.names = tmp.names
 				end
 				if tmp and tmp.targets then
 					self.targets = tmp.targets
