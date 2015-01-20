@@ -234,14 +234,14 @@ function logic_mob_step (self, dtime)
 			if target.position or (target.entity:is_player() or target.entity:get_luaentity()) then
 				local p = target.position or target.entity:getpos()
 				local dist = vector.distance(s, p)
-				local dist_target = target.distance or self.traits.vision
+				local dist_max = target.distance or self.traits.vision
 				local ent = nil
 				if target.entity then
 					ent = target.entity:get_luaentity()
 				end
 
 				-- remove targets which are dead or out of range
-				if dist > dist_target or (target.entity and target.entity:get_hp() <= 0) then
+				if dist > dist_max or (target.entity and target.entity:get_hp() <= 0) then
 					self.targets[obj] = nil
 				-- if the mob is no longer fit to fight, change attack targets to avoid
 				elseif self.teams_target.attack and self.teams_target.avoid and target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
@@ -265,12 +265,15 @@ function logic_mob_step (self, dtime)
 	for i, target in pairs(self.targets) do
 		local p = target.position or target.entity:getpos()
 		local dist = vector.distance(s, p)
-		local interest = target.priority * (self.traits.vision / dist)
+		local dist_max = target.distance or self.traits.vision
+		local interest = target.priority * (1 - dist / dist_max)
 
 		-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
-		if dist ~= 0 and target.priority >= (1 - self.traits.determination) and interest >= best_priority then
-			best_priority = interest
-			self.target_current = target
+		if dist ~= 0 and dist <= dist_max and interest >= (1 - self.traits.determination) then
+			if interest >= best_priority then
+				best_priority = interest
+				self.target_current = target
+			end
 		end
 	end
 
@@ -283,9 +286,9 @@ function logic_mob_step (self, dtime)
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
 		self.v_avoid = false
 		local dist = vector.distance(s, self.v_pos)
-		local dist_target = self.target_current.distance or self.traits.vision
+		local dist_max = self.target_current.distance or self.traits.vision
 
-		if minetest.setting_getbool("fast_mobs") and dist > 2 and dist / dist_target >= 1 - self.target_current.priority then
+		if minetest.setting_getbool("fast_mobs") and dist > 2 and dist / dist_max >= 1 - self.target_current.priority then
 			self:set_animation("walk_punch")
 			self.v_speed = self.run_velocity
 		elseif dist > 2 then
@@ -343,14 +346,14 @@ function logic_mob_step (self, dtime)
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
 		self.v_avoid = self.target_current.objective == "avoid"
 		local dist = vector.distance(s, self.v_pos)
-		local dist_target = self.target_current.distance or self.traits.vision
+		local dist_max = self.target_current.distance or self.traits.vision
 
 		if minetest.setting_getbool("fast_mobs") and
-		(not self.v_avoid and dist / dist_target >= 1 - self.target_current.priority) or
-		(self.v_avoid and dist / dist_target < 1 - self.target_current.priority) then
+		(not self.v_avoid and dist / dist_max >= 1 - self.target_current.priority) or
+		(self.v_avoid and dist / dist_max < 1 - self.target_current.priority) then
 			self:set_animation("walk")
 			self.v_speed = self.run_velocity
-		elseif dist > dist_target / 5 then
+		elseif dist > dist_max / 5 then
 			self:set_animation("walk")
 			self.v_speed = self.walk_velocity
 		else

@@ -44,7 +44,7 @@
 		loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them. Note that ghosts can only possess mobs that are following them. Must range between 0 and 1!
 		fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first). Must range between 0 and 1!
 		aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first). Must range between 0 and 1!
-		determination = {0.5, 0.5}: Lower values make it more likely for a mob to drop distant targets and abandon a task. Must range between 0 and 1!
+		determination = {0.5, 0.5}: Targets with an importance lower than this will be ignored. Must range between 0 and 1!
 	teams_target = {attack = true, avoid = true, follow = true}: What types of targets this mob will automatically add or change based on team relationships. Can be nil for default behavior.
 	on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the logic_mob_activate function.
 	on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the logic_mob_step function.
@@ -102,3 +102,16 @@
 	Whenever a player right-clicks a mob, their creatures.selected entry is updated. Therefore you can reference the mob the formspec is referring to as creatures.selected[clicker].
 	The formspec can contain its own fields, which can be read using a custom minetest.register_on_player_receive_fields function. Below are the builtin fields, which buttons or other elements can trigger:
 		possess: When this field is received, the player will possess the creature.
+
+* Scripting - Targets:
+	By default, mobs will attack or avoid foes and follow allies. This is determined by the teams field (see "creatures:alliance") and each behavoir can be disabled using "teams_target". Mobs may also walk to random nodes, based on the rules specified in "nodes".
+	Mob targets are of three types: Attack, Avoid, Follow. Each target can address either an entity (creature) or a position (node). Each target has a priority, which together with distance is used to determine which task the mob chooses.
+	A mob's targets can be referenced in two ways: As self.targets[name] or self.current_target. The second simply references an entry from the first... the one which is currently being carried out. Modifying self.current_target has no effect, it is read-only!
+	To add a custom target, use table.insert(self.targets[name], {...}). To remove one, use self.targets[name] = nil. Every custom target must have the persist property set to true, otherwise the code will assume it was added automatically and may modify it!
+	Below is a list of the default target properties. You can add and use your own if needed, eg: self.targets[mytarget].mytext = "I'm a target".
+		entity = object: The entity this target is addressing. Can be a player or any Lua object. Alternatively you can use "position".
+		position = {...}: The position this target is addressing. Alternatively you can use "entity".
+		objective = "type": The type of action to take. Can be "attack", "avoid", or "follow".
+		distance = 1: Optional. When set, the target will be taken into account if no further away than this value. If not set, only if it's within the mob's radius of vision.
+		priority = 0.5: The importance of this target. The target with the highest priority will be the task carried on by the mob.
+		persist = true: Prevents the logic code from modifying this target, and also persists it on the mob entity. Always set this to true!
