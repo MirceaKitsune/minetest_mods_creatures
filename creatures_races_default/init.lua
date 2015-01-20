@@ -1,21 +1,44 @@
 -- Default mob formspec:
 
 local function formspec(self, clicker)
-	local label = "("..creatures:alliance(clicker, self.object)..")"
+	local alliance = creatures:alliance(clicker, self.object)
+	local alliance_color = "#FFFFAA"
+	if alliance > 0 then
+		alliance_color = "#AAFFAA"
+	elseif alliance < 0 then
+		alliance_color = "#FFAAAA"
+	end
+
+	local info =
+		"Race: "..self.name..","
+		.."Health: "..(self.object:get_hp() * 5)..","
+		..alliance_color.."Alliance: "..alliance..","
+	if alliance > 0 then
+		info = info
+			.."Traits - Attack: "..string.format("%.3f", self.traits.attack_interval)..","
+			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits.think)..","
+			.."Traits - Vision: "..string.format("%.3f", self.traits.vision)..","
+			.."Traits - Curiosity: "..string.format("%.3f", self.traits.roam)..","
+			.."Traits - Loyalty: "..string.format("%.3f", self.traits.loyalty)..","
+			.."Traits - Fear: "..string.format("%.3f", self.traits.fear)..","
+			.."Traits - Aggressivity: "..string.format("%.3f", self.traits.aggressivity)..","
+			.."Traits - Determination: "..string.format("%.3f", self.traits.determination)
+	end
+
 	local formspec =
-		"size[4,2]"
+		"size[6,4]"
 		..default.gui_bg
 		..default.gui_bg_img
 		..default.gui_slots
 		.."image[0,0;1,1;"..self.icon.."]"
-		.."label[1,0;"..label.."]"
+		.."textlist[1,0;5,3;;"..info..";0;false]"
 	-- Possession is possible
 	if creatures:can_possess(clicker, self) then
-		formspec = formspec.."button_exit[0,1;2,1;possess;Possess]"
-		formspec = formspec.."button_exit[2,1;2,1;quit;Exit]"
+		formspec = formspec.."button_exit[0,3;3,1;possess;Possess]"
+		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
 	-- Possession isn't possible
 	else
-		formspec = formspec.."button_exit[0,1;4,1;quit;Exit]"
+		formspec = formspec.."button_exit[0,3;6,1;quit;Exit]"
 	end
 
 	minetest.show_formspec(clicker:get_player_name(), "creatures:formspec", formspec)
