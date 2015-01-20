@@ -445,16 +445,18 @@ function logic_mob_activate (self, staticdata, dtime_s)
 
 	-- set personality: each trait is a random value per mob, between the min and max values defined
 	-- on_step must never execute before this is set, the code expects a single value for each trait!
-	for trait, entry in pairs(self.traits) do
-		if type(entry) == "table" then
-			self.traits[trait] = math.random() * (entry[2] - entry[1]) + entry[1]
+	for i, trait in pairs(self.traits) do
+		if type(trait) == "table" then
+			self.traits[i] = math.random() * (trait[2] - trait[1]) + trait[1]
 		end
 	end
 
 	-- set name: choose one name from all potential names
 	-- on_step must never execute before this is set, the code expects a single value for the name!
-	if type(self.names) == "table" and #self.names > 0 then
-		self.names = self.names[math.random(#self.names)]
+	for i, name in pairs(self.names) do
+		if type(name) == "table" then
+			self.names[i] = name[math.random(#name)]
+		end
 	end
 
 	-- if the textures field contains tables, we have multiple texture sets

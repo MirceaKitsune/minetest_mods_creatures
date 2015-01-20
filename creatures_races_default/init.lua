@@ -8,13 +8,17 @@ local function formspec(self, clicker)
 	elseif alliance < 0 then
 		alliance_color = "#FFAAAA"
 	end
-	local name = "N/A"
-	if self.names and type(self.names) == "string" then
-		name = self.names
+
+	local names = "N/A"
+	if #self.names > 0 then
+		names = ""
+		for i, name in pairs(self.names) do
+			names = names..name.." "
+		end
 	end
 
 	local info =
-		"Name: "..name..","
+		"Name: "..names..","
 		.."Health: "..(self.object:get_hp() * 5)..","
 		..alliance_color.."Alliance: "..alliance..","
 	if alliance > 0 then
@@ -222,7 +226,10 @@ creatures:register_creature("creatures_races_default:human_male", {
 		aggressivity = {0.5, 0.75},
 		determination = {0.8, 1},
 	},
-	names = {"Alex", "Daniel", "Mike", "Sam", "Earl", "Steve", "Charlie", "Claude", "Arnold", "Andrew", "David", "Damian", "Bob", "Tom", "Gabriel", "Walter", "Jerry", "Jake",},
+	names = {
+		{"Alex", "Daniel", "Mike", "Sam", "Earl", "Steve", "Charlie", "Claude", "Arnold", "Andrew", "David", "Damian", "Bob", "Tom", "Gabriel", "Walter", "Jerry", "Jake", "Michael", "Nate", "Oliver", "Bubba",},
+		{"Wheeler", "Anderson", "Simpson", "Jackson", "Parker", "Adams", "Steven", "Johnson",},
+	},
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -331,7 +338,10 @@ creatures:register_creature("creatures_races_default:human_female", {
 		aggressivity = {0.25, 0.5},
 		determination = {0.8, 1},
 	},
-	names = {"Ana", "Maria", "Kate", "Michelle", "Sarah", "Mona", "Rose", "Stephanie", "Cleopatra", "Denise",},
+	names = {
+		{"Ana", "Maria", "Kate", "Michelle", "Sarah", "Mona", "Rose", "Stephanie", "Cleopatra", "Denise",},
+		{"Wheeler", "Anderson", "Simpson", "Jackson", "Parker", "Adams", "Steven", "Johnson",},
+	},
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
