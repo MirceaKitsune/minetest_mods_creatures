@@ -28,6 +28,7 @@ function creatures:register_mob(name, def)
 		animation = def.animation,
 		jump = def.jump or true,
 		teams = def.teams,
+		teams_target = def.teams_target or {attack = true, avoid = true, follow = true},
 		traits = def.traits,
 		custom = def.custom,
 
@@ -35,7 +36,7 @@ function creatures:register_mob(name, def)
 		on_rightclick = def.on_rightclick,
 		on_activate = def.on_activate,
 		on_punch = def.on_punch,
-		
+
 		timer_life = 60,
 		timer_think = 0,
 		timer_attack = 0,

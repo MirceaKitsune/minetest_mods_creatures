@@ -94,6 +94,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 		aggressivity = {0.5, 0.5},
 		determination = {0.5, 0.5},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -216,6 +217,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		aggressivity = {0.5, 0.75},
 		determination = {0.8, 1},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -323,6 +325,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		aggressivity = {0.25, 0.5},
 		determination = {0.8, 1},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -427,6 +430,7 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 		aggressivity = {0.7, 0.9},
 		determination = {0.6, 0.8},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -531,6 +535,7 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 		aggressivity = {0.8, 1},
 		determination = {0.9, 1},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -635,6 +640,7 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 		aggressivity = {0.7, 0.9},
 		determination = {0.6, 0.8},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -739,6 +745,7 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 		aggressivity = {0.5, 0.7},
 		determination = {0.5, 0.6},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -848,6 +855,7 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 		aggressivity = {0.6, 0.8},
 		determination = {0.7, 0.9},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -947,6 +955,7 @@ creatures:register_creature("creatures_races_default:sheep", {
 		fear = {0.8, 1},
 		determination = {0.4, 0.6},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -1087,6 +1096,7 @@ creatures:register_creature("creatures_races_default:rat", {
 		fear = {0.5, 0.7},
 		determination = {0.3, 0.5},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -1216,6 +1226,7 @@ creatures:register_creature("creatures_races_default:oerkki", {
 		aggressivity = {0.4, 0.6},
 		determination = {0.6, 0.8},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,
@@ -1320,6 +1331,7 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 		aggressivity = {0.8, 1},
 		determination = {0.5, 0.7},
 	},
+	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 	end,

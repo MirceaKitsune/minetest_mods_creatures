@@ -167,43 +167,43 @@ function logic_mob_step (self, dtime)
 		self.in_liquid = false
 	end
 
-	if not minetest.setting_getbool("mindless_mobs") then
-		-- targets: set node targets
-		if self.nodes and #self.nodes > 0 then
-			local corner_start = {x = s.x - self.traits.vision / 2, y = s.y - self.traits.vision / 2, z = s.z - self.traits.vision / 2}
-			local corner_end = {x = s.x + self.traits.vision / 2, y = s.y + self.traits.vision / 2, z = s.z + self.traits.vision / 2}
-			for i, node in pairs(self.nodes) do
-				local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, node.nodes)
-				local pos_all_good = {}
-				if node.priority >= math.random() then
-					for _, pos_this in pairs(pos_all) do
-						local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
-						if vector.distance(s, pos_this_up) <= self.traits.vision then
-							local node_this_up = minetest.env:get_node(pos_this_up)
-							if node_this_up.name == "air" then
-								local light_this_up = minetest.get_node_light(pos_this_up, nil)
-								if light_this_up >= node.light_min and light_this_up <= node.light_max then
-									table.insert(pos_all_good, pos_this_up)
-								end
+	-- targets: set node targets
+	if self.nodes and #self.nodes > 0 then
+		local corner_start = {x = s.x - self.traits.vision / 2, y = s.y - self.traits.vision / 2, z = s.z - self.traits.vision / 2}
+		local corner_end = {x = s.x + self.traits.vision / 2, y = s.y + self.traits.vision / 2, z = s.z + self.traits.vision / 2}
+		for i, node in pairs(self.nodes) do
+			local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, node.nodes)
+			local pos_all_good = {}
+			if node.priority >= math.random() then
+				for _, pos_this in pairs(pos_all) do
+					local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
+					if vector.distance(s, pos_this_up) <= self.traits.vision then
+						local node_this_up = minetest.env:get_node(pos_this_up)
+						if node_this_up.name == "air" then
+							local light_this_up = minetest.get_node_light(pos_this_up, nil)
+							if light_this_up >= node.light_min and light_this_up <= node.light_max then
+								table.insert(pos_all_good, pos_this_up)
 							end
 						end
 					end
+				end
 
-					if #pos_all_good > 0 then
-						local pos = pos_all_good[math.random(#pos_all_good)]
-						local obj = "follow"
-						if node.avoid then
-							obj = "avoid"
-						end
-						self.targets[i] = {position = pos, objective = obj, priority = node.priority}
-					else
-						self.targets[i] = nil
+				if #pos_all_good > 0 then
+					local pos = pos_all_good[math.random(#pos_all_good)]
+					local obj = "follow"
+					if node.avoid then
+						obj = "avoid"
 					end
+					self.targets[i] = {position = pos, objective = obj, priority = node.priority}
+				else
+					self.targets[i] = nil
 				end
 			end
 		end
+	end
 
-		-- targets: add player or mob targets
+	-- targets: add player or mob targets
+	if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
 		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)
 		for _, obj in pairs(objects) do
 			if obj ~= self.object and (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().teams)) and not self.targets[obj] then
@@ -214,47 +214,47 @@ function logic_mob_step (self, dtime)
 					local action = math.random()
 
 					-- attack targets
-					if self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -action then
+					if self.teams_target.attack and self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -action then
 						self.targets[obj] = {entity = obj, objective = "attack", priority = math.abs(relation) * self.traits.aggressivity}
 					-- avoid targets
-					elseif relation * self.traits.fear <= -action then
+					elseif self.teams_target.avoid and relation * self.traits.fear <= -action then
 						self.targets[obj] = {entity = obj, objective = "avoid", priority = math.abs(relation) * self.traits.fear}
 					-- follow targets
-					elseif relation * self.traits.loyalty >= action then
+					elseif self.teams_target.follow and relation * self.traits.loyalty >= action then
 						self.targets[obj] = {entity = obj, objective = "follow", priority = math.abs(relation) * self.traits.loyalty}
 					end
 				end
 			end
 		end
+	end
 
-		-- targets: remove or modify player or mob targets
-		for obj, target in pairs(self.targets) do
-			if not target.persist then
-				if target.position or (target.entity:is_player() or target.entity:get_luaentity()) then
-					local p = target.position or target.entity:getpos()
-					local dist = vector.distance(s, p)
-					local dist_target = target.distance or self.traits.vision
-					local ent = nil
-					if target.entity then
-						ent = target.entity:get_luaentity()
-					end
-
-					-- remove targets which are dead or out of range
-					if dist > dist_target or (target.entity and target.entity:get_hp() <= 0) then
-						self.targets[obj] = nil
-					-- if the mob is no longer fit to fight, change attack targets to avoid
-					elseif target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
-						self.targets[obj].objective = "avoid"
-					-- don't follow mobs which are following someone else or a persistent target
-					elseif target.objective == "follow" and ent then
-						if ent.target_current and (ent.target_current.entity or ent.target_current.persist) then
-							self.targets[obj] = nil
-						end
-					end
-				else
-					-- remove players that disconnected or mobs that were removed from the world
-					self.targets[obj] = nil
+	-- targets: remove or modify player or mob targets
+	for obj, target in pairs(self.targets) do
+		if not target.persist then
+			if target.position or (target.entity:is_player() or target.entity:get_luaentity()) then
+				local p = target.position or target.entity:getpos()
+				local dist = vector.distance(s, p)
+				local dist_target = target.distance or self.traits.vision
+				local ent = nil
+				if target.entity then
+					ent = target.entity:get_luaentity()
 				end
+
+				-- remove targets which are dead or out of range
+				if dist > dist_target or (target.entity and target.entity:get_hp() <= 0) then
+					self.targets[obj] = nil
+				-- if the mob is no longer fit to fight, change attack targets to avoid
+				elseif self.teams_target.attack and self.teams_target.avoid and target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
+					self.targets[obj].objective = "avoid"
+				-- don't follow mobs which are following someone else or a persistent target
+				elseif self.teams_target.follow and target.objective == "follow" and ent then
+					if ent.target_current and (ent.target_current.entity or ent.target_current.persist) then
+						self.targets[obj] = nil
+					end
+				end
+			else
+				-- remove players that disconnected or mobs that were removed from the world
+				self.targets[obj] = nil
 			end
 		end
 	end
@@ -487,20 +487,20 @@ function logic_mob_punch (self, hitter)
 			minetest.sound_play(self.sounds.die, {object = self.object})
 		end
 	else
-		if not minetest.setting_getbool("mindless_mobs") then
+		if self.teams_target.attack or self.teams_target.avoid then
 			-- targets: take action toward the creature who hit us
 			local ent = hitter:get_luaentity()
 			if not (self.targets[hitter] and self.targets[hitter].persist) and (hitter:is_player() or (ent and ent.teams)) then
 				local importance = (1 - relation) * 0.5
 				local action = math.random()
-				if self.attack_type and minetest.setting_getbool("enable_damage") and importance * self.traits.aggressivity >= action then
+				if self.teams_target.attack and self.attack_type and minetest.setting_getbool("enable_damage") and importance * self.traits.aggressivity >= action then
 					if not self.targets[hitter] then
 						self.targets[hitter] = {entity = hitter, objective = "attack", priority = importance * self.traits.aggressivity}
 					else
 						self.targets[hitter].objective = "attack"
 						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits.aggressivity
 					end
-				elseif importance * self.traits.fear >= action then
+				elseif self.teams_target.avoid and importance * self.traits.fear >= action then
 					if not self.targets[hitter] then
 						self.targets[hitter] = {entity = hitter, objective = "avoid", priority = importance * self.traits.fear}
 					else
@@ -511,50 +511,52 @@ function logic_mob_punch (self, hitter)
 			end
 
 			-- targets: make other mobs who see this mob fighting take action
-			for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), highest_vision)) do
-				local other = obj:get_luaentity()
-				if obj ~= self.object and other and other.teams then
-					local p = obj:getpos()
-					local h = hitter:getpos()
-					local dist = vector.distance(s, p)
-					if dist ~= 0 and dist < other.traits.vision then
-						local relation_other_self = creatures:alliance(obj, self.object)
-						local relation_other_hitter = creatures:alliance(obj, hitter)
-						-- determine who the bad guy is, and how important it is to interfere
-						local relation_min = math.min(relation_other_hitter, relation_other_self)
-						local relation_max = math.max(relation_other_hitter, relation_other_self)
-						local importance = math.abs(relation_min - relation_max) * 0.5
-						local action = math.random()
-						local enemy = hitter
-						if relation_other_self < relation_other_hitter then
-							enemy = self.object
-						end
+			if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
+				for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), highest_vision)) do
+					local other = obj:get_luaentity()
+					if obj ~= self.object and other and other.teams then
+						local p = obj:getpos()
+						local h = hitter:getpos()
+						local dist = vector.distance(s, p)
+						if dist ~= 0 and dist < other.traits.vision then
+							local relation_other_self = creatures:alliance(obj, self.object)
+							local relation_other_hitter = creatures:alliance(obj, hitter)
+							-- determine who the bad guy is, and how important it is to interfere
+							local relation_min = math.min(relation_other_hitter, relation_other_self)
+							local relation_max = math.max(relation_other_hitter, relation_other_self)
+							local importance = math.abs(relation_min - relation_max) * 0.5
+							local action = math.random()
+							local enemy = hitter
+							if relation_other_self < relation_other_hitter then
+								enemy = self.object
+							end
 
-						if not (other.targets[enemy] and other.targets[enemy].persist) then
-							-- if we are loyal and eager enough to fight, attack our ally's enemy
-							if other.attack_type and minetest.setting_getbool("enable_damage") and
-							importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5) >= action then
-								if not other.targets[enemy] then
-									other.targets[enemy] = {entity = enemy, objective = "attack", priority = importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)}
-								else
-									other.targets[enemy].objective = "attack"
-									other.targets[enemy].priority = other.targets[enemy].priority + importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)
-								end
-							-- if we are loyal but won't fight, follow our ally instead
-							elseif importance * other.traits.loyalty >= action then
-								if not other.targets[enemy] then
-									other.targets[enemy] = {entity = enemy, objective = "follow", priority = importance * other.traits.loyalty}
-								else
-									other.targets[enemy].objective = "follow"
-									other.targets[enemy].priority = other.targets[enemy].priority + importance * other.traits.loyalty
-								end
-							-- if we're afraid instead, avoid the side we're least comfortable with
-							elseif importance * self.traits.fear >= action then
-								if not other.targets[enemy] then
-									other.targets[enemy] = {entity = enemy, objective = "avoid", priority = importance * self.traits.fear}
-								else
-									other.targets[enemy].objective = "avoid"
-									other.targets[enemy].priority = other.targets[enemy].priority + importance * self.traits.fear
+							if not (other.targets[enemy] and other.targets[enemy].persist) then
+								-- if we are loyal and eager enough to fight, attack our ally's enemy
+								if other.teams_target.attack and other.attack_type and minetest.setting_getbool("enable_damage") and
+								importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5) >= action then
+									if not other.targets[enemy] then
+										other.targets[enemy] = {entity = enemy, objective = "attack", priority = importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)}
+									else
+										other.targets[enemy].objective = "attack"
+										other.targets[enemy].priority = other.targets[enemy].priority + importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)
+									end
+								-- if we are loyal but won't fight, follow our ally instead
+								elseif other.teams_target.follow and importance * other.traits.loyalty >= action then
+									if not other.targets[enemy] then
+										other.targets[enemy] = {entity = enemy, objective = "follow", priority = importance * other.traits.loyalty}
+									else
+										other.targets[enemy].objective = "follow"
+										other.targets[enemy].priority = other.targets[enemy].priority + importance * other.traits.loyalty
+									end
+								-- if we're afraid instead, avoid the side we're least comfortable with
+								elseif other.teams_target.avoid and importance * self.traits.fear >= action then
+									if not other.targets[enemy] then
+										other.targets[enemy] = {entity = enemy, objective = "avoid", priority = importance * self.traits.fear}
+									else
+										other.targets[enemy].objective = "avoid"
+										other.targets[enemy].priority = other.targets[enemy].priority + importance * self.traits.fear
+									end
 								end
 							end
 						end

@@ -3,7 +3,6 @@
 	enable_damage = false: When the damage system is off, mobs will not attack. Mobs that would otherwise attack a creature will instead consider avoiding them.
 	only_peaceful_mobs = false: When enabled, only mobs that don't have the ability to attack will spawn.
 	fast_mobs = false: Whether mobs can run. This should only be turned on when players have the "fast" privilege by default, to ensure balanced gameplay.
-	mindless_mobs = false: Disables decision making. Mobs will not add or remove any targets, although they will respect targets added through other means.
 	pathfinding = false: Enables mob pathfinding system. Highly experimental, only use for testing purposes!
 
 * creatures.player_default = "creatures:ghost": Players who aren't part of a race are set to this creature. Typically applies to new players who join the server for the first time.
@@ -46,6 +45,7 @@
 		fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first). Must range between 0 and 1!
 		aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first). Must range between 0 and 1!
 		determination = {0.5, 0.5}: Lower values make it more likely for a mob to drop distant targets and abandon a task. Must range between 0 and 1!
+	teams_target = {attack = true, avoid = true, follow = true}: What types of targets this mob will automatically add or change based on team relationships. Can be nil for default behavior.
 	on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the logic_mob_activate function.
 	on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the logic_mob_step function.
 	on_punch = function(self, hitter) ... end: Function executed when the mob is punched. By default, this should call the logic_mob_punch function.
