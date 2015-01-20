@@ -487,8 +487,8 @@ function logic_mob_punch (self, hitter)
 			minetest.sound_play(self.sounds.die, {object = self.object})
 		end
 	else
+		-- targets: take action toward the creature who hit us
 		if self.teams_target.attack or self.teams_target.avoid then
-			-- targets: take action toward the creature who hit us
 			local ent = hitter:get_luaentity()
 			if not (self.targets[hitter] and self.targets[hitter].persist) and (hitter:is_player() or (ent and ent.teams)) then
 				local importance = (1 - relation) * 0.5
@@ -506,60 +506,6 @@ function logic_mob_punch (self, hitter)
 					else
 						self.targets[hitter].objective = "aviod"
 						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits.fear
-					end
-				end
-			end
-
-			-- targets: make other mobs who see this mob fighting take action
-			if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
-				for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), highest_vision)) do
-					local other = obj:get_luaentity()
-					if obj ~= self.object and other and other.teams then
-						local p = obj:getpos()
-						local h = hitter:getpos()
-						local dist = vector.distance(s, p)
-						if dist ~= 0 and dist < other.traits.vision then
-							local relation_other_self = creatures:alliance(obj, self.object)
-							local relation_other_hitter = creatures:alliance(obj, hitter)
-							-- determine who the bad guy is, and how important it is to interfere
-							local relation_min = math.min(relation_other_hitter, relation_other_self)
-							local relation_max = math.max(relation_other_hitter, relation_other_self)
-							local importance = math.abs(relation_min - relation_max) * 0.5
-							local action = math.random()
-							local enemy = hitter
-							if relation_other_self < relation_other_hitter then
-								enemy = self.object
-							end
-
-							if not (other.targets[enemy] and other.targets[enemy].persist) then
-								-- if we are loyal and eager enough to fight, attack our ally's enemy
-								if other.teams_target.attack and other.attack_type and minetest.setting_getbool("enable_damage") and
-								importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5) >= action then
-									if not other.targets[enemy] then
-										other.targets[enemy] = {entity = enemy, objective = "attack", priority = importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)}
-									else
-										other.targets[enemy].objective = "attack"
-										other.targets[enemy].priority = other.targets[enemy].priority + importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5)
-									end
-								-- if we are loyal but won't fight, follow our ally instead
-								elseif other.teams_target.follow and importance * other.traits.loyalty >= action then
-									if not other.targets[enemy] then
-										other.targets[enemy] = {entity = enemy, objective = "follow", priority = importance * other.traits.loyalty}
-									else
-										other.targets[enemy].objective = "follow"
-										other.targets[enemy].priority = other.targets[enemy].priority + importance * other.traits.loyalty
-									end
-								-- if we're afraid instead, avoid the side we're least comfortable with
-								elseif other.teams_target.avoid and importance * self.traits.fear >= action then
-									if not other.targets[enemy] then
-										other.targets[enemy] = {entity = enemy, objective = "avoid", priority = importance * self.traits.fear}
-									else
-										other.targets[enemy].objective = "avoid"
-										other.targets[enemy].priority = other.targets[enemy].priority + importance * self.traits.fear
-									end
-								end
-							end
-						end
 					end
 				end
 			end
