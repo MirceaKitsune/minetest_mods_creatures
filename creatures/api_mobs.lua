@@ -240,8 +240,7 @@ end
 
 function creatures:can_possess(player, creature)
 	local psettings = creatures.player_def[creatures:player_get(player)]
-	if creature and not creature.actor and player:is_player() and psettings.reincarnate and
-	creature.target_current and player == creature.target_current.entity then
+	if creature and not creature.actor and player:is_player() and psettings.reincarnates then
 		return true
 	end
 	return false

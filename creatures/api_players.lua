@@ -20,7 +20,7 @@ function creatures:register_player(name, def)
 	creatures.player_def[name].menu = def.menu
 	creatures.player_def[name].inventory_main = def.inventory_main
 	creatures.player_def[name].inventory_craft = def.inventory_craft
-	creatures.player_def[name].reincarnate = def.reincarnate
+	creatures.player_def[name].reincarnates = def.reincarnates
 	creatures.player_def[name].ghost = def.ghost
 	creatures.player_def[name].eye_offset = def.eye_offset
 	creatures.player_def[name].fog = def.fog

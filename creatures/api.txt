@@ -55,7 +55,7 @@
 	menu = true: Whether players which are part of this race have a formspec inventory menu... containing their inventory, crafting area, etc.
 	inventory_main = {x = 8, y = 4}: Size of the main inventory for players which are part of this race.
 	inventory_craft = {x = 1, y = 1}: Size of the craft area for players which are part of this race.
-	reincarnate = true: Players that are part of this race can possess allied mobs, typically used for ghosts.
+	reincarnates = true: Players that are part of this race can possess allied mobs, typically used for ghosts.
 	ghost = "": What creature the player becomes upon death. If blank, creatures.player_default is used.
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}}: Camera offset for 1st and 3rd person views, used to adjust the camera to eye position for creatures of various shapes and sizes.
 	fog = {r = 0, g = 0, b = 0}: If set, this fog color is seen by players who are part of this race.
