@@ -168,36 +168,37 @@ function logic_mob_step (self, dtime)
 	end
 
 	if not minetest.setting_getbool("mindless_mobs") then
-		-- targets: add or remove node targets
-		if self.roam_spots and #self.roam_spots > 0 and self.traits.roam >= math.random() then
+		-- targets: set node targets
+		if self.nodes and #self.nodes > 0 then
 			local corner_start = {x = s.x - self.traits.vision / 2, y = s.y - self.traits.vision / 2, z = s.z - self.traits.vision / 2}
 			local corner_end = {x = s.x + self.traits.vision / 2, y = s.y + self.traits.vision / 2, z = s.z + self.traits.vision / 2}
-			for i, roam_spot in pairs(self.roam_spots) do
-				local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, roam_spot.nodes)
+			for i, node in pairs(self.nodes) do
+				local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, node.nodes)
 				local pos_all_good = {}
-
-				for _, pos_this in pairs(pos_all) do
-					local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
-					if vector.distance(s, pos_this_up) < self.traits.vision then
-						local node_this_up = minetest.env:get_node(pos_this_up)
-						if node_this_up.name == "air" then
-							local light_this_up = minetest.get_node_light(pos_this_up, nil)
-							if light_this_up >= roam_spot.light_min and light_this_up <= roam_spot.light_max then
-								table.insert(pos_all_good, pos_this_up)
+				if node.priority >= math.random() then
+					for _, pos_this in pairs(pos_all) do
+						local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
+						if vector.distance(s, pos_this_up) <= self.traits.vision then
+							local node_this_up = minetest.env:get_node(pos_this_up)
+							if node_this_up.name == "air" then
+								local light_this_up = minetest.get_node_light(pos_this_up, nil)
+								if light_this_up >= node.light_min and light_this_up <= node.light_max then
+									table.insert(pos_all_good, pos_this_up)
+								end
 							end
 						end
 					end
-				end
 
-				if #pos_all_good > 0 then
-					local pos = pos_all_good[math.random(#pos_all_good)]
-					local obj = "follow"
-					if roam_spot.avoid then
-						obj = "avoid"
+					if #pos_all_good > 0 then
+						local pos = pos_all_good[math.random(#pos_all_good)]
+						local obj = "follow"
+						if node.avoid then
+							obj = "avoid"
+						end
+						self.targets[i] = {position = pos, objective = obj, priority = node.priority}
+					else
+						self.targets[i] = nil
 					end
-					self.targets["roam"..i] = {position = pos, objective = obj, priority = roam_spot.priority}
-				else
-					self.targets["roam"..i] = nil
 				end
 			end
 		end
@@ -205,13 +206,13 @@ function logic_mob_step (self, dtime)
 		-- targets: add player or mob targets
 		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)
 		for _, obj in pairs(objects) do
-			if obj ~= self.object and (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().traits)) and not self.targets[obj] then
+			if obj ~= self.object and (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().teams)) and not self.targets[obj] then
 				local p = obj:getpos()
 				local dist = vector.distance(s, p)
-				if dist < self.traits.vision and minetest.line_of_sight(s, p, 1) then
+				if dist <= self.traits.vision and minetest.line_of_sight(s, p, 1) then
 					local relation = creatures:alliance(self.object, obj)
 					local action = math.random()
- 
+
 					-- attack targets
 					if self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -action then
 						self.targets[obj] = {entity = obj, objective = "attack", priority = math.abs(relation) * self.traits.aggressivity}
@@ -229,11 +230,14 @@ function logic_mob_step (self, dtime)
 		-- targets: remove or modify player or mob targets
 		for obj, target in pairs(self.targets) do
 			if not target.persist then
-				local target_old = target
 				if target.position or (target.entity:is_player() or target.entity:get_luaentity()) then
 					local p = target.position or target.entity:getpos()
 					local dist = vector.distance(s, p)
 					local dist_target = target.distance or self.traits.vision
+					local ent = nil
+					if target.entity then
+						ent = target.entity:get_luaentity()
+					end
 
 					-- remove targets which are dead or out of range
 					if dist > dist_target or (target.entity and target.entity:get_hp() <= 0) then
@@ -241,10 +245,9 @@ function logic_mob_step (self, dtime)
 					-- if the mob is no longer fit to fight, change attack targets to avoid
 					elseif target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
 						self.targets[obj].objective = "avoid"
-					-- don't keep following mobs who have other business to attend to
-					elseif target.objective == "follow" and target.entity and target.entity:get_luaentity() then
-						local ent = target.entity:get_luaentity()
-						if ent.target_current and ent.target_current.priority > 0 then
+					-- don't follow mobs which are following someone else or a persistent target
+					elseif target.objective == "follow" and ent then
+						if ent.target_current and (ent.target_current.entity or ent.target_current.persist) then
 							self.targets[obj] = nil
 						end
 					end
@@ -262,11 +265,11 @@ function logic_mob_step (self, dtime)
 	for i, target in pairs(self.targets) do
 		local p = target.position or target.entity:getpos()
 		local dist = vector.distance(s, p)
-		local interest = (self.traits.vision * self.traits.determination) / dist
+		local interest = target.priority * (self.traits.vision / dist)
 
 		-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
-		if dist ~= 0 and target.priority * interest >= best_priority then
-			best_priority = target.priority * interest
+		if dist ~= 0 and target.priority >= (1 - self.traits.determination) and interest >= best_priority then
+			best_priority = interest
 			self.target_current = target
 		end
 	end
@@ -486,8 +489,8 @@ function logic_mob_punch (self, hitter)
 	else
 		if not minetest.setting_getbool("mindless_mobs") then
 			-- targets: take action toward the creature who hit us
-			if not (self.targets[hitter] and self.targets[hitter].persist) and (hitter:is_player() or (hitter:get_luaentity() and hitter:get_luaentity().traits)) then
-				local target_old = self.targets[hitter]
+			local ent = hitter:get_luaentity()
+			if not (self.targets[hitter] and self.targets[hitter].persist) and (hitter:is_player() or (ent and ent.teams)) then
 				local importance = (1 - relation) * 0.5
 				local action = math.random()
 				if self.attack_type and minetest.setting_getbool("enable_damage") and importance * self.traits.aggressivity >= action then
@@ -509,8 +512,8 @@ function logic_mob_punch (self, hitter)
 
 			-- targets: make other mobs who see this mob fighting take action
 			for _, obj in pairs(minetest.env:get_objects_inside_radius(self.object:getpos(), highest_vision)) do
-				if obj ~= self.object and obj:get_luaentity() and obj:get_luaentity().traits then
-					local other = obj:get_luaentity()
+				local other = obj:get_luaentity()
+				if obj ~= self.object and other and other.teams then
 					local p = obj:getpos()
 					local h = hitter:getpos()
 					local dist = vector.distance(s, p)
@@ -528,7 +531,6 @@ function logic_mob_punch (self, hitter)
 						end
 
 						if not (other.targets[enemy] and other.targets[enemy].persist) then
-							local target_old = other.targets[enemy]
 							-- if we are loyal and eager enough to fight, attack our ally's enemy
 							if other.attack_type and minetest.setting_getbool("enable_damage") and
 							importance * ((other.traits.aggressivity + other.traits.loyalty) * 0.5) >= action then

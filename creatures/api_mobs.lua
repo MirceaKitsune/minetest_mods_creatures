@@ -20,7 +20,7 @@ function creatures:register_mob(name, def)
 		drops = def.drops,
 		armor = def.armor,
 		icon = def.icon,
-		roam_spots = def.roam_spots,
+		nodes = def.nodes,
 		attack_damage = def.attack_damage,
 		attack_type = def.attack_type,
 		attack_arrow = def.attack_arrow,

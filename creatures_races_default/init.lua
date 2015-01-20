@@ -18,7 +18,6 @@ local function formspec(self, clicker)
 			.."Traits - Attack: "..string.format("%.3f", self.traits.attack_interval)..","
 			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits.think)..","
 			.."Traits - Vision: "..string.format("%.3f", self.traits.vision)..","
-			.."Traits - Curiosity: "..string.format("%.3f", self.traits.roam)..","
 			.."Traits - Loyalty: "..string.format("%.3f", self.traits.loyalty)..","
 			.."Traits - Fear: "..string.format("%.3f", self.traits.fear)..","
 			.."Traits - Aggressivity: "..string.format("%.3f", self.traits.aggressivity)..","
@@ -85,12 +84,11 @@ creatures:register_creature("creatures_races_default:ghost", {
 	drops = {},
 	attack_damage = 1,
 	attack_type = "melee",
-	roam_spots = {},
+	nodes = {},
 	traits = {
 		attack_interval = {1, 1},
 		think = {1, 1},
 		vision = {15, 15},
-		roam = {0.5, 0.5},
 		loyalty = {0.5, 0.5},
 		fear = {0.5, 0.5},
 		aggressivity = {0.5, 0.5},
@@ -202,18 +200,17 @@ creatures:register_creature("creatures_races_default:human_male", {
 	},
 	attack_damage = 1,
 	attack_type = "melee",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 7,
-		light_max = LIGHT_MAX,
+		light_max = 15,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		attack_interval = {0.75, 1},
 		think = {0.5, 0.75},
 		vision = {15, 20},
-		roam = {0.5, 0.65},
 		loyalty = {0.5, 0.75},
 		fear = {0.25, 0.5},
 		aggressivity = {0.5, 0.75},
@@ -310,18 +307,17 @@ creatures:register_creature("creatures_races_default:human_female", {
 	},
 	attack_damage = 1,
 	attack_type = "melee",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 7,
-		light_max = LIGHT_MAX,
+		light_max = 15,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		attack_interval = {0.5, 0.75},
 		think = {0.65, 0.85},
 		vision = {15, 20},
-		roam = {0.4, 0.7},
 		loyalty = {0.6, 0.8},
 		fear = {0.35, 0.65},
 		aggressivity = {0.25, 0.5},
@@ -415,18 +411,17 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	},
 	attack_damage = 1,
 	attack_type = "melee",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		attack_interval = {1.35, 1.65},
 		think = {1.5, 1.65},
 		vision = {10, 15},
-		roam = {0.35, 0.5},
 		loyalty = {0.15, 0.3},
 		fear = {0.3, 0.5},
 		aggressivity = {0.7, 0.9},
@@ -520,18 +515,17 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	},
 	attack_damage = 3,
 	attack_type = "melee",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
 		think = {1, 1.25},
 		vision = {10, 10},
-		roam = {0.5, 0.5},
 		loyalty = {0.3, 0.5},
 		fear = {0.1, 0.3},
 		aggressivity = {0.8, 1},
@@ -625,18 +619,17 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	},
 	attack_damage = 2,
 	attack_type = "melee",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
-		light_max = LIGHT_MAX,
+		light_max = 15,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		attack_interval = {1.25, 1.5},
 		think = {1.35, 1.5},
 		vision = {20, 20},
-		roam = {0.35, 0.5},
 		loyalty = {0.4, 0.7},
 		fear = {0.15, 0.3},
 		aggressivity = {0.7, 0.9},
@@ -730,18 +723,17 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	},
 	attack_damage = 2,
 	attack_type = "melee",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
 		think = {0.75, 1.25},
 		vision = {10, 15},
-		roam = {0.25, 0.35},
 		loyalty = {0.3, 0.6},
 		fear = {0.1, 0.25},
 		aggressivity = {0.5, 0.7},
@@ -840,18 +832,17 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	disable_fall_damage = true,
 	attack_damage = 2,
 	attack_type = "melee",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
-		light_max = LIGHT_MAX,
+		light_max = 15,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		attack_interval = {1.25, 1.5},
 		think = {1.15, 1.35},
 		vision = {15, 20},
-		roam = {0.35, 0.65},
 		loyalty = {0.5, 0.75},
 		fear = {0.4, 0.6},
 		aggressivity = {0.6, 0.8},
@@ -942,17 +933,16 @@ creatures:register_creature("creatures_races_default:sheep", {
 		min = 2,
 		max = 3,},
 	},
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly"},
 		light_min = 7,
-		light_max = LIGHT_MAX,
+		light_max = 15,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		think = {1.5, 2},
 		vision = {5, 5},
-		roam = {0.15, 0.25},
 		loyalty = {0.2, 0.4},
 		fear = {0.8, 1},
 		determination = {0.4, 0.6},
@@ -1083,17 +1073,16 @@ creatures:register_creature("creatures_races_default:rat", {
 
 	-- Mob properties:
 	drops = {},
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		think = {1.5, 1.75},
 		vision = {5, 5},
-		roam = {0.5, 0.75},
 		loyalty = {0.15, 0.3},
 		fear = {0.5, 0.7},
 		determination = {0.3, 0.5},
@@ -1211,18 +1200,17 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	drops = {},
 	attack_damage = 3,
 	attack_type = "melee",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	traits = {
 		attack_interval = {0.85, 1.15},
 		think = {0.75, 1.25},
 		vision = {10, 15},
-		roam = {0.35, 0.5},
 		loyalty = {0.3, 0.7},
 		fear = {0.1, 0.4},
 		aggressivity = {0.4, 0.6},
@@ -1315,19 +1303,18 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	},
 	attack_damage = 4,
 	attack_type = "shoot",
-	roam_spots = {
+	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
 		avoid = false,
-		priority = 0,},
+		priority = 0.25,},
 	},
 	attack_arrow = "creatures_races_default:fireball",
 	traits = {
 		attack_interval = {2.5, 3},
 		think = {1.25, 1.75},
 		vision = {10, 15},
-		roam = {0.15, 0.25},
 		loyalty = {0.4, 0.7},
 		fear = {0, 0.25},
 		aggressivity = {0.8, 1},
