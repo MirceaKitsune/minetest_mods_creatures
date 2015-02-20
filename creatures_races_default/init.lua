@@ -1,6 +1,8 @@
 -- Default mob formspec:
 
 local function formspec(self, clicker)
+	if not self.traits_set or not self.names_set then return end
+
 	local alliance = creatures:alliance(clicker, self.object)
 	local alliance_color = "#FFFFAA"
 	if alliance > 0 then
@@ -12,7 +14,7 @@ local function formspec(self, clicker)
 	local names = "N/A"
 	if #self.names > 0 then
 		names = ""
-		for i, name in pairs(self.names) do
+		for i, name in pairs(self.names_set) do
 			names = names..name.." "
 		end
 	end
@@ -23,13 +25,13 @@ local function formspec(self, clicker)
 		..alliance_color.."Alliance: "..alliance..","
 	if alliance > 0 then
 		info = info
-			.."Traits - Attack: "..string.format("%.3f", self.traits.attack_interval)..","
-			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits.think)..","
-			.."Traits - Vision: "..string.format("%.3f", self.traits.vision)..","
-			.."Traits - Loyalty: "..string.format("%.3f", self.traits.loyalty)..","
-			.."Traits - Fear: "..string.format("%.3f", self.traits.fear)..","
-			.."Traits - Aggressivity: "..string.format("%.3f", self.traits.aggressivity)..","
-			.."Traits - Determination: "..string.format("%.3f", self.traits.determination)
+			.."Traits - Attack: "..string.format("%.3f", self.traits_set.attack_interval)..","
+			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits_set.think)..","
+			.."Traits - Vision: "..string.format("%.3f", self.traits_set.vision)..","
+			.."Traits - Loyalty: "..string.format("%.3f", self.traits_set.loyalty)..","
+			.."Traits - Fear: "..string.format("%.3f", self.traits_set.fear)..","
+			.."Traits - Aggressivity: "..string.format("%.3f", self.traits_set.aggressivity)..","
+			.."Traits - Determination: "..string.format("%.3f", self.traits_set.determination)
 	end
 
 	local formspec =

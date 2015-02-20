@@ -4,6 +4,8 @@
 
 -- logic_mob_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
 function logic_mob_step (self, dtime)
+	if not self.traits_set then return end
+
 	if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
 		self.object:remove()
 	end
@@ -142,15 +144,15 @@ function logic_mob_step (self, dtime)
 	-- apply AI think speed, influenced by the mob's current status
 	self.timer_think = self.timer_think+dtime
 	if self.target_current and self.target_current.objective == "attack" then
-		if self.timer_think < self.traits.think / 10 then
+		if self.timer_think < self.traits_set.think / 10 then
 			return
 		end
 	elseif self.target_current and (self.target_current.objective == "follow" or self.target_current.objective == "avoid") then
-		if self.timer_think < self.traits.think / 2 then
+		if self.timer_think < self.traits_set.think / 2 then
 			return
 		end
 	else
-		if self.timer_think < self.traits.think then
+		if self.timer_think < self.traits_set.think then
 			return
 		end
 	end
@@ -167,15 +169,15 @@ function logic_mob_step (self, dtime)
 
 	-- targets: set node targets
 	if self.nodes and #self.nodes > 0 then
-		local corner_start = {x = s.x - self.traits.vision / 2, y = s.y - self.traits.vision / 2, z = s.z - self.traits.vision / 2}
-		local corner_end = {x = s.x + self.traits.vision / 2, y = s.y + self.traits.vision / 2, z = s.z + self.traits.vision / 2}
+		local corner_start = {x = s.x - self.traits_set.vision / 2, y = s.y - self.traits_set.vision / 2, z = s.z - self.traits_set.vision / 2}
+		local corner_end = {x = s.x + self.traits_set.vision / 2, y = s.y + self.traits_set.vision / 2, z = s.z + self.traits_set.vision / 2}
 		for i, node in pairs(self.nodes) do
 			local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, node.nodes)
 			local pos_all_good = {}
 			if node.priority >= math.random() then
 				for _, pos_this in pairs(pos_all) do
 					local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
-					if vector.distance(s, pos_this_up) <= self.traits.vision then
+					if vector.distance(s, pos_this_up) <= self.traits_set.vision then
 						local node_this_up = minetest.env:get_node(pos_this_up)
 						if node_this_up.name == "air" then
 							local light_this_up = minetest.get_node_light(pos_this_up, nil)
@@ -202,24 +204,24 @@ function logic_mob_step (self, dtime)
 
 	-- targets: add player or mob targets
 	if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
-		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits.vision)
+		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits_set.vision)
 		for _, obj in pairs(objects) do
 			if obj ~= self.object and (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().teams)) and not self.targets[obj] then
 				local p = obj:getpos()
 				local dist = vector.distance(s, p)
-				if dist <= self.traits.vision and minetest.line_of_sight(s, p, 1) then
+				if dist <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
 					local relation = creatures:alliance(self.object, obj)
 					local action = math.random()
 
 					-- attack targets
-					if self.teams_target.attack and self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits.aggressivity <= -action then
-						self.targets[obj] = {entity = obj, objective = "attack", priority = math.abs(relation) * self.traits.aggressivity}
+					if self.teams_target.attack and self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits_set.aggressivity <= -action then
+						self.targets[obj] = {entity = obj, objective = "attack", priority = math.abs(relation) * self.traits_set.aggressivity}
 					-- avoid targets
-					elseif self.teams_target.avoid and relation * self.traits.fear <= -action then
-						self.targets[obj] = {entity = obj, objective = "avoid", priority = math.abs(relation) * self.traits.fear}
+					elseif self.teams_target.avoid and relation * self.traits_set.fear <= -action then
+						self.targets[obj] = {entity = obj, objective = "avoid", priority = math.abs(relation) * self.traits_set.fear}
 					-- follow targets
-					elseif self.teams_target.follow and relation * self.traits.loyalty >= action then
-						self.targets[obj] = {entity = obj, objective = "follow", priority = math.abs(relation) * self.traits.loyalty}
+					elseif self.teams_target.follow and relation * self.traits_set.loyalty >= action then
+						self.targets[obj] = {entity = obj, objective = "follow", priority = math.abs(relation) * self.traits_set.loyalty}
 					end
 				end
 			end
@@ -232,7 +234,7 @@ function logic_mob_step (self, dtime)
 			if target.position or (target.entity:is_player() or target.entity:get_luaentity()) then
 				local p = target.position or target.entity:getpos()
 				local dist = vector.distance(s, p)
-				local dist_max = target.distance or self.traits.vision
+				local dist_max = target.distance or self.traits_set.vision
 				local ent = nil
 				if target.entity then
 					ent = target.entity:get_luaentity()
@@ -242,7 +244,7 @@ function logic_mob_step (self, dtime)
 				if dist > dist_max or (target.entity and target.entity:get_hp() <= 0) then
 					self.targets[obj] = nil
 				-- if the mob is no longer fit to fight, change attack targets to avoid
-				elseif self.teams_target.attack and self.teams_target.avoid and target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits.fear then
+				elseif self.teams_target.attack and self.teams_target.avoid and target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits_set.fear then
 					self.targets[obj].objective = "avoid"
 				-- don't follow mobs which are following someone else or a persistent target
 				elseif self.teams_target.follow and target.objective == "follow" and ent then
@@ -263,11 +265,11 @@ function logic_mob_step (self, dtime)
 	for i, target in pairs(self.targets) do
 		local p = target.position or target.entity:getpos()
 		local dist = vector.distance(s, p)
-		local dist_max = target.distance or self.traits.vision
+		local dist_max = target.distance or self.traits_set.vision
 		local interest = target.priority * (1 - dist / dist_max)
 
 		-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
-		if dist ~= 0 and dist <= dist_max and interest >= (1 - self.traits.determination) then
+		if dist ~= 0 and dist <= dist_max and interest >= (1 - self.traits_set.determination) then
 			if interest >= best_priority then
 				best_priority = interest
 				self.target_current = target
@@ -284,7 +286,7 @@ function logic_mob_step (self, dtime)
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
 		self.v_avoid = false
 		local dist = vector.distance(s, self.v_pos)
-		local dist_max = self.target_current.distance or self.traits.vision
+		local dist_max = self.target_current.distance or self.traits_set.vision
 
 		if minetest.setting_getbool("fast_mobs") and dist > 2 and dist / dist_max >= 1 - self.target_current.priority then
 			self:set_animation("walk_punch")
@@ -295,7 +297,7 @@ function logic_mob_step (self, dtime)
 		else
 			self:set_animation("punch")
 			self.v_speed = 0
-			if self.timer_attack > self.traits.attack_interval then
+			if self.timer_attack > self.traits_set.attack_interval then
 				self.timer_attack = 0
 				if self.sounds and self.sounds.attack then
 					minetest.sound_play(self.sounds.attack, {object = self.object})
@@ -319,7 +321,7 @@ function logic_mob_step (self, dtime)
 		self.v_avoid = false
 		self.v_speed = 0
 
-		if self.timer_attack > self.traits.attack_interval then
+		if self.timer_attack > self.traits_set.attack_interval then
 			self.timer_attack = 0
 			if self.sounds and self.sounds.attack then
 				minetest.sound_play(self.sounds.attack, {object = self.object})
@@ -344,7 +346,7 @@ function logic_mob_step (self, dtime)
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
 		self.v_avoid = self.target_current.objective == "avoid"
 		local dist = vector.distance(s, self.v_pos)
-		local dist_max = self.target_current.distance or self.traits.vision
+		local dist_max = self.target_current.distance or self.traits_set.vision
 
 		if minetest.setting_getbool("fast_mobs") and
 		(not self.v_avoid and dist / dist_max >= 1 - self.target_current.priority) or
@@ -390,7 +392,7 @@ function logic_mob_step (self, dtime)
 		if not self.v_path or vector.distance(self.v_path[#self.v_path], self.v_pos) > 1 then
 			local p1 = {x = math.floor(s.x), y = math.floor(s.y), z = math.floor(s.z)}
 			local p2 = {x = math.floor(self.v_pos.x), y = math.floor(self.v_pos.y), z = math.floor(self.v_pos.z)}
-			local new_path = minetest.find_path(p1, p2, self.traits.vision, 1, 5, nil)
+			local new_path = minetest.find_path(p1, p2, self.traits_set.vision, 1, 5, nil)
 			if new_path and #new_path > 0 then
 				self.v_path = new_path
 			end
@@ -443,33 +445,13 @@ function logic_mob_activate (self, staticdata, dtime_s)
 		self.object:remove()
 	end
 
-	-- set personality: each trait is a random value per mob, between the min and max values defined
-	-- on_step must never execute before this is set, the code expects a single value for each trait!
-	for i, trait in pairs(self.traits) do
-		if type(trait) == "table" then
-			self.traits[i] = math.random() * (trait[2] - trait[1]) + trait[1]
-		end
-	end
-
-	-- set name: choose one name from all potential names
-	-- on_step must never execute before this is set, the code expects a single value for the name!
-	for i, name in pairs(self.names) do
-		if type(name) == "table" then
-			self.names[i] = name[math.random(#name)]
-		end
-	end
-
-	-- if the textures field contains tables, we have multiple texture sets
-	if self.textures and type(self.textures[1]) == "table" then
-		if self.skin == 0 or not self.textures[self.skin] then
-			self.skin = math.random(1, #self.textures)
-		end
-		self.object:set_properties({textures = self.textures[self.skin]})
-	end
+	creatures:configure_mob(self)
 end
 
 -- logic_mob_punch: Executed in on_punch, handles: damage, death, target management
 function logic_mob_punch (self, hitter)
+	if not self.traits_set then return end
+
 	local psettings = creatures.player_def[creatures:player_get(hitter)]
 	local relation = creatures:alliance(self.object, hitter)
 	local s = self.object:getpos()
@@ -497,19 +479,19 @@ function logic_mob_punch (self, hitter)
 			if not (self.targets[hitter] and self.targets[hitter].persist) and (hitter:is_player() or (ent and ent.teams)) then
 				local importance = (1 - relation) * 0.5
 				local action = math.random()
-				if self.teams_target.attack and self.attack_type and minetest.setting_getbool("enable_damage") and importance * self.traits.aggressivity >= action then
+				if self.teams_target.attack and self.attack_type and minetest.setting_getbool("enable_damage") and importance * self.traits_set.aggressivity >= action then
 					if not self.targets[hitter] then
-						self.targets[hitter] = {entity = hitter, objective = "attack", priority = importance * self.traits.aggressivity}
+						self.targets[hitter] = {entity = hitter, objective = "attack", priority = importance * self.traits_set.aggressivity}
 					else
 						self.targets[hitter].objective = "attack"
-						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits.aggressivity
+						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits_set.aggressivity
 					end
-				elseif self.teams_target.avoid and importance * self.traits.fear >= action then
+				elseif self.teams_target.avoid and importance * self.traits_set.fear >= action then
 					if not self.targets[hitter] then
-						self.targets[hitter] = {entity = hitter, objective = "avoid", priority = importance * self.traits.fear}
+						self.targets[hitter] = {entity = hitter, objective = "avoid", priority = importance * self.traits_set.fear}
 					else
 						self.targets[hitter].objective = "aviod"
-						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits.fear
+						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits_set.fear
 					end
 				end
 			end

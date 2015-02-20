@@ -7,6 +7,7 @@ function creatures:register_mob(name, def)
 	def.collisionbox[5] = def.collisionbox[5] - 1
 
 	minetest.register_entity(name, {
+		-- static properties:
 		hp_max = def.hp_max,
 		physical = true,
 		collisionbox = def.collisionbox,
@@ -29,8 +30,8 @@ function creatures:register_mob(name, def)
 		jump = def.jump or true,
 		teams = def.teams,
 		teams_target = def.teams_target or {attack = true, avoid = true, follow = true},
-		traits = def.traits, -- set in on_activate
-		names = def.names, -- set in on_activate
+		traits = def.traits,
+		names = def.names,
 		custom = def.custom,
 
 		on_step = def.on_step,
@@ -38,6 +39,12 @@ function creatures:register_mob(name, def)
 		on_activate = def.on_activate,
 		on_punch = def.on_punch,
 
+		-- initialized properties:
+		traits_set = nil,
+		names_set = nil,
+		skin = 0,
+
+		-- dynamic properties:
 		timer_life = 60,
 		timer_think = 0,
 		timer_attack = 0,
@@ -46,7 +53,6 @@ function creatures:register_mob(name, def)
 		run_velocity = tonumber(minetest.setting_get("movement_speed_fast")) * def.physics.speed,
 		jump_velocity = tonumber(minetest.setting_get("movement_speed_jump")) * def.physics.jump,
 		gravity = tonumber(minetest.setting_get("movement_gravity")) * def.physics.gravity,
-		skin = 0,
 		targets = {},
 		target_current = nil,
 		in_liquid = false,
@@ -122,8 +128,8 @@ function creatures:register_mob(name, def)
 			tmp.skin = self.skin
 			tmp.timer_life = self.timer_life
 			tmp.actor = self.actor
-			tmp.traits = self.traits
-			tmp.names = self.names
+			tmp.traits_set = self.traits_set
+			tmp.names_set = self.names_set
 			-- only add persistent targets
 			tmp.targets = {}
 			for obj, target in pairs(self.targets) do
@@ -146,11 +152,11 @@ function creatures:register_mob(name, def)
 				if tmp and tmp.actor then
 					self.actor = tmp.actor
 				end
-				if tmp and tmp.traits then
-					self.traits = tmp.traits
+				if tmp and tmp.traits_set then
+					self.traits_set = tmp.traits_set
 				end
-				if tmp and tmp.names then
-					self.names = tmp.names
+				if tmp and tmp.names_set then
+					self.names_set = tmp.names_set
 				end
 				if tmp and tmp.targets then
 					self.targets = tmp.targets
@@ -158,6 +164,35 @@ function creatures:register_mob(name, def)
 			end
 		end,
 	})
+end
+
+-- Mob configuration:
+-- This must be executed immediately after the entity is initialized!
+
+function creatures:configure_mob(self)
+	-- set personality: each trait is a random value between min and max
+	if not self.traits_set then
+		self.traits_set = {}
+		for i, trait in pairs(self.traits) do
+			self.traits_set[i] = math.random() * (trait[2] - trait[1]) + trait[1]
+		end
+	end
+
+	-- set name: choose one name from all potential names
+	if not self.names_set then
+		self.names_set = {}
+		for i, name in pairs(self.names) do
+			self.names_set[i] = name[math.random(#name)]
+		end
+	end
+
+	-- if the textures field contains tables, we have multiple texture sets
+	if self.textures and type(self.textures[1]) == "table" then
+		if self.skin == 0 or not self.textures[self.skin] then
+			self.skin = math.random(1, #self.textures)
+		end
+		self.object:set_properties({textures = self.textures[self.skin]})
+	end
 end
 
 -- Mob spawning:
