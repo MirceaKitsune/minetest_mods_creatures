@@ -153,8 +153,7 @@ function creatures:register_mob(name, def)
 					self.actor = tmp.actor
 				end
 				if tmp and tmp.traits_set then
-					-- Temporarily disabled due to a bug: Serialization no longer persists stacked tables correctly.
-					--self.traits_set = tmp.traits_set
+					self.traits_set = tmp.traits_set
 				end
 				if tmp and tmp.names_set then
 					self.names_set = tmp.names_set
