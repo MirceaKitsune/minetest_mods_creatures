@@ -304,11 +304,11 @@ function logic_mob_step (self, dtime)
 					minetest.sound_play(self.sounds.attack, {object = self.object})
 				end
 				if self.target_current.entity then
-					local vec = {x = self.v_pos.x - s.x, y = self.v_pos.y - s.y, z = self.v_pos.z - s.z}
+					local dir = vector.direction(self.v_pos, s)
 					self.target_current.entity:punch(self.object, self.attack_interval, {
 						full_punch_interval = self.attack_interval,
 						damage_groups = {fleshy = self.attack_damage}
-					}, vec)
+					}, dir)
 				end
 			end
 		end
@@ -331,13 +331,14 @@ function logic_mob_step (self, dtime)
 
 			s.y = s.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
 			local obj = minetest.env:add_entity(s, self.attack_projectile)
-			local amount = (vec.x ^ 2 + vec.y ^ 2 + vec.z ^ 2) ^ 0.5
+			local dir = vector.direction(self.v_pos, s)
+			local amount = (dir.x ^ 2 + dir.y ^ 2 + dir.z ^ 2) ^ 0.5
 			local v = obj:get_luaentity().velocity
-			vec.y = vec.y + 1
-			vec.x = vec.x * v / amount
-			vec.y = vec.y * v / amount
-			vec.z = vec.z * v / amount
-			obj:setvelocity(vec)
+			dir.y = dir.y + 1
+			dir.x = dir.x * v / amount
+			dir.y = dir.y * v / amount
+			dir.z = dir.z * v / amount
+			obj:setvelocity(dir)
 		end
 
 		if self.sounds and self.sounds.random_attack and math.random(1, 50) <= 1 then
@@ -412,8 +413,8 @@ function logic_mob_step (self, dtime)
 
 	-- movement: handle orientation and walking
 	if pos and self.v_speed then
-		local vec = {x = pos.x - s.x, y = pos.y - s.y, z = pos.z - s.z}
-		local yaw = math.atan(vec.z / vec.x) + math.pi / 2
+		local dir = vector.direction(pos, s)
+		local yaw = math.atan(dir.z / dir.x) + math.pi / 2
 		if pos.x > s.x then
 			yaw = yaw + math.pi
 		end
