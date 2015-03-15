@@ -304,8 +304,9 @@ function logic_mob_step (self, dtime)
 					minetest.sound_play(self.sounds.attack, {object = self.object})
 				end
 				if self.target_current.entity then
-					self.target_current.entity:punch(self.object, 1.0,  {
-						full_punch_interval = 1.0,
+					local vec = {x = self.v_pos.x - s.x, y = self.v_pos.y - s.y, z = self.v_pos.z - s.z}
+					self.target_current.entity:punch(self.object, self.attack_interval, {
+						full_punch_interval = self.attack_interval,
 						damage_groups = {fleshy = self.attack_damage}
 					}, vec)
 				end
@@ -456,17 +457,19 @@ function logic_mob_activate (self, staticdata, dtime_s)
 end
 
 -- logic_mob_punch: Executed in on_punch, handles: damage, death, target management
-function logic_mob_punch (self, hitter)
+function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities, dir)
 	if not self.traits_set then return end
 
 	local psettings = creatures.player_def[creatures:player_get(hitter)]
 	local relation = creatures:alliance(self.object, hitter)
 	local s = self.object:getpos()
+	local delay = time_from_last_punch < 1 and hitter:is_player()
 
 	-- trigger the player's attack sound
-	if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
+	if not delay and hitter:is_player() and psettings.sounds and psettings.sounds.attack then
 		minetest.sound_play(psettings.sounds.attack, {object = hitter})
 	end
+
 	-- handle mob death
 	if self.object:get_hp() <= 0 then
 		if hitter and hitter:is_player() and hitter:get_inventory() then
@@ -479,7 +482,7 @@ function logic_mob_punch (self, hitter)
 		if self.sounds and self.sounds.die then
 			minetest.sound_play(self.sounds.die, {object = self.object})
 		end
-	else
+	elseif not delay then
 		-- targets: take action toward the creature who hit us
 		if self.teams_target.attack or self.teams_target.avoid then
 			local ent = hitter:get_luaentity()

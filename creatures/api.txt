@@ -49,7 +49,7 @@
 	teams_target = {attack = true, avoid = true, follow = true}: What types of targets this mob will automatically add or change based on team relationships. Can be nil for default behavior.
 	on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the logic_mob_activate function.
 	on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the logic_mob_step function.
-	on_punch = function(self, hitter) ... end: Function executed when the mob is punched. By default, this should call the logic_mob_punch function.
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir) ... end: Function executed when the mob is punched. By default, this should call the logic_mob_punch function.
 	on_rightclick = function(self, clicker) ... end: Function executed when the mob is right-clicked. By default, this should call the logic_mob_rightclick function.
 
 - Player only parameters:

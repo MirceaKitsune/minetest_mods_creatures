@@ -112,8 +112,8 @@ creatures:register_creature("creatures_races_default:ghost", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -239,8 +239,8 @@ creatures:register_creature("creatures_races_default:human_male", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -351,8 +351,8 @@ creatures:register_creature("creatures_races_default:human_female", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -457,8 +457,8 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -563,8 +563,8 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -669,8 +669,8 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -775,8 +775,8 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -886,8 +886,8 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -987,8 +987,8 @@ creatures:register_creature("creatures_races_default:sheep", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -1129,8 +1129,8 @@ creatures:register_creature("creatures_races_default:rat", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -1260,8 +1260,8 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
@@ -1366,8 +1366,8 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
 	end,
-	on_punch = function(self, hitter)
-		logic_mob_punch(self, hitter)
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
