@@ -14,11 +14,12 @@ function logic_mob_step (self, dtime)
 	self.timer_life = self.timer_life - dtime
 	if self.timer_life <= 0 and not self.actor then
 		local player_count = 0
-		for _,obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), 20)) do
+		for _, obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), math.max(10, self.traits_set.vision))) do
 			if obj:is_player() then
 				player_count = player_count + 1
 			end
 		end
+
 		if player_count == 0 then
 			self.object:remove()
 			return
@@ -142,7 +143,7 @@ function logic_mob_step (self, dtime)
 	self.timer_attack = self.timer_attack + dtime
 
 	-- apply AI think speed, influenced by the mob's current status
-	self.timer_think = self.timer_think+dtime
+	self.timer_think = self.timer_think + dtime
 	if self.target_current and self.target_current.objective == "attack" then
 		if self.timer_think < self.traits_set.think / 10 then
 			return
@@ -328,7 +329,7 @@ function logic_mob_step (self, dtime)
 			end
 
 			s.y = s.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
-			local obj = minetest.env:add_entity(s, self.attack_arrow)
+			local obj = minetest.env:add_entity(s, self.attack_projectile)
 			local amount = (vec.x ^ 2 + vec.y ^ 2 + vec.z ^ 2) ^ 0.5
 			local v = obj:get_luaentity().velocity
 			vec.y = vec.y + 1
@@ -349,11 +350,11 @@ function logic_mob_step (self, dtime)
 		local dist_max = self.target_current.distance or self.traits_set.vision
 
 		if minetest.setting_getbool("fast_mobs") and
-		(not self.v_avoid and dist / dist_max >= 1 - self.target_current.priority) or
-		(self.v_avoid and dist / dist_max < 1 - self.target_current.priority) then
+		((not self.v_avoid and dist / dist_max >= 1 - self.target_current.priority) or
+		(self.v_avoid and dist / dist_max < 1 - self.target_current.priority)) then
 			self:set_animation("walk")
 			self.v_speed = self.run_velocity
-		elseif dist > dist_max / 5 then
+		elseif self.v_avoid or dist > dist_max / 5 then
 			self:set_animation("walk")
 			self.v_speed = self.walk_velocity
 		else
@@ -446,6 +447,12 @@ function logic_mob_activate (self, staticdata, dtime_s)
 	end
 
 	creatures:configure_mob(self)
+
+	-- randomize these timers to prevent mobs from acting synchronously if initialized at the same moment
+	self.timer_think = self.traits_set.think * math.random()
+	if self.attack_type then
+		self.timer_attack = self.traits_set.attack_interval * math.random()
+	end
 end
 
 -- logic_mob_punch: Executed in on_punch, handles: damage, death, target management
@@ -490,7 +497,7 @@ function logic_mob_punch (self, hitter)
 					if not self.targets[hitter] then
 						self.targets[hitter] = {entity = hitter, objective = "avoid", priority = importance * self.traits_set.fear}
 					else
-						self.targets[hitter].objective = "aviod"
+						self.targets[hitter].objective = "avoid"
 						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits_set.fear
 					end
 				end

@@ -21,7 +21,7 @@ local function formspec(self, clicker)
 
 	local info =
 		"Name: "..names..","
-		.."Health: "..(self.object:get_hp() * 5)..","
+		.."Health: "..(self.object:get_hp() * 5).."%,"
 		..alliance_color.."Alliance: "..alliance..","
 	if alliance > 0 then
 		info = info
@@ -1172,7 +1172,7 @@ creatures:register_spawn("creatures_races_default:rat", {"default:dirt", "defaul
 minetest.register_craftitem("creatures_races_default:rat", {
 	description = "Rat",
 	inventory_image = "mobs_rat_inventory.png",
-	
+
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.above then
 			minetest.env:add_entity(pointed_thing.above, "creatures_races_default:rat")
@@ -1181,11 +1181,11 @@ minetest.register_craftitem("creatures_races_default:rat", {
 		return itemstack
 	end,
 })
-	
+
 minetest.register_craftitem("creatures_races_default:rat_cooked", {
 	description = "Cooked Rat",
 	inventory_image = "mobs_cooked_rat.png",
-	
+
 	on_use = minetest.item_eat(3),
 })
 
@@ -1348,7 +1348,7 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 		avoid = false,
 		priority = 0.25,},
 	},
-	attack_arrow = "creatures_races_default:fireball",
+	attack_projectile = "creatures_races_default:fireball",
 	traits = {
 		attack_interval = {2.5, 3},
 		think = {1.25, 1.75},
@@ -1402,7 +1402,7 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 })
 creatures:register_spawn("creatures_races_default:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
 
-creatures:register_arrow("creatures_races_default:fireball", {
+creatures:register_projectile("creatures_races_default:fireball", {
 	visual = "sprite",
 	visual_size = {x=1, y=1},
 	textures = {"mobs_fireball.png"},

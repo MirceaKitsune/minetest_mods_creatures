@@ -24,7 +24,7 @@ function creatures:register_mob(name, def)
 		nodes = def.nodes,
 		attack_damage = def.attack_damage,
 		attack_type = def.attack_type,
-		attack_arrow = def.attack_arrow,
+		attack_projectile = def.attack_projectile,
 		sounds = def.sounds,
 		animation = def.animation,
 		jump = def.jump or true,
@@ -204,7 +204,7 @@ function creatures:register_spawn(name, nodes, max_light, min_light, chance, act
 	minetest.register_abm({
 		nodenames = nodes,
 		neighbors = {"air"},
-		interval = 30,
+		interval = 10,
 		chance = chance,
 		action = function(pos, node, _, active_object_count_wider)
 			if active_object_count_wider > active_object_count then
@@ -229,14 +229,14 @@ function creatures:register_spawn(name, nodes, max_light, min_light, chance, act
 			if minetest.env:get_node(pos).name ~= "air" then
 				return
 			end
-			pos.y = pos.y+1
+			pos.y = pos.y + 1
 			if minetest.env:get_node(pos).name ~= "air" then
 				return
 			end
 			if spawn_func and not spawn_func(pos, node) then
 				return
 			end
-			
+
 			if minetest.setting_getbool("display_mob_spawn") then
 				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
 			end
@@ -245,9 +245,9 @@ function creatures:register_spawn(name, nodes, max_light, min_light, chance, act
 	})
 end
 
--- Mob arrows:
+-- Mob projectiles:
 
-function creatures:register_arrow(name, def)
+function creatures:register_projectile(name, def)
 	minetest.register_entity(name, {
 		physical = false,
 		visual = def.visual,

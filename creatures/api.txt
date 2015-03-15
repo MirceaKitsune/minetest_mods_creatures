@@ -82,7 +82,7 @@
 	max_height: Maximum height this spawner will work at. (TODO: Also add a min_height)
 	spawn_func: Custom spawn function.
 
-* creatures:register_arrow("creatures:fireball", {...}): Defines a projectile, used by mobs with the "shoot" attack type. Parameters:
+* creatures:register_projectile("creatures:fireball", {...}): Defines a projectile, used by mobs with the "shoot" attack type. Parameters:
 	visual = "sprite": Visual type of the projectile.
 	visual_size = {x=1, y=1}: Scale of the projectile visual.
 	textures = {"mobs_fireball.png"}: Texture of the projectile visual.
@@ -113,6 +113,6 @@
 		entity = object: The entity this target is addressing. Can be a player or any Lua object. Alternatively you can use "position".
 		position = {...}: The position this target is addressing. Alternatively you can use "entity".
 		objective = "type": The type of action to take. Can be "attack", "avoid", or "follow".
-		distance = 1: Optional. When set, the target will be taken into account if no further away than this value. If not set, only if it's within the mob's radius of vision.
-		priority = 0.5: The importance of this target. The target with the highest priority will be the task carried on by the mob.
+		distance = 10: Optional. When set, the target will be taken into account if no further away than this value. If not set, only if it's within the mob's radius of vision.
+		priority = 0.5: The importance of this target. The target with the highest priority will be the task carried on by the mob. This also determines the probability for the target to be added at all (per think).
 		persist = true: Prevents the logic code from modifying this target, and also persists it on the mob entity. Always set this to true!
