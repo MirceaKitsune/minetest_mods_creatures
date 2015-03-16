@@ -44,7 +44,7 @@
 		attack_interval = {1, 1}: How many seconds the mob shoots or punches. Lower means a greater attack skill.
 		think = {1, 1}: How many seconds the mob makes new decisions or takes actions. AI speed is this value when idle, half this value when following or avoiding, and a tenth this value when attacking. Lower values mean smarter mobs. Do not abuse this, low values also mean more server load!
 		vision = {15, 15}: View distance of the mob, and the range in which other creatures are detected and pursued.
-		loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them. Note that ghosts can only possess mobs that are following them. Must range between 0 and 1!
+		loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them.
 		fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first). Must range between 0 and 1!
 		aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first). Must range between 0 and 1!
 		determination = {0.5, 0.5}: Targets with an importance lower than this will be ignored. Must range between 0 and 1!
@@ -57,7 +57,6 @@
 - Player only parameters:
 	inventory_main = {x = 8, y = 4}: Size of the main inventory for players which are part of this race.
 	inventory_craft = {x = 1, y = 1}: Size of the craft area for players which are part of this race.
-	reincarnates = true: Players that are part of this race can possess allied mobs, typically used for ghosts.
 	ghost = "": What creature the player becomes upon death. If blank, creatures.player_default is used.
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}}: Camera offset for 1st and 3rd person views, used to adjust the camera to eye position for creatures of various shapes and sizes.
 	fog = {r = 0, g = 0, b = 0}: If set, this fog color is seen by players who are part of this race.
@@ -95,15 +94,13 @@
 	creatures:player_get(player): Gets the race of a player as a table: [1] = name, [2] = skin
 	creatures:player_set(player, settings): Sets the race of a player from a table: [1] = name, [2] = skin
 	creatures:alliance(creature1, creature2): Returns the alliance between two mobs and / or players, ranging between -1 and 1.
-	creatures:can_possess(player, creature): Checks whether a player can possess a creature.
-	creatures:possess(player, creature): Causes a player to possess a creature if possible.
+	creatures:possess(player, creature): Causes a player to possess a creature.
 
 * Scripting - Formspec:
 	A formspec should be defined for each creature, in order to allow interaction between players and mobs (including possession). Formspec settings should be defined together with creatures, ideally as a common function.
-	The formspec is shown to the player by calling minetest.show_formspec(clicker:get_player_name(), "creatures:formspec", formspec) from the creature's on_rightclick function. The formname must always be "creatures:formspec"!
+	The formspec is shown to the player by calling minetest.show_formspec(clicker:get_player_name(), "creatures:formspec", formspec) from the creature's on_rightclick function.
 	Whenever a player right-clicks a mob, their creatures.selected entry is updated. Therefore you can reference the mob the formspec is referring to as creatures.selected[clicker].
-	The formspec can contain its own fields, which can be read using a custom minetest.register_on_player_receive_fields function. Below are the builtin fields, which buttons or other elements can trigger:
-		possess: When this field is received, the player will possess the creature.
+	The formspec can contain its own fields, which can be read using a custom minetest.register_on_player_receive_fields function.
 
 * Scripting - Targets:
 	By default, mobs will attack or avoid foes and follow allies. This is determined by the teams field (see "creatures:alliance") and each behavoir can be disabled using "teams_target". Mobs may also walk to random nodes, based on the rules specified in "nodes".

@@ -2,6 +2,7 @@
 local function formspec(self, clicker)
 	if not self.traits_set or not self.names_set then return end
 
+	local name = creatures:player_get(clicker:get_player_name())
 	local alliance = creatures:alliance(clicker, self.object)
 	local alliance_color = "#FFFFAA"
 	if alliance > 0 then
@@ -41,7 +42,7 @@ local function formspec(self, clicker)
 		.."image[0,0;1,1;"..self.icon.."]"
 		.."textlist[1,0;5,3;;"..info..";0;false]"
 	-- Possession is possible
-	if creatures:can_possess(clicker, self) then
+	if name == "creatures_races_default:ghost" and not self.actor then
 		formspec = formspec.."button_exit[0,3;3,1;possess;Possess]"
 		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
 	-- Special button for rats
@@ -64,8 +65,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname == "creatures:formspec" then
 		local creature = creatures.selected[player]
 		if player:get_hp() > 0 and creature.object and vector.distance(player:getpos(), creature.object:getpos()) <= 5 then
+			-- Handle possession:
+			if fields["possess"] then
+				if not creature.actor then
+					creatures:possess(player, creature)
+				end
 			-- Handle rats:
-			if fields["rat"] then
+			elseif fields["rat"] then
 				if player:is_player() and player:get_inventory() then
 					player:get_inventory():add_item("main", "creatures_races_default:rat")
 					creature.object:remove()
@@ -232,7 +238,6 @@ creatures:register_creature("creatures_races_default:ghost", {
 	-- Player properties:
 	inventory_main = {x = 1, y = 1},
 	inventory_craft = {x = 1, y = 1},
-	reincarnates = true,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = {r = 64, g = 0, b = 128},
@@ -359,7 +364,6 @@ creatures:register_creature("creatures_races_default:human_male", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -470,7 +474,6 @@ creatures:register_creature("creatures_races_default:human_female", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -575,7 +578,6 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -680,7 +682,6 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -785,7 +786,6 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -890,7 +890,6 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1000,7 +999,6 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1102,7 +1100,6 @@ creatures:register_creature("creatures_races_default:sheep", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 1, y = 1},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = -5, z = 0}, {x = 0, y = -5, z = 0}},
 	fog = nil,
@@ -1210,7 +1207,6 @@ creatures:register_creature("creatures_races_default:rat", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 1, y = 1},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = -10, z = 0}, {x = 0, y = -10, z = 0}},
 	fog = nil,
@@ -1336,7 +1332,6 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1441,7 +1436,6 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	-- Player properties:
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
-	reincarnates = false,
 	ghost = "",
 	eye_offset = {{x = 0, y = 5, z = 0}, {x = 0, y = 5, z = 0}},
 	fog = nil,
