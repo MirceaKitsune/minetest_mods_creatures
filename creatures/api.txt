@@ -5,12 +5,14 @@
 	fast_mobs = false: Whether mobs can run. This should only be turned on when players have the "fast" privilege by default, to ensure balanced gameplay.
 	pathfinding = false: Enables mob pathfinding system. Highly experimental, only use for testing purposes!
 
+* creatures.player_formspec = function(def): The inventory formspec for all players. Set whenever the player becomes a different creature. Must return either a string, either nil for no effect. def represents the player definition, from which player parameters may be read (see below).
+
 * creatures.player_default = "creatures:ghost": Players who aren't part of a race are set to this creature. Typically applies to new players who join the server for the first time.
 
 * creatures:register_creature("creatures:ghost", {..}): Defines a new creature, with the current parameters:
 
 - Common parameters (applied to both creatures and players):
-	icon = "mobs_*_icon.png": Icon for this creature, indicating what a player or mob is. Players see it in the inventory menu or the HUD.
+	icon = "mobs_*_icon.png": Icon for this creature, indicating what a player or mob is. Players should see it in the inventory menu or the HUD.
 	hp_max = 20: Mobs and players are born with this amount of health, and cannot gain more than it.
 	armor = 100: Armor decides how much damage gets absorbed.
 	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5}: Collosion box size. (TODO: Currently works only for mobs, engine implementation needed for players!)
@@ -53,7 +55,6 @@
 	on_rightclick = function(self, clicker) ... end: Function executed when the mob is right-clicked. By default, this should call the logic_mob_rightclick function.
 
 - Player only parameters:
-	menu = true: Whether players which are part of this race have a formspec inventory menu... containing their inventory, crafting area, etc.
 	inventory_main = {x = 8, y = 4}: Size of the main inventory for players which are part of this race.
 	inventory_craft = {x = 1, y = 1}: Size of the craft area for players which are part of this race.
 	reincarnates = true: Players that are part of this race can possess allied mobs, typically used for ghosts.

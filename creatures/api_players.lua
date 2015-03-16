@@ -17,7 +17,6 @@ function creatures:register_player(name, def)
 	creatures.player_def[name].env_damage = def.env_damage
 	creatures.player_def[name].teams = def.teams
 	creatures.player_def[name].physics = def.physics
-	creatures.player_def[name].menu = def.menu
 	creatures.player_def[name].inventory_main = def.inventory_main
 	creatures.player_def[name].inventory_craft = def.inventory_craft
 	creatures.player_def[name].reincarnates = def.reincarnates
@@ -85,31 +84,6 @@ function creatures:set_animation(player, type, speed)
 	end
 end
 
-local function get_formspec(size_main, size_craft, icon)
-	local image = icon
-	if not image or image == "" then
-		image = "logo.png"
-	end
-
-	local size = {}
-	size.x = math.max(size_main.x, (size_craft.x + 3))
-	size.y = size_main.y + size_craft.y + 1.25
-	local formspec =
-		"size["..size.x..","..size.y.."]"
-		..default.gui_bg
-		..default.gui_bg_img
-		..default.gui_slots
-		.."image[0,0;1,1;"..image.."]"
-		.."list[current_player;craft;"..(size.x - size_craft.x - 2)..",0;"..size_craft.x..","..size_craft.y..";]"
-		.."list[current_player;craftpreview;"..(size.x - 1)..","..math.floor(size_craft.y / 2)..";1,1;]"
-		.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 1)..";"..size_main.x..",1;]"
-		.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 2.25)..";"..size_main.x..","..(size_main.y - 1)..";"..size_main.x.."]"
-	for i = 0, size_main.x - 1, 1 do
-		formspec = formspec.."image["..(size.x - size_main.x + i)..","..(size_craft.y + 1)..";1,1;gui_hb_bg.png]"
-	end
-	return formspec
-end
-
 local function apply_settings (player, settings)
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
@@ -141,22 +115,11 @@ local function apply_settings (player, settings)
 		inv:set_width("craft", def.inventory_craft.x)
 	end
 	player:hud_set_hotbar_itemcount(def.inventory_main.x)
-	if not minetest.setting_getbool("creative_mode") and not minetest.setting_getbool("inventory_crafting_full") then
-		if def.menu then
-			minetest.after(0, function()
-				player:set_inventory_formspec(get_formspec(def.inventory_main, def.inventory_craft, def.icon))
-			end)
-		else
-			minetest.after(0, function()
-				player:set_inventory_formspec(
-					"size[1,1]"
-					..default.gui_bg
-					..default.gui_bg_img
-					..default.gui_slots
-					.."image[0,0;1,1;"
-					..def.icon.."]")
-			end)
-		end
+	local formspec = creatures.player_formspec(def)
+	if formspec then
+		minetest.after(0, function()
+			player:set_inventory_formspec(creatures.player_formspec(def))
+		end)
 	end
 
 	-- player: configure properties

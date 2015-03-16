@@ -1,5 +1,4 @@
 -- Default mob formspec:
-
 local function formspec(self, clicker)
 	if not self.traits_set or not self.names_set then return end
 
@@ -51,6 +50,56 @@ local function formspec(self, clicker)
 	end
 
 	minetest.show_formspec(clicker:get_player_name(), "creatures:formspec", formspec)
+end
+
+-- Inventory formspec for players:
+creatures.player_formspec = function(def)
+	if minetest.setting_getbool("creative_mode") then
+		return nil
+	end
+
+	local icon = def.icon
+	if not icon or icon == "" then
+		icon = "logo.png"
+	end
+
+	-- Formspec for ghosts (default)
+	local formspec =
+		"size[1,1]"
+		..default.gui_bg
+		..default.gui_bg_img
+		..default.gui_slots
+		.."image[0,0;1,1;"
+		..def.icon.."]"
+
+	-- If this creature has an inventory, use a full formspec instead
+	local size_main = def.inventory_main
+	local size_craft = def.inventory_craft
+	if minetest.setting_getbool("inventory_crafting_full") then
+		size_craft = {x = 3, y = 3}
+	end
+
+	if size_main.x > 1 or size_main.y > 1 or size_craft.x > 1 or size_craft.y > 1 then
+		local size = {}
+		size.x = math.max(size_main.x, (size_craft.x + 3))
+		size.y = size_main.y + size_craft.y + 1.25
+		formspec =
+			"size["..size.x..","..size.y.."]"
+			..default.gui_bg
+			..default.gui_bg_img
+			..default.gui_slots
+			.."image[0,0;1,1;"..icon.."]"
+			.."list[current_player;craft;"..(size.x - size_craft.x - 2)..",0;"..size_craft.x..","..size_craft.y..";]"
+			.."list[current_player;craftpreview;"..(size.x - 1)..","..math.floor(size_craft.y / 2)..";1,1;]"
+			.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 1)..";"..size_main.x..",1;]"
+			.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 2.25)..";"..size_main.x..","..(size_main.y - 1)..";"..size_main.x.."]"
+		for i = 0, size_main.x - 1, 1 do
+			formspec = formspec.."image["..(size.x - size_main.x + i)..","..(size_craft.y + 1)..";1,1;gui_hb_bg.png]"
+		end
+	end
+
+	-- Return the formspec string
+	return formspec
 end
 
 -- Default race for new players:
@@ -120,7 +169,6 @@ creatures:register_creature("creatures_races_default:ghost", {
 	end,
 
 	-- Player properties:
-	menu = false,
 	inventory_main = {x = 1, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	reincarnates = true,
@@ -248,7 +296,6 @@ creatures:register_creature("creatures_races_default:human_male", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	reincarnates = false,
@@ -360,7 +407,6 @@ creatures:register_creature("creatures_races_default:human_female", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	reincarnates = false,
@@ -466,7 +512,6 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnates = false,
@@ -572,7 +617,6 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnates = false,
@@ -678,7 +722,6 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnates = false,
@@ -784,7 +827,6 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnates = false,
@@ -895,7 +937,6 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 2},
 	inventory_craft = {x = 2, y = 2},
 	reincarnates = false,
@@ -1031,7 +1072,6 @@ creatures:register_creature("creatures_races_default:sheep", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	reincarnates = false,
@@ -1142,7 +1182,6 @@ creatures:register_creature("creatures_races_default:rat", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	reincarnates = false,
@@ -1269,7 +1308,6 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	reincarnates = false,
@@ -1375,7 +1413,6 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	end,
 
 	-- Player properties:
-	menu = true,
 	inventory_main = {x = 8, y = 4},
 	inventory_craft = {x = 3, y = 3},
 	reincarnates = false,
