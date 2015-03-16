@@ -170,21 +170,19 @@ function logic_mob_step (self, dtime)
 
 	-- targets: set node targets
 	if self.nodes and #self.nodes > 0 then
-		local corner_start = {x = s.x - self.traits_set.vision / 2, y = s.y - self.traits_set.vision / 2, z = s.z - self.traits_set.vision / 2}
-		local corner_end = {x = s.x + self.traits_set.vision / 2, y = s.y + self.traits_set.vision / 2, z = s.z + self.traits_set.vision / 2}
+		local distance = self.traits_set.vision * self.traits_set.determination
+		local corner_start = {x = s.x - distance / 2, y = s.y - distance / 2, z = s.z - distance / 2}
+		local corner_end = {x = s.x + distance / 2, y = s.y + distance / 2, z = s.z + distance / 2}
 		for i, node in pairs(self.nodes) do
-			local pos_all = minetest.find_nodes_in_area(corner_start, corner_end, node.nodes)
-			local pos_all_good = {}
 			if node.priority >= math.random() then
+				local pos_all_good = {}
+				local pos_all = minetest.find_nodes_in_area_under_air(corner_start, corner_end, node.nodes)
 				for _, pos_this in pairs(pos_all) do
 					local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
 					if vector.distance(s, pos_this_up) <= self.traits_set.vision then
-						local node_this_up = minetest.env:get_node(pos_this_up)
-						if node_this_up.name == "air" then
-							local light_this_up = minetest.get_node_light(pos_this_up, nil)
-							if light_this_up >= node.light_min and light_this_up <= node.light_max then
-								table.insert(pos_all_good, pos_this_up)
-							end
+						local light_this_up = minetest.get_node_light(pos_this_up, nil)
+						if light_this_up >= node.light_min and light_this_up <= node.light_max then
+							table.insert(pos_all_good, pos_this_up)
 						end
 					end
 				end
@@ -205,7 +203,8 @@ function logic_mob_step (self, dtime)
 
 	-- targets: add player or mob targets
 	if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
-		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits_set.vision)
+		local distance = self.traits_set.vision * self.traits_set.determination
+		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), distance)
 		for _, obj in pairs(objects) do
 			if obj ~= self.object and (obj:is_player() or (obj:get_luaentity() and obj:get_luaentity().teams)) and not self.targets[obj] then
 				local p = obj:getpos()
@@ -270,7 +269,7 @@ function logic_mob_step (self, dtime)
 		local interest = target.priority * (1 - dist / dist_max)
 
 		-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
-		if dist ~= 0 and dist <= dist_max and interest >= (1 - self.traits_set.determination) then
+		if dist ~= 0 and dist <= dist_max then
 			if interest >= best_priority then
 				best_priority = interest
 				self.target_current = target
@@ -356,7 +355,7 @@ function logic_mob_step (self, dtime)
 		(self.v_avoid and dist / dist_max < 1 - self.target_current.priority)) then
 			self:set_animation("walk")
 			self.v_speed = self.run_velocity
-		elseif self.v_avoid or dist > dist_max / 5 then
+		elseif self.v_avoid or dist > dist_max / 10 then
 			self:set_animation("walk")
 			self.v_speed = self.walk_velocity
 		else
