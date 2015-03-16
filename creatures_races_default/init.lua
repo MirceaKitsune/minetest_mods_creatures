@@ -106,8 +106,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 				if player:get_inventory() and not creature.naked then
 					creature.naked = true
-					if minetest.registered_items["wool:white"] then
+					-- white wool
+					if creature.skin == 1 and minetest.registered_items["wool:white"] then
 						player:get_inventory():add_item("main", ItemStack("wool:white "..math.random(1,3)))
+					-- grey wool
+					elseif creature.skin == 2 and minetest.registered_items["wool:grey"] then
+						player:get_inventory():add_item("main", ItemStack("wool:grey "..math.random(1,3)))
+					-- black wool
+					elseif creature.skin == 3 and minetest.registered_items["wool:black"] then
+						player:get_inventory():add_item("main", ItemStack("wool:black "..math.random(1,3)))
 					end
 					creature.object:set_properties({
 						textures = {"mobs_sheep_shaved.png"},
@@ -1030,7 +1037,11 @@ creatures:register_creature("creatures_races_default:sheep", {
 	collisionbox = {-0.5, -0.01, -0.5, 0.65, 1, 0.5},
 	visual = "mesh",
 	mesh = "mobs_sheep.x",
-	textures = {"mobs_sheep.png"},
+	textures = {
+		{"mobs_sheep_white.png"},
+		{"mobs_sheep_grey.png"},
+		{"mobs_sheep_black.png"},
+	},
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
