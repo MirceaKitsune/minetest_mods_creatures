@@ -44,13 +44,74 @@ local function formspec(self, clicker)
 	if creatures:can_possess(clicker, self) then
 		formspec = formspec.."button_exit[0,3;3,1;possess;Possess]"
 		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
-	-- Possession isn't possible
+	-- Special button for rats
+	elseif self.name == "creatures_races_default:rat" then
+		formspec = formspec.."button_exit[0,3;3,1;rat;Take]"
+		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
+	-- Special button for sheep
+	elseif self.name == "creatures_races_default:sheep" then
+		formspec = formspec.."button_exit[0,3;3,1;sheep;Shear / Breed]"
+		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
+	-- No special buttons
 	else
 		formspec = formspec.."button_exit[0,3;6,1;quit;Exit]"
 	end
 
 	minetest.show_formspec(clicker:get_player_name(), "creatures:formspec", formspec)
 end
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname == "creatures:formspec" then
+		local creature = creatures.selected[player]
+		if player:get_hp() > 0 and creature.object and vector.distance(player:getpos(), creature.object:getpos()) <= 5 then
+			-- Handle rats:
+			if fields["rat"] then
+				if player:is_player() and player:get_inventory() then
+					player:get_inventory():add_item("main", "creatures_races_default:rat")
+					creature.object:remove()
+				end
+			-- Handle sheep:
+			elseif fields["sheep"] then
+				local item = player:get_wielded_item()
+				if item:get_name() == "farming:wheat" then
+					if not creature.actor then
+						if not minetest.setting_getbool("creative_mode") then
+							item:take_item()
+							player:set_wielded_item(item)
+						end
+						creature.actor = true
+					elseif creature.naked then
+						if not minetest.setting_getbool("creative_mode") then
+							item:take_item()
+							player:set_wielded_item(item)
+						end
+						creature.food = (creature.food or 0) + 1
+						if creature.food >= 8 then
+							creature.food = 0
+							creature.naked = false
+							creature.object:set_properties({
+								textures = {"mobs_sheep.png"},
+								mesh = "mobs_sheep.x",
+							})
+						end
+					end
+					return
+				end
+
+				if player:get_inventory() and not creature.naked then
+					creature.naked = true
+					if minetest.registered_items["wool:white"] then
+						player:get_inventory():add_item("main", ItemStack("wool:white "..math.random(1,3)))
+					end
+					creature.object:set_properties({
+						textures = {"mobs_sheep_shaved.png"},
+						mesh = "mobs_sheep_shaved.x",
+					})
+				end
+			end
+		end
+	end
+end)
 
 -- Inventory formspec for players:
 creatures.player_formspec = function(def)
@@ -1014,10 +1075,12 @@ creatures:register_creature("creatures_races_default:sheep", {
 		priority = 0.25,},
 	},
 	traits = {
+		attack_interval = {0, 0},
 		think = {1.5, 2},
 		vision = {5, 5},
 		loyalty = {0.2, 0.4},
 		fear = {0.8, 1},
+		aggressivity = {0, 0},
 		determination = {0.4, 0.6},
 	},
 	names = {},
@@ -1033,42 +1096,7 @@ creatures:register_creature("creatures_races_default:sheep", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
-
-		local item = clicker:get_wielded_item()
-		if item:get_name() == "farming:wheat" then
-			if not self.actor then
-				if not minetest.setting_getbool("creative_mode") then
-					item:take_item()
-					clicker:set_wielded_item(item)
-				end
-				self.actor = true
-			elseif self.naked then
-				if not minetest.setting_getbool("creative_mode") then
-					item:take_item()
-					clicker:set_wielded_item(item)
-				end
-				self.food = (self.food or 0) + 1
-				if self.food >= 8 then
-					self.food = 0
-					self.naked = false
-					self.object:set_properties({
-						textures = {"mobs_sheep.png"},
-						mesh = "mobs_sheep.x",
-					})
-				end
-			end
-			return
-		end
-		if clicker:get_inventory() and not self.naked then
-			self.naked = true
-			if minetest.registered_items["wool:white"] then
-				clicker:get_inventory():add_item("main", ItemStack("wool:white "..math.random(1,3)))
-			end
-			self.object:set_properties({
-				textures = {"mobs_sheep_shaved.png"},
-				mesh = "mobs_sheep_shaved.x",
-			})
-		end
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
@@ -1155,10 +1183,12 @@ creatures:register_creature("creatures_races_default:rat", {
 		priority = 0.25,},
 	},
 	traits = {
+		attack_interval = {0, 0},
 		think = {1.5, 1.75},
 		vision = {5, 5},
 		loyalty = {0.15, 0.3},
 		fear = {0.5, 0.7},
+		aggressivity = {0, 0},
 		determination = {0.3, 0.5},
 	},
 	names = {},
@@ -1174,11 +1204,7 @@ creatures:register_creature("creatures_races_default:rat", {
 	end,
 	on_rightclick = function(self, clicker)
 		logic_mob_rightclick(self, clicker)
-
-		if clicker:is_player() and clicker:get_inventory() then
-			clicker:get_inventory():add_item("main", "creatures_races_default:rat")
-			self.object:remove()
-		end
+		formspec(self, clicker)
 	end,
 
 	-- Player properties:
