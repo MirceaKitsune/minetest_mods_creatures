@@ -338,26 +338,26 @@ creatures:register_creature("creatures_races_default:human_male", {
 		{nodes = {"group:bed"},
 		light_min = 0,
 		light_max = 7,
-		avoid = false,
+		objective = "follow",
 		stay = true,
 		priority = 0.75,},
 		-- interact with functional nodes (chests, furnaces, etc) if it's not midday
 		{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
 		light_min = 7,
 		light_max = 14,
-		avoid = false,
+		objective = "follow",
 		priority = 0.5,},
 		-- do some farming if it's midday
 		{nodes = {"group:field", "group:flora", "group:seed"},
 		light_min = 15,
 		light_max = 15,
-		avoid = false,
+		objective = "follow",
 		priority = 0.5,},
 		-- wander around idly
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 7,
 		light_max = 15,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -468,26 +468,26 @@ creatures:register_creature("creatures_races_default:human_female", {
 		{nodes = {"group:bed"},
 		light_min = 0,
 		light_max = 7,
-		avoid = false,
+		objective = "follow",
 		stay = true,
 		priority = 0.75,},
 		-- interact with functional nodes (chests, furnaces, etc) if it's not midday
 		{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
 		light_min = 7,
 		light_max = 14,
-		avoid = false,
+		objective = "follow",
 		priority = 0.5,},
 		-- do some farming if it's midday
 		{nodes = {"group:field", "group:flora", "group:seed"},
 		light_min = 15,
 		light_max = 15,
-		avoid = false,
+		objective = "follow",
 		priority = 0.5,},
 		-- wander around idly
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 7,
 		light_max = 15,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -594,7 +594,7 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -698,7 +698,7 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -802,7 +802,7 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 15,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -906,7 +906,7 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -1015,7 +1015,7 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 15,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -1117,17 +1117,17 @@ creatures:register_creature("creatures_races_default:sheep", {
 		max = 3,},
 	},
 	nodes = {
-		-- eat grass
+		-- eat grass if it's midday
 		{nodes = {"group:flora"},
-		light_min = 7,
+		light_min = 15,
 		light_max = 15,
-		avoid = false,
+		objective = "attack",
 		priority = 0.5,},
 		-- wander around idly
 		{nodes = {"group:crumbly"},
 		light_min = 7,
 		light_max = 15,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -1234,7 +1234,7 @@ creatures:register_creature("creatures_races_default:rat", {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -1359,7 +1359,7 @@ creatures:register_creature("creatures_races_default:oerkki", {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	traits = {
@@ -1462,7 +1462,7 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 0,
 		light_max = 7,
-		avoid = false,
+		objective = "follow",
 		priority = 0.25,},
 	},
 	attack_projectile = "creatures_races_default:fireball",

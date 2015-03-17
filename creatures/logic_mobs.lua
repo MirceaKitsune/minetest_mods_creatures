@@ -189,11 +189,7 @@ function logic_mob_step (self, dtime)
 
 				if #pos_all_good > 0 then
 					local pos = pos_all_good[math.random(#pos_all_good)]
-					local obj = "follow"
-					if node.avoid then
-						obj = "avoid"
-					end
-					self.targets[i] = {position = pos, objective = obj, priority = node.priority}
+					self.targets[i] = {position = pos, objective = node.objective, priority = node.priority}
 				else
 					self.targets[i] = nil
 				end
@@ -282,7 +278,7 @@ function logic_mob_step (self, dtime)
 		self:set_animation("stand")
 		self.v_speed = nil
 	-- state: attacking, melee
-	elseif self.target_current.objective == "attack" and self.attack_type == "melee" then
+	elseif self.target_current.objective == "attack" and (self.attack_type == "melee" or (not self.attack_type and self.target_current.position)) then
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
 		self.v_avoid = false
 		local dist = vector.distance(s, self.v_pos)
@@ -302,7 +298,10 @@ function logic_mob_step (self, dtime)
 				if self.sounds and self.sounds.attack then
 					minetest.sound_play(self.sounds.attack, {object = self.object})
 				end
-				if self.target_current.entity then
+				if self.target_current.position then
+					local pos = {x = self.target_current.position.x, y = self.target_current.position.y - 1, z = self.target_current.position.z}
+					minetest.dig_node(pos)
+				elseif self.target_current.entity then
 					local dir = vector.direction(self.v_pos, s)
 					self.target_current.entity:punch(self.object, self.attack_interval, {
 						full_punch_interval = self.attack_interval,
