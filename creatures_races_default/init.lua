@@ -211,7 +211,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 0.6, people = 0.8, animals = 0.4},
+	teams = {monsters = 1.0, people = 1.0, animals = 1.0},
 
 	-- Mob properties:
 	drops = {},
@@ -314,7 +314,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.4, people = 0.6, animals = 0.1},
+	teams = {monsters = -0.6, people = 1.0, animals = 0.0},
 
 	-- Mob properties:
 	drops = {
@@ -334,6 +334,26 @@ creatures:register_creature("creatures_races_default:human_male", {
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = {
+		-- go to bed if it's dark
+		{nodes = {"group:bed"},
+		light_min = 0,
+		light_max = 7,
+		avoid = false,
+		stay = true,
+		priority = 0.75,},
+		-- interact with functional nodes (chests, furnaces, etc) if it's not midday
+		{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
+		light_min = 7,
+		light_max = 14,
+		avoid = false,
+		priority = 0.5,},
+		-- do some farming if it's midday
+		{nodes = {"group:field", "group:flora", "group:seed"},
+		light_min = 15,
+		light_max = 15,
+		avoid = false,
+		priority = 0.5,},
+		-- wander around idly
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 7,
 		light_max = 15,
@@ -341,13 +361,13 @@ creatures:register_creature("creatures_races_default:human_male", {
 		priority = 0.25,},
 	},
 	traits = {
-		attack_interval = {0.75, 1},
-		think = {0.5, 0.75},
-		vision = {15, 20},
-		loyalty = {0.5, 0.75},
-		fear = {0.25, 0.5},
-		aggressivity = {0.5, 0.75},
-		determination = {0.8, 1},
+		attack_interval = {0.75, 1.25},
+		think = {0.5, 1.0},
+		vision = {25, 35},
+		loyalty = {0.25, 1.0},
+		fear = {0.0, 0.5},
+		aggressivity = {0.5, 1.0},
+		determination = {0.5, 1.0},
 	},
 	names = {
 		{"Alex", "Daniel", "Mike", "Sam", "Earl", "Steve", "Charlie", "Claude", "Arnold", "Andrew", "David", "Damian", "Bob", "Tom", "Gabriel", "Walter", "Jerry", "Jake", "Michael", "Nate", "Oliver", "Bubba",},
@@ -432,7 +452,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.3, people = 0.6, animals = 0.2},
+	teams = {monsters = -0.5, people = 1.0, animals = 0.1},
 
 	-- Mob properties:
 	drops = {
@@ -444,6 +464,26 @@ creatures:register_creature("creatures_races_default:human_female", {
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = {
+		-- go to bed if it's dark
+		{nodes = {"group:bed"},
+		light_min = 0,
+		light_max = 7,
+		avoid = false,
+		stay = true,
+		priority = 0.75,},
+		-- interact with functional nodes (chests, furnaces, etc) if it's not midday
+		{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
+		light_min = 7,
+		light_max = 14,
+		avoid = false,
+		priority = 0.5,},
+		-- do some farming if it's midday
+		{nodes = {"group:field", "group:flora", "group:seed"},
+		light_min = 15,
+		light_max = 15,
+		avoid = false,
+		priority = 0.5,},
+		-- wander around idly
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
 		light_min = 7,
 		light_max = 15,
@@ -451,13 +491,13 @@ creatures:register_creature("creatures_races_default:human_female", {
 		priority = 0.25,},
 	},
 	traits = {
-		attack_interval = {0.5, 0.75},
-		think = {0.65, 0.85},
-		vision = {15, 20},
-		loyalty = {0.6, 0.8},
-		fear = {0.35, 0.65},
-		aggressivity = {0.25, 0.5},
-		determination = {0.8, 1},
+		attack_interval = {1.0, 1.5},
+		think = {0.5, 1.0},
+		vision = {25, 35},
+		loyalty = {0.5, 1.0},
+		fear = {0.5, 1.0},
+		aggressivity = {0.0, 0.5},
+		determination = {0.5, 1.0},
 	},
 	names = {
 		{"Ana", "Maria", "Kate", "Michelle", "Sarah", "Mona", "Rose", "Stephanie", "Cleopatra", "Denise",},
@@ -516,7 +556,7 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 25,
+		speed = 20,
 		stand = {0, 14},
 		walk = {15, 38},
 		walk_punch = {40, 63},
@@ -535,11 +575,11 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 		light = 1,
 	},
 	physics = {
-		speed = 0.75,
-		jump = 1,
+		speed = 0.5,
+		jump = 0.75,
 		gravity = 1,
 	},
-	teams = {monsters = 0.4, people = -0.2, animals = 0},
+	teams = {monsters = 1.0, people = -0.4, animals = 0.0},
 
 	-- Mob properties:
 	drops = {
@@ -558,13 +598,13 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 		priority = 0.25,},
 	},
 	traits = {
-		attack_interval = {1.35, 1.65},
-		think = {1.5, 1.65},
+		attack_interval = {1.5, 1.75},
+		think = {1.5, 1.75},
 		vision = {10, 15},
-		loyalty = {0.15, 0.3},
-		fear = {0.3, 0.5},
-		aggressivity = {0.7, 0.9},
-		determination = {0.6, 0.8},
+		loyalty = {0.0, 0.0},
+		fear = {0.0, 0.25},
+		aggressivity = {0.75, 1.0},
+		determination = {0.35, 0.65},
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
@@ -640,10 +680,10 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	},
 	physics = {
 		speed = 0.75,
-		jump = 0.75,
+		jump = 0.5,
 		gravity = 1.25,
 	},
-	teams = {monsters = 0.6, people = -0.4, animals = -0.2},
+	teams = {monsters = 1.0, people = -0.8, animals = -0.2},
 
 	-- Mob properties:
 	drops = {
@@ -664,11 +704,11 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	traits = {
 		attack_interval = {1, 1.25},
 		think = {1, 1.25},
-		vision = {10, 10},
-		loyalty = {0.3, 0.5},
-		fear = {0.1, 0.3},
-		aggressivity = {0.8, 1},
-		determination = {0.9, 1},
+		vision = {15, 20},
+		loyalty = {0.0, 0.25},
+		fear = {0.0, 0.0},
+		aggressivity = {0.75, 1},
+		determination = {0.75, 1},
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
@@ -747,7 +787,7 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 0.5, people = -0.2, animals = -0.2},
+	teams = {monsters = 1.0, people = -0.6, animals = -0.4},
 
 	-- Mob properties:
 	drops = {
@@ -767,9 +807,9 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	},
 	traits = {
 		attack_interval = {1.25, 1.5},
-		think = {1.35, 1.5},
-		vision = {20, 20},
-		loyalty = {0.4, 0.7},
+		think = {1.35, 1.65},
+		vision = {30, 30},
+		loyalty = {0.25, 0.5},
 		fear = {0.15, 0.3},
 		aggressivity = {0.7, 0.9},
 		determination = {0.6, 0.8},
@@ -828,7 +868,7 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 20,
+		speed = 25,
 		stand = {0, 39},
 		walk = {41, 72},
 		walk_punch = {74, 105},
@@ -847,11 +887,11 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 		light = 1,
 	},
 	physics = {
-		speed = 0.5,
+		speed = 0.75,
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 0.5, people = -0.2, animals = -0.2},
+	teams = {monsters = 1.0, people = -0.6, animals = 0.2},
 
 	-- Mob properties:
 	drops = {
@@ -870,13 +910,13 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 		priority = 0.25,},
 	},
 	traits = {
-		attack_interval = {1, 1.25},
-		think = {0.75, 1.25},
-		vision = {10, 15},
+		attack_interval = {1.0, 1.25},
+		think = {1.0, 1.25},
+		vision = {15, 20},
 		loyalty = {0.3, 0.6},
 		fear = {0.1, 0.25},
-		aggressivity = {0.5, 0.7},
-		determination = {0.5, 0.6},
+		aggressivity = {0.5, 0.75},
+		determination = {0.5, 0.75},
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
@@ -952,10 +992,10 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	},
 	physics = {
 		speed = 0.75,
-		jump = 1,
+		jump = 1.5,
 		gravity = 1,
 	},
-	teams = {monsters = 0.5, people = -0.4, animals = 0.6},
+	teams = {monsters = 0.8, people = -0.4, animals = 0.6},
 
 	-- Mob properties:
 	drops = {
@@ -979,13 +1019,13 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 		priority = 0.25,},
 	},
 	traits = {
-		attack_interval = {1.25, 1.5},
+		attack_interval = {1.0, 1.25},
 		think = {1.15, 1.35},
-		vision = {15, 20},
-		loyalty = {0.5, 0.75},
+		vision = {25, 30},
+		loyalty = {0.6, 0.8},
 		fear = {0.4, 0.6},
-		aggressivity = {0.6, 0.8},
-		determination = {0.7, 0.9},
+		aggressivity = {0.4, 0.8},
+		determination = {0.6, 0.8},
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
@@ -1045,7 +1085,7 @@ creatures:register_creature("creatures_races_default:sheep", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 10,
+		speed = 15,
 		stand = {0, 80},
 		walk = {81, 100},
 		walk_punch = {81, 100},
@@ -1063,11 +1103,11 @@ creatures:register_creature("creatures_races_default:sheep", {
 		light = 0,
 	},
 	physics = {
-		speed = 0.35,
+		speed = 0.5,
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.2, people = 0.2, animals = 0.6},
+	teams = {monsters = -0.4, people = 0.2, animals = 1.0},
 
 	-- Mob properties:
 	drops = {
@@ -1077,6 +1117,13 @@ creatures:register_creature("creatures_races_default:sheep", {
 		max = 3,},
 	},
 	nodes = {
+		-- eat grass
+		{nodes = {"group:flora"},
+		light_min = 7,
+		light_max = 15,
+		avoid = false,
+		priority = 0.5,},
+		-- wander around idly
 		{nodes = {"group:crumbly"},
 		light_min = 7,
 		light_max = 15,
@@ -1084,12 +1131,12 @@ creatures:register_creature("creatures_races_default:sheep", {
 		priority = 0.25,},
 	},
 	traits = {
-		attack_interval = {0, 0},
+		attack_interval = {2, 3},
 		think = {1.5, 2},
-		vision = {5, 5},
-		loyalty = {0.2, 0.4},
-		fear = {0.8, 1},
-		aggressivity = {0, 0},
+		vision = {15, 20},
+		loyalty = {0.6, 0.8},
+		fear = {0.8, 1.0},
+		aggressivity = {0.0, 0.2},
 		determination = {0.4, 0.6},
 	},
 	names = {},
@@ -1179,7 +1226,7 @@ creatures:register_creature("creatures_races_default:rat", {
 		jump = 0.75,
 		gravity = 0.75,
 	},
-	teams = {monsters = 0.2, people = -0.4, animals = 0.4},
+	teams = {monsters = 0.4, people = -0.6, animals = 1.0},
 
 	-- Mob properties:
 	drops = {},
@@ -1191,13 +1238,13 @@ creatures:register_creature("creatures_races_default:rat", {
 		priority = 0.25,},
 	},
 	traits = {
-		attack_interval = {0, 0},
+		attack_interval = {1.5, 2},
 		think = {1.5, 1.75},
-		vision = {5, 5},
-		loyalty = {0.15, 0.3},
-		fear = {0.5, 0.7},
-		aggressivity = {0, 0},
-		determination = {0.3, 0.5},
+		vision = {10, 15},
+		loyalty = {0.0, 0.5},
+		fear = {0.3, 0.7},
+		aggressivity = {0.4, 0.6},
+		determination = {0.25, 0.5},
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
@@ -1299,10 +1346,10 @@ creatures:register_creature("creatures_races_default:oerkki", {
 	},
 	physics = {
 		speed = 1.25,
-		jump = 1,
+		jump = 1.25,
 		gravity = 1,
 	},
-	teams = {monsters = 0.4, people = 0.3, animals = 0.4},
+	teams = {monsters = 0.5, people = 0.5, animals = 0.5},
 
 	-- Mob properties:
 	drops = {},
@@ -1316,13 +1363,13 @@ creatures:register_creature("creatures_races_default:oerkki", {
 		priority = 0.25,},
 	},
 	traits = {
-		attack_interval = {0.85, 1.15},
+		attack_interval = {0.75, 1.0},
 		think = {0.75, 1.25},
-		vision = {10, 15},
-		loyalty = {0.3, 0.7},
-		fear = {0.1, 0.4},
+		vision = {15, 25},
+		loyalty = {0.25, 0.75},
+		fear = {0.2, 0.4},
 		aggressivity = {0.4, 0.6},
-		determination = {0.6, 0.8},
+		determination = {0.4, 0.8},
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
@@ -1396,11 +1443,11 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 		light = 0,
 	},
 	physics = {
-		speed = 0.65,
+		speed = 0.75,
 		jump = 1.25,
 		gravity = 1.25,
 	},
-	teams = {monsters = 0.8, people = -0.8, animals = -0.4},
+	teams = {monsters = 1.0, people = -1.0, animals = -0.2},
 
 	-- Mob properties:
 	drops = {
@@ -1422,11 +1469,11 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 	traits = {
 		attack_interval = {2.5, 3},
 		think = {1.25, 1.75},
-		vision = {10, 15},
-		loyalty = {0.4, 0.7},
-		fear = {0, 0.25},
-		aggressivity = {0.8, 1},
-		determination = {0.5, 0.7},
+		vision = {15, 20},
+		loyalty = {0.3, 0.7},
+		fear = {0.0, 0.25},
+		aggressivity = {0.75, 1.0},
+		determination = {0.75, 1.0},
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
