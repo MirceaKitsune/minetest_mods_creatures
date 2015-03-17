@@ -358,7 +358,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		light_min = 7,
 		light_max = 15,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {0.75, 1.25},
@@ -488,7 +488,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		light_min = 7,
 		light_max = 15,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {1, 1.5},
@@ -595,7 +595,7 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 		light_min = 0,
 		light_max = 7,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {1.5, 1.75},
@@ -699,7 +699,7 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 		light_min = 0,
 		light_max = 7,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
@@ -803,7 +803,7 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 		light_min = 0,
 		light_max = 15,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {1.25, 1.5},
@@ -907,7 +907,7 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 		light_min = 0,
 		light_max = 7,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
@@ -1016,7 +1016,7 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 		light_min = 0,
 		light_max = 15,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
@@ -1128,7 +1128,7 @@ creatures:register_creature("creatures_races_default:sheep", {
 		light_min = 7,
 		light_max = 15,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {2, 3},
@@ -1235,7 +1235,7 @@ creatures:register_creature("creatures_races_default:rat", {
 		light_min = 0,
 		light_max = 7,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {1.5, 2},
@@ -1360,7 +1360,7 @@ creatures:register_creature("creatures_races_default:oerkki", {
 		light_min = 0,
 		light_max = 7,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	traits = {
 		attack_interval = {0.75, 1},
@@ -1463,7 +1463,7 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 		light_min = 0,
 		light_max = 7,
 		objective = "follow",
-		priority = 0,},
+		priority = 0.1,},
 	},
 	attack_projectile = "creatures_races_default:fireball",
 	traits = {
