@@ -142,20 +142,10 @@ function logic_mob_step (self, dtime)
 
 	self.timer_attack = self.timer_attack + dtime
 
-	-- apply AI think speed, influenced by the mob's current status
+	-- apply AI think speed
 	self.timer_think = self.timer_think + dtime
-	if self.target_current and self.target_current.objective == "attack" then
-		if self.timer_think < self.traits_set.think / 10 then
-			return
-		end
-	elseif self.target_current and (self.target_current.objective == "follow" or self.target_current.objective == "avoid") then
-		if self.timer_think < self.traits_set.think / 2 then
-			return
-		end
-	else
-		if self.timer_think < self.traits_set.think then
-			return
-		end
+	if self.timer_think < self.traits_set.think then
+		return
 	end
 	self.timer_think = 0
 
@@ -363,7 +353,7 @@ function logic_mob_step (self, dtime)
 		(self.v_avoid and dist / dist_max < 1 - self.target_current.priority)) then
 			self:set_animation("walk")
 			self.v_speed = self.run_velocity
-		elseif self.v_avoid or dist > dist_max / 10 then
+		elseif self.v_avoid or dist > math.max(2, dist_max / 10) then
 			self:set_animation("walk")
 			self.v_speed = self.walk_velocity
 		else
