@@ -348,7 +348,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		objective = "follow",
 		priority = 0.5,},
 		-- do some farming if it's midday
-		{nodes = {"group:field", "group:flora", "group:seed"},
+		{nodes = {"group:field"},
 		light_min = 15,
 		light_max = 15,
 		objective = "follow",
@@ -478,7 +478,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		objective = "follow",
 		priority = 0.5,},
 		-- do some farming if it's midday
-		{nodes = {"group:field", "group:flora", "group:seed"},
+		{nodes = {"group:field"},
 		light_min = 15,
 		light_max = 15,
 		objective = "follow",

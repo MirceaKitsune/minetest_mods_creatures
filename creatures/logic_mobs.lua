@@ -170,9 +170,9 @@ function logic_mob_step (self, dtime)
 
 	-- targets: add node targets
 	if self.nodes and #self.nodes > 0 then
-		local distance = self.traits_set.vision * self.traits_set.determination
-		local corner_start = {x = s.x - distance / 2, y = s.y - distance / 2, z = s.z - distance / 2}
-		local corner_end = {x = s.x + distance / 2, y = s.y + distance / 2, z = s.z + distance / 2}
+		local distance = self.traits_set.vision / 2
+		local corner_start = {x = s.x - distance, y = s.y - distance, z = s.z - distance}
+		local corner_end = {x = s.x + distance, y = s.y + distance, z = s.z + distance}
 		for i, node in pairs(self.nodes) do
 			if node.priority >= math.random() then
 				local pos_all = minetest.find_nodes_in_area_under_air(corner_start, corner_end, node.nodes)
@@ -195,8 +195,7 @@ function logic_mob_step (self, dtime)
 
 	-- targets: add player or mob targets
 	if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
-		local distance = self.traits_set.vision * self.traits_set.determination
-		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), distance)
+		local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits_set.vision)
 		for _, obj in pairs(objects) do
 			local ent = obj:get_luaentity()
 			if obj ~= self.object and (obj:is_player() or (ent and ent.teams)) and not self.targets[obj] then
@@ -272,7 +271,7 @@ function logic_mob_step (self, dtime)
 		local p = target.position or target.entity:getpos()
 		local dist = vector.distance(s, p)
 		local dist_max = target.distance or self.traits_set.vision
-		local interest = target.priority * (1 - dist / dist_max)
+		local interest = target.priority * (1 - dist / dist_max) + ((1 - self.traits_set.determination) * math.random())
 
 		-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
 		if dist ~= 0 and dist <= dist_max then
