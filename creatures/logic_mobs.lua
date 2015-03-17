@@ -170,12 +170,11 @@ function logic_mob_step (self, dtime)
 					local id = "x"..pos_this.x.."y"..pos_this.y.."z"..pos_this.z
 					if not self.targets[id] then
 						local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
-						if vector.distance(s, pos_this_up) <= self.traits_set.vision then
-							local light_this_up = minetest.get_node_light(pos_this_up, nil)
-							if light_this_up >= node.light_min and light_this_up <= node.light_max then
-								local name = minetest.env:get_node(pos_this).name
-								self.targets[id] = {position = pos_this_up, name = name, objective = node.objective, priority = node.priority}
-							end
+						local light_this_up = minetest.get_node_light(pos_this_up, nil)
+						if light_this_up >= node.light_min and light_this_up <= node.light_max and
+						vector.distance(s, pos_this_up) <= self.traits_set.vision and minetest.line_of_sight(s, pos_this_up, 1) then
+							local name = minetest.env:get_node(pos_this).name
+							self.targets[id] = {position = pos_this_up, name = name, objective = node.objective, priority = node.priority}
 						end
 					end
 				end
@@ -190,8 +189,7 @@ function logic_mob_step (self, dtime)
 			local ent = obj:get_luaentity()
 			if obj ~= self.object and (obj:is_player() or (ent and ent.teams)) and not self.targets[obj] then
 				local p = obj:getpos()
-				local dist = vector.distance(s, p)
-				if dist <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
+				if vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
 					local relation = creatures:alliance(self.object, obj)
 					local action = math.random()
 					local name = nil
