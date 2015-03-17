@@ -110,6 +110,7 @@
 	Below is a list of the default target properties. You can add and use your own if needed, eg: self.targets[mytarget].mytext = "I'm a target".
 		entity = object: The entity this target is addressing. Can be a player or any Lua object. Alternatively you can use "position".
 		position = {...}: The position this target is addressing. Alternatively you can use "entity".
+		name = "name": The name of the entity this target is addressing. For players this is the player name, for entities this is the definition name, for nodes this is the node name.
 		objective = "type": The type of action to take. Can be "attack", "avoid", or "follow".
 		distance = 10: Optional. When set, the target will be taken into account if no further away than this value. If not set, only if it's within the mob's radius of vision.
 		priority = 0.5: The importance of this target. The target with the highest priority will be the task carried on by the mob. This also determines the probability for the target to be added at all (per think).
