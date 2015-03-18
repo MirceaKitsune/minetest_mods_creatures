@@ -173,11 +173,9 @@ function logic_mob_step (self, dtime)
 					local id = "x"..pos_this.x.."y"..pos_this.y.."z"..pos_this.z
 					if not self.targets[id] then
 						local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
-						local light_this_up = minetest.get_node_light(pos_this_up, nil)
-						if light_this_up >= node.light_min and light_this_up <= node.light_max and
-						vector.distance(s, pos_this_up) <= self.traits_set.vision and minetest.line_of_sight(s, pos_this_up, 1) then
+						if vector.distance(s, pos_this_up) <= self.traits_set.vision and minetest.line_of_sight(s, pos_this_up, 1) then
 							local name = minetest.env:get_node(pos_this).name
-							self.targets[id] = {position = pos_this_up, name = name, objective = node.objective, priority = node.priority}
+							self.targets[id] = {position = pos_this_up, name = name, light_min = node.light_min, light_max = node.light_max, objective = node.objective, priority = node.priority}
 						end
 					end
 				end
@@ -229,27 +227,31 @@ function logic_mob_step (self, dtime)
 					ent = target.entity:get_luaentity()
 				end
 
-				-- remove node targets that changed
-				if target.position and target.name and not target.entity then
+				-- remove targets which are out of range
+				if dist > dist_max then
+					self.targets[obj] = nil
+				-- remove node targets that don't meet the necessary criteria
+				elseif target.position and not target.entity and target.name then
 					local pos = {x = target.position.x, y = target.position.y - 1, z = target.position.z}
 					local name = minetest.env:get_node(pos).name
-					if name ~= target.name then
+					local light = minetest.get_node_light(target.position, nil)
+					if name ~= target.name or light < target.light_min or light > target.light_max then
 						self.targets[obj] = nil
 					end
-				-- remove targets which are dead or out of range
-				elseif dist > dist_max or (target.entity and target.entity:get_hp() <= 0) then
+				-- remove entity targets which are dead
+				elseif target.entity and target.entity:get_hp() <= 0 then
 					self.targets[obj] = nil
 				-- if the mob is no longer fit to fight, change attack targets to avoid
-				elseif self.teams_target.attack and self.teams_target.avoid and target.objective == "attack" and self.object:get_hp() <= self.hp_max * self.traits_set.fear then
+				elseif target.entity and target.objective == "attack" and self.teams_target.avoid and self.object:get_hp() <= self.hp_max * self.traits_set.fear then
 					self.targets[obj].objective = "avoid"
 				-- don't follow mobs which are following someone else or a persistent target
-				elseif self.teams_target.follow and target.objective == "follow" and ent then
-					if ent.target_current and (ent.target_current.entity or ent.target_current.persist) then
+				elseif target.entity and target.objective == "follow" then
+					if ent and ent.target_current and (ent.target_current.entity or ent.target_current.persist) then
 						self.targets[obj] = nil
 					end
 				end
 			else
-				-- remove players that disconnected or mobs that were removed from the world
+				-- remove entities which are no longer available
 				self.targets[obj] = nil
 			end
 		end
