@@ -22,7 +22,7 @@
 	textures = {{"clear.png", ...}, ...}: Texture sets used by the player and mob. When defined like this, a skin is randomly chosen for each creature.
 	visual_size = {x=1, y=1}: Scales the visual of the player and mob.
 	animation = {speed = 0, stand = {1, 31}, ...}: List of animation ranges, containing the following entries: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end.
-	sounds = {random_idle = "filename", ...}: A list containing sound effects for various actions. Valid entries: random_idle, random_attack, random_follow, random_avoid, attack, damage, die.
+	sounds = {attack = "filename", ...}: A list containing sound effects for various actions. Valid entries: attack, damage, die.
 	makes_footstep_sound = false: Whether the player and mob make footstep sounds while walking. (TODO: Currently works only for mobs, engine implementation needed for players!)
 	env_damage = {water = 0, ...}: Enrivonment damage. Valid entries: water, lava, light.
 	physics = {speed = 1, ...}: Modifies player and mob movement, as an offset to the physics settings in minetest.conf. Valid entries: speed, jump, gravity.

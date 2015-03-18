@@ -312,10 +312,6 @@ function logic_mob_step (self, dtime)
 				end
 			end
 		end
-
-		if self.sounds and self.sounds.random_attack and math.random(1, 50) <= 1 then
-			minetest.sound_play(self.sounds.random_attack, {object = self.object})
-		end
 	-- state: attacking, shoot
 	elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then
 		self:set_animation("punch")
@@ -340,10 +336,6 @@ function logic_mob_step (self, dtime)
 			dir.z = dir.z * v / amount
 			obj:setvelocity(dir)
 		end
-
-		if self.sounds and self.sounds.random_attack and math.random(1, 50) <= 1 then
-			minetest.sound_play(self.sounds.random_attack, {object = self.object})
-		end
 	-- state: following or avoiding
 	elseif self.target_current.objective == "follow" or self.target_current.objective == "avoid" then
 		self.v_pos = self.target_current.position or self.target_current.entity:getpos()
@@ -362,18 +354,6 @@ function logic_mob_step (self, dtime)
 		else
 			self:set_animation("stand")
 			self.v_speed = nil
-		end
-
-		if self.sounds and math.random(1, 50) <= 1 then
-			if self.target_current.priority == 0 then
-				if self.sounds.random_idle then
-					minetest.sound_play(self.sounds.random_idle, {object = self.object})
-				end
-			elseif self.v_avoid and self.sounds.random_avoid then
-				minetest.sound_play(self.sounds.random_avoid, {object = self.object})
-			elseif not self.v_avoid and self.sounds.random_follow then
-				minetest.sound_play(self.sounds.random_follow, {object = self.object})
-			end
 		end
 	end
 

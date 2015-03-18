@@ -195,7 +195,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 	drawtype = "front",
 	animation = nil,
 	sounds = {
-		random_idle = "creatures_ghost_random",
+		random_idle = "creatures_ghost_random", -- must be implemented as a custom function
 		attack = "creatures_ghost_attack",
 		damage = "creatures_ghost_damage",
 		die = "creatures_ghost_die",
@@ -563,7 +563,7 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 		punch = {40, 63},
 	},
 	sounds = {
-		random_idle = "creatures_monster_random",
+		random_idle = "creatures_monster_random", -- must be implemented as a custom function
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -667,7 +667,7 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 		punch = {40, 63},
 	},
 	sounds = {
-		random_idle = "creatures_monster_random",
+		random_idle = "creatures_monster_random", -- must be implemented as a custom function
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -771,7 +771,7 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 		punch = {74, 105},
 	},
 	sounds = {
-		random_idle = "creatures_monster_random",
+		random_idle = "creatures_monster_random", -- must be implemented as a custom function
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -875,7 +875,7 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 		punch = {74, 105},
 	},
 	sounds = {
-		random_idle = "creatures_monster_random",
+		random_idle = "creatures_monster_random", -- must be implemented as a custom function
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -979,7 +979,7 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 		punch = {48, 62},
 	},
 	sounds = {
-		random_idle = "creatures_monster_random",
+		random_idle = "creatures_monster_random", -- must be implemented as a custom function
 		attack = "creatures_monster_attack",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
@@ -1092,7 +1092,7 @@ creatures:register_creature("creatures_races_default:sheep", {
 		punch = {81, 100},
 	},
 	sounds = {
-		random_idle = "creatures_sheep_random",
+		random_idle = "creatures_sheep_random", -- must be implemented as a custom function
 		damage = "creatures_sheep_damage",
 		die = "creatures_sheep_die",
 	},
@@ -1211,7 +1211,7 @@ creatures:register_creature("creatures_races_default:rat", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	sounds = {
-		random_idle = "creatures_rat_random",
+		random_idle = "creatures_rat_random", -- must be implemented as a custom function
 		damage = "creatures_rat_damage",
 		die = "creatures_rat_die",
 	},
@@ -1334,7 +1334,7 @@ creatures:register_creature("creatures_races_default:oerkki", {
 		punch = {37, 49},
 	},
 	sounds = {
-		random_idle = "creatures_human_male_attack",
+		random_idle = "creatures_human_male_attack", -- must be implemented as a custom function
 		damage = "creatures_human_male_damage",
 		die = "creatures_human_male_die",
 	},
@@ -1431,7 +1431,7 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 		punch = {36, 48},
 	},
 	sounds = {
-		random_idle = "creatures_monster_large_random",
+		random_idle = "creatures_monster_large_random", -- must be implemented as a custom function
 		attack = "creatures_fireball",
 		damage = "creatures_monster_damage",
 		die = "creatures_monster_die",
