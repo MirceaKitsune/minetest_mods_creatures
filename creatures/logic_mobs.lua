@@ -140,11 +140,14 @@ function logic_mob_step (self, dtime)
 		end
 	end
 
-	self.timer_attack = self.timer_attack + dtime
-
 	-- apply AI think speed
+	self.timer_attack = self.timer_attack + dtime
 	self.timer_think = self.timer_think + dtime
-	if self.timer_think < self.traits_set.think then
+	local think = self.traits_set.think
+	if self.target_current and self.target_current.objective == "attack" and self.target_current.entity then
+		think = math.min(self.traits_set.think, self.traits_set.attack_interval)
+	end
+	if self.timer_think < think then
 		return
 	end
 	self.timer_think = 0
@@ -290,7 +293,7 @@ function logic_mob_step (self, dtime)
 		else
 			self:set_animation("punch")
 			self.v_speed = 0
-			if self.timer_attack > self.traits_set.attack_interval then
+			if self.timer_attack >= self.traits_set.attack_interval then
 				self.timer_attack = 0
 				if self.sounds and self.sounds.attack then
 					minetest.sound_play(self.sounds.attack, {object = self.object})
@@ -318,7 +321,7 @@ function logic_mob_step (self, dtime)
 		self.v_avoid = false
 		self.v_speed = 0
 
-		if self.timer_attack > self.traits_set.attack_interval then
+		if self.timer_attack >= self.traits_set.attack_interval then
 			self.timer_attack = 0
 			if self.sounds and self.sounds.attack then
 				minetest.sound_play(self.sounds.attack, {object = self.object})

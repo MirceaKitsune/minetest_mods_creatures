@@ -42,7 +42,7 @@
 	names = {{"Mike", "Dan", ...}, {...}}: A random name will be chosen from this list for each mob. Can be empty for mobs that shouldn't have a name (eg: monsters).
 	traits = {attack_interval = {1, 1}, ...}: Personality traits. Each individual mob gets a value between min and max when it first spawns. Actor mobs persist those settings between server restarts. Default traits:
 		attack_interval = {1, 1}: How many seconds the mob shoots or punches. Lower means a greater attack skill.
-		think = {1, 1}: How many seconds the mob makes new decisions or takes actions. AI speed is this value when idle, half this value when following or avoiding, and a tenth this value when attacking. Lower values mean smarter mobs. Do not abuse this, low values also mean more server load!
+		think = {1, 1}: How many seconds the mob makes new decisions or takes actions. While attacking, 'attack_interval' is used instead if it's lower. Lower values mean smarter mobs, but also mean more server load!
 		vision = {15, 15}: View distance of the mob, and the range in which objectives are detected.
 		loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them. Must range between 0 and 1!
 		fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first). Must range between 0 and 1!
