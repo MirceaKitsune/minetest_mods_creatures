@@ -1,45 +1,33 @@
-=== Creatures for MINETEST-C55 ===
-by MirceaKitsune
+Creatures mod by MirceaKitsune
+Authors of media and source files:
 
-License:
-Sourcecode: WTFPL (see below)
-Sounds: PD, GPL, CC-BY (by legoluft, Independent.nu, qubodup, Gwes, Ogrebane, Stilgar, Charlotte Duckett, Fernando Carmona)
+PilzAdam, MirceaKitsune (WTFPL):
+  *.lua (source code)
 
-=== SimpleMobs for MINETEST-C55 ===
-by PilzAdam
+MirceaKitsune (WTFPL):
+  mobs_human.blend
+  mobs_human.x
 
-How to use the mod:
-See https://github.com/PilzAdam/mobs/wiki
+Jordach (CC BY-SA 3.0):
+  mobs_human_1.png
 
-For developers:
-The API documentation is moved to https://github.com/PilzAdam/mobs/wiki/API
+jmf, Chinchow, Stuart Jones (WTFPL):
+  mobs_human_*.png
 
-License:
-Sourcecode: WTFPL (see below)
-Grahpics: WTFPL (see below)
-Models: WTFPL (by Pavel_S, see below)
+PavelS (WTFPL):
+  mobs_deer.*
+  mobs_dirt_monster.*
+  mobs_stone_monster.*
+  mobs_sand_monster.*
+  mobs_snow_monster.*
+  mobs_tree_monster.*
+  mobs_rat.*
+  mobs_sheep.*
+  mobs_oerkki.*
+  mobs_dungeon_master.*
 
-See also:
-http://minetest.net/
+ExeterDad (WTFPL):
+  mobs_rabbit.*
 
-=== Character skins ====
-
-Jordach (CC BY-SA 3.0)
-jmf (WTFPL)
-Chinchow (WTFPL)
-Stuart Jones (WTFPL)
-
-=== WTFPL ===
-         DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-                    Version 2, December 2004
-
- Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
-
- Everyone is permitted to copy and distribute verbatim or modified
- copies of this license document, and changing it is allowed as long
- as the name is changed.
-
-            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-
-  0. You just DO WHAT THE FUCK YOU WANT TO. 
+legoluft, Independent.nu, qubodup, Gwes, Ogrebane, Stilgar, Charlotte Duckett, Fernando Carmona (PD, GPL, CC-BY):
+  *.ogg (sounds)

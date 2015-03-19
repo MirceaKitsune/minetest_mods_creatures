@@ -25,7 +25,7 @@ local function formspec(self, clicker)
 		..alliance_color.."Alliance: "..alliance..","
 	if alliance > 0 then
 		info = info
-			.."Traits - Attack: "..string.format("%.3f", self.traits_set.attack_interval)..","
+			.."Traits - Attack: "..string.format("%.3f", 1 / self.traits_set.attack_interval)..","
 			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits_set.think)..","
 			.."Traits - Vision: "..string.format("%.3f", self.traits_set.vision)..","
 			.."Traits - Loyalty: "..string.format("%.3f", self.traits_set.loyalty)..","
@@ -1199,6 +1199,104 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
+creatures:register_creature("creatures_races_default:rabbit", {
+	-- Common properties:
+	icon = "mobs_rabbit_icon.png",
+	hp_max = 2,
+	armor = 100,
+	collisionbox = {-0.25, -0.01, -0.25, 0.25, 0.5, 0.25},
+	visual = "mesh",
+	mesh = "mobs_rabbit.x",
+	textures = {
+		{"mobs_rabbit_white_blue.png"},
+		{"mobs_rabbit_white_brown.png"},
+		{"mobs_rabbit_white_brown_spots.png"},
+		{"mobs_rabbit_gray.png"},
+		{"mobs_rabbit_brown.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 25,
+		stand = {0, 60},
+		walk = {61, 80},
+		walk_punch = {61, 80},
+		punch = {61, 80},
+	},
+	sounds = {},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 1,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 0.75,
+	},
+	teams = {monsters = -0.4, people = -0.2, animals = 1},
+
+	-- Mob properties:
+	drops = {},
+	nodes = {
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		objective = "follow",
+		priority = 0.1,},
+	},
+	traits = {
+		attack_interval = {2, 2.5},
+		think = {1, 1.25},
+		vision = {15, 20},
+		loyalty = {0.25, 0.5},
+		fear = {0.75, 1},
+		aggressivity = {0, 0.25},
+		determination = {0.5, 0.75},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 1},
+	inventory_craft = {x = 1, y = 1},
+	ghost = "",
+	eye_offset = {{x = 0, y = -10, z = 0}, {x = 0, y = -10, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:rabbit", {"default:dirt_with_grass"}, 20, 8, 6000, 1, 31000)
+
 creatures:register_creature("creatures_races_default:rat", {
 	-- Common properties:
 	icon = "mobs_rat_icon.png",
@@ -1266,7 +1364,7 @@ creatures:register_creature("creatures_races_default:rat", {
 	inventory_main = {x = 8, y = 1},
 	inventory_craft = {x = 1, y = 1},
 	ghost = "",
-	eye_offset = {{x = 0, y = -10, z = 0}, {x = 0, y = -10, z = 0}},
+	eye_offset = {{x = 0, y = -15, z = 0}, {x = 0, y = -15, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1286,7 +1384,7 @@ creatures:register_creature("creatures_races_default:rat", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 20, -1, 7000, 1, 31000)
+creatures:register_spawn("creatures_races_default:rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 20, -1, 3000, 1, 31000)
 
 minetest.register_craftitem("creatures_races_default:rat", {
 	description = "Rat",
