@@ -5,8 +5,8 @@ PilzAdam, MirceaKitsune (WTFPL):
   *.lua (source code)
 
 MirceaKitsune (WTFPL):
-  mobs_human.blend
-  mobs_human.x
+  mobs_human.*
+  mobs_anthro.*
 
 Jordach (CC BY-SA 3.0):
   mobs_human_1.png
