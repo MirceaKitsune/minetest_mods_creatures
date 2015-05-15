@@ -5,10 +5,12 @@ local function formspec(self, clicker)
 	local name = creatures:player_get(clicker:get_player_name())
 	local alliance = creatures:alliance(clicker, self.object)
 	local alliance_color = "#FFFFAA"
-	if alliance > 0 then
+	if alliance > creatures.teams_neutral then
 		alliance_color = "#AAFFAA"
-	elseif alliance < 0 then
+	elseif alliance < -creatures.teams_neutral then
 		alliance_color = "#FFAAAA"
+	else
+		alliance_color = "#FFFFAA"
 	end
 
 	local names = "N/A"
@@ -176,8 +178,9 @@ creatures.player_formspec = function(def)
 	return formspec
 end
 
--- Default race for new players:
+-- Default settings:
 creatures.player_default = "creatures_races_default:ghost"
+creatures.teams_neutral = 0.1
 
 -- Default player definitions:
 
@@ -211,7 +214,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 1, people = 1, animals = 1},
+	teams = {monsters = 1, humans = 1, anthropomorphics = 1, animals = 1},
 
 	-- Mob properties:
 	drops = {},
@@ -314,7 +317,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.6, people = 1, animals = 0},
+	teams = {monsters = -0.6, humans = 1, anthropomorphics = -0.1, animals = 0},
 
 	-- Mob properties:
 	drops = {
@@ -452,7 +455,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.5, people = 1, animals = 0.1},
+	teams = {monsters = -0.5, humans = 1, anthropomorphics = -0.1, animals = 0.1},
 
 	-- Mob properties:
 	drops = {
@@ -582,7 +585,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.4, people = 0.8, animals = 0.2},
+	teams = {monsters = -0.4, humans = -0.1, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
 	drops = {
@@ -719,7 +722,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.3, people = 0.9, animals = 0.3},
+	teams = {monsters = -0.3, humans = -0.1, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
 	drops = {
@@ -845,7 +848,7 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 		jump = 0.75,
 		gravity = 1,
 	},
-	teams = {monsters = 1, people = -0.4, animals = 0},
+	teams = {monsters = 1, humans = -0.4, anthropomorphics = -0.4, animals = 0},
 
 	-- Mob properties:
 	drops = {
@@ -949,7 +952,7 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 		jump = 0.5,
 		gravity = 1.25,
 	},
-	teams = {monsters = 1, people = -0.8, animals = -0.2},
+	teams = {monsters = 1, humans = -0.8, anthropomorphics = -0.8, animals = -0.2},
 
 	-- Mob properties:
 	drops = {
@@ -1053,7 +1056,7 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 1, people = -0.6, animals = -0.4},
+	teams = {monsters = 1, humans = -0.6, anthropomorphics = -0.4, animals = -0.4},
 
 	-- Mob properties:
 	drops = {
@@ -1157,7 +1160,7 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = 1, people = -0.6, animals = 0.2},
+	teams = {monsters = 1, humans = -0.6, anthropomorphics = -0.4, animals = 0.2},
 
 	-- Mob properties:
 	drops = {
@@ -1261,7 +1264,7 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 		jump = 1.5,
 		gravity = 1,
 	},
-	teams = {monsters = 0.8, people = -0.4, animals = 0.6},
+	teams = {monsters = 0.8, humans = -0.4, anthropomorphics = 0, animals = 0.6},
 
 	-- Mob properties:
 	drops = {
@@ -1373,7 +1376,7 @@ creatures:register_creature("creatures_races_default:sheep", {
 		jump = 1,
 		gravity = 1,
 	},
-	teams = {monsters = -0.4, people = 0.2, animals = 1},
+	teams = {monsters = -0.4, humans = 0.2, anthropomorphics = 0, animals = 1},
 
 	-- Mob properties:
 	drops = {
@@ -1501,7 +1504,7 @@ creatures:register_creature("creatures_races_default:rabbit", {
 		jump = 1,
 		gravity = 0.75,
 	},
-	teams = {monsters = -0.4, people = -0.2, animals = 1},
+	teams = {monsters = -0.4, humans = -0.2, anthropomorphics = 0, animals = 1},
 
 	-- Mob properties:
 	drops = {},
@@ -1590,7 +1593,7 @@ creatures:register_creature("creatures_races_default:rat", {
 		jump = 0.75,
 		gravity = 0.75,
 	},
-	teams = {monsters = 0.4, people = -0.6, animals = 1},
+	teams = {monsters = 0.4, humans = -0.6, anthropomorphics = -0.2, animals = 1},
 
 	-- Mob properties:
 	drops = {},
@@ -1713,7 +1716,7 @@ creatures:register_creature("creatures_races_default:oerkki", {
 		jump = 1.25,
 		gravity = 1,
 	},
-	teams = {monsters = 0.5, people = 0.5, animals = 0.5},
+	teams = {monsters = 0.5, humans = 0.5, anthropomorphics = -0.5, animals = 0.5},
 
 	-- Mob properties:
 	drops = {},
@@ -1811,7 +1814,7 @@ creatures:register_creature("creatures_races_default:dungeon_master", {
 		jump = 1.25,
 		gravity = 1.25,
 	},
-	teams = {monsters = 1, people = -1, animals = -0.2},
+	teams = {monsters = 1, humans = -1, anthropomorphics = -1, animals = -0.2},
 
 	-- Mob properties:
 	drops = {

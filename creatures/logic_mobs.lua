@@ -190,8 +190,8 @@ function logic_mob_step (self, dtime)
 			local ent = obj:get_luaentity()
 			if obj ~= self.object and (obj:is_player() or (ent and ent.teams)) and not self.targets[obj] then
 				local p = obj:getpos()
-				if vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
-					local relation = creatures:alliance(self.object, obj)
+				local relation = creatures:alliance(self.object, obj)
+				if math.abs(relation) > creatures.teams_neutral and vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
 					local action = math.random()
 					local name = nil
 					if ent then
