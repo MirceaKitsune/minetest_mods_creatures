@@ -25,7 +25,7 @@ local function formspec(self, clicker)
 		"Name: "..names..","
 		.."Health: "..(self.object:get_hp() * 5).."%,"
 		..alliance_color.."Alliance: "..alliance..","
-	if alliance > 0 then
+	if alliance > creatures.teams_neutral then
 		info = info
 			.."Traits - Attack: "..string.format("%.3f", 1 / self.traits_set.attack_interval)..","
 			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits_set.think)..","
