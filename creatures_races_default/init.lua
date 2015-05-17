@@ -466,7 +466,17 @@ creatures:register_creature("creatures_races_default:human_male", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:human_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 15, 7, 16000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:human_male", {
+	nodes = {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 16000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:human_female", {
 	-- Common properties:
@@ -565,7 +575,17 @@ creatures:register_creature("creatures_races_default:human_female", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:human_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 15, 7, 18000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:human_female", {
+	nodes = {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 18000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 -- #2 - Creatures | #3 - Anthros
 
@@ -663,7 +683,17 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_fox_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 15, 7, 24000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_fox_male", {
+	nodes = {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 24000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	-- Common properties:
@@ -759,7 +789,17 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_fox_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 15, 7, 24000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_fox_female", {
+	nodes = {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 24000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	-- Common properties:
@@ -854,7 +894,17 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_wolf_male", {"default:dirt_with_snow", "default:snowblock"}, 15, 3, 18000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_wolf_male", {
+	nodes = {"default:dirt_with_snow", "default:snowblock"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 18000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 3,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	-- Common properties:
@@ -949,7 +999,17 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_wolf_female", {"default:dirt_with_snow", "default:snowblock"}, 15, 3, 20000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_wolf_female", {
+	nodes = {"default:dirt_with_snow", "default:snowblock"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 20000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 3,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	-- Common properties:
@@ -1044,7 +1104,17 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_leopard_male", {"default:sand", "default:desert_sand"}, 15, 7, 20000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_leopard_male", {
+	nodes = {"default:sand", "default:desert_sand"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 20000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	-- Common properties:
@@ -1139,7 +1209,17 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_leopard_female", {"default:sand", "default:desert_sand"}, 15, 7, 22000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_leopard_female", {
+	nodes = {"default:sand", "default:desert_sand"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 22000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	-- Common properties:
@@ -1235,7 +1315,17 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_rabbit_male", {"default:dirt", "default:dirt_with_grass"}, 15, 11, 20000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_rabbit_male", {
+	nodes = {"default:dirt", "default:dirt_with_grass"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 20000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 11,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	-- Common properties:
@@ -1331,7 +1421,17 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_rabbit_female", {"default:dirt", "default:dirt_with_grass"}, 15, 11, 18000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_rabbit_female", {
+	nodes = {"default:dirt", "default:dirt_with_grass"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 18000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 11,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	-- Common properties:
@@ -1427,7 +1527,17 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_squirrel_male", {"default:leaves", "default:jungleleaves"}, 15, 7, 18000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_squirrel_male", {
+	nodes = {"default:leaves", "default:jungleleaves"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 18000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	-- Common properties:
@@ -1523,7 +1633,17 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_squirrel_female", {"default:leaves", "default:jungleleaves"}, 15, 7, 18000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:anthro_squirrel_female", {
+	nodes = {"default:leaves", "default:jungleleaves"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 18000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 -- #2 - Creatures | #4 - Monsters
 
@@ -1629,7 +1749,17 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:monster_dirt", {"default:dirt", "default:dirt_with_grass"}, 7, 0, 8000, 3, 31000)
+
+creatures:register_spawn("creatures_races_default:monster_dirt", {
+	nodes = {"default:dirt", "default:dirt_with_grass"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 8000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 0,
+	max_light = 7,
+})
 
 creatures:register_creature("creatures_races_default:monster_stone", {
 	-- Common properties:
@@ -1733,7 +1863,17 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:monster_stone", {"default:stone", "default:cobblestone"}, 3, 0, 12000, 3, 0)
+
+creatures:register_spawn("creatures_races_default:monster_stone", {
+	nodes = {"default:stone", "default:cobblestone"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 12000,
+	min_height = -31000,
+	max_height = 0,
+	min_light = 0,
+	max_light = 3,
+})
 
 creatures:register_creature("creatures_races_default:monster_sand", {
 	-- Common properties:
@@ -1837,7 +1977,17 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:monster_sand", {"default:sand", "default:desert_sand"}, 7, 3, 8000, 3, 31000)
+
+creatures:register_spawn("creatures_races_default:monster_sand", {
+	nodes = {"default:sand", "default:desert_sand"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 8000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 3,
+	max_light = 7,
+})
 
 creatures:register_creature("creatures_races_default:monster_snow", {
 	-- Common properties:
@@ -1941,7 +2091,17 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:monster_snow", {"default:dirt_with_snow", "default:snowblock"}, 3, 0, 8000, 3, 31000)
+
+creatures:register_spawn("creatures_races_default:monster_snow", {
+	nodes = {"default:dirt_with_snow", "default:snowblock"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 8000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 0,
+	max_light = 3,
+})
 
 creatures:register_creature("creatures_races_default:monster_tree", {
 	-- Common properties:
@@ -2050,7 +2210,17 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:monster_tree", {"default:leaves", "default:jungleleaves"}, 11, 0, 10000, 3, 31000)
+
+creatures:register_spawn("creatures_races_default:monster_tree", {
+	nodes = {"default:leaves", "default:jungleleaves"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 10000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 0,
+	max_light = 11,
+})
 
 creatures:register_creature("creatures_races_default:monster_oerkki", {
 	-- Common properties:
@@ -2148,7 +2318,17 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:monster_oerkki", {"default:stone"}, 7, 0, 14000, 3, -10)
+
+creatures:register_spawn("creatures_races_default:monster_oerkki", {
+	nodes = {"default:stone"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 14000,
+	min_height = -31000,
+	max_height = 0,
+	min_light = 0,
+	max_light = 7,
+})
 
 creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	-- Common properties:
@@ -2252,7 +2432,17 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:monster_dungeon_master", {"default:stone"}, 3, 0, 18000, 1, -50)
+
+creatures:register_spawn("creatures_races_default:monster_dungeon_master", {
+	nodes = {"default:stone"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 18000,
+	min_height = -31000,
+	max_height = -50,
+	min_light = 0,
+	max_light = 3,
+})
 
 creatures:register_projectile("creatures_races_default:fireball", {
 	visual = "sprite",
@@ -2411,7 +2601,17 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:animal_sheep", {"default:dirt_with_grass"}, 15, 7, 12000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:animal_sheep", {
+	nodes = {"default:dirt_with_grass"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 12000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 minetest.register_craftitem("creatures_races_default:meat_raw", {
 	description = "Raw Meat",
@@ -2527,7 +2727,17 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:animal_rabbit", {"default:dirt_with_grass"}, 15, 7, 14000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:animal_rabbit", {
+	nodes = {"default:dirt_with_grass"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 14000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 7,
+	max_light = 15,
+})
 
 creatures:register_creature("creatures_races_default:animal_rat", {
 	-- Common properties:
@@ -2616,7 +2826,17 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:animal_rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 15, 0, 8000, 1, 31000)
+
+creatures:register_spawn("creatures_races_default:animal_rat", {
+	nodes = {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"},
+	neighbors = {"air"},
+	interval = 10,
+	chance = 8000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 0,
+	max_light = 15,
+})
 
 minetest.register_craftitem("creatures_races_default:animal_rat", {
 	description = "Rat",

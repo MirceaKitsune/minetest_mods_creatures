@@ -197,46 +197,33 @@ end
 
 -- Mob spawning:
 
-creatures.spawning_mobs = {}
-
-function creatures:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height, spawn_func)
-	creatures.spawning_mobs[name] = true
+function creatures:register_spawn(name, def)
 	minetest.register_abm({
-		nodenames = nodes,
-		neighbors = {"air"},
-		interval = 10,
-		chance = chance,
+		nodenames = def.nodes,
+		neighbors = def.neighbors,
+		interval = def.interval,
+		chance = def.chance,
 		action = function(pos, node, _, active_object_count_wider)
-			if active_object_count_wider > active_object_count then
-				return
-			end
-			if not creatures.spawning_mobs[name] then
-				return
-			end
-			pos.y = pos.y+1
-			if not minetest.env:get_node_light(pos) then
-				return
-			end
-			if minetest.env:get_node_light(pos) > max_light then
-				return
-			end
-			if minetest.env:get_node_light(pos) < min_light then
-				return
-			end
-			if pos.y > max_height then
-				return
-			end
-			if minetest.env:get_node(pos).name ~= "air" then
+			if active_object_count_wider > 1 then
 				return
 			end
 			pos.y = pos.y + 1
-			if minetest.env:get_node(pos).name ~= "air" then
+			if pos.y < def.min_height or pos.y > def.max_height then
 				return
 			end
-			if spawn_func and not spawn_func(pos, node) then
+			local light = minetest.env:get_node_light(pos)
+			if not light or light < def.min_light or light > def.max_light then
+				return
+			end
+			local liquidtype = minetest.registered_nodes[minetest.env:get_node(pos).name].liquidtype
+			if minetest.env:get_node(pos).name ~= "air" and liquidtype == "none" then
+				return
+			end
+			if def.on_spawn and not def.on_spawn(pos, node) then
 				return
 			end
 
+			pos.y = pos.y + 1
 			if minetest.setting_getbool("display_mob_spawn") then
 				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
 			end
@@ -258,6 +245,7 @@ function creatures:register_projectile(name, def)
 		hit_node = def.hit_node,
 		
 		on_step = function(self, dtime)
+		-- TODO: This must damage other mobs as well
 			local pos = self.object:getpos()
 			if minetest.env:get_node(self.object:getpos()).name ~= "air" then
 				self.hit_node(self, pos, node)
