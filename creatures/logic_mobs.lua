@@ -110,7 +110,7 @@ function logic_mob_step (self, dtime)
 				-- jump if we're standing on something solid
 				local v = self.object:getvelocity()
 				if self.jump and v.y == 0 then
-					v.y = self.jump_velocity
+					v.y = self.jump_velocity * 0.75
 					self.object:setvelocity(v)
 				end
 			end
@@ -133,7 +133,7 @@ function logic_mob_step (self, dtime)
 				-- jump if we're standing on something solid
 				local v = self.object:getvelocity()
 				if self.jump and v.y == 0 then
-					v.y = self.jump_velocity
+					v.y = self.jump_velocity * 0.75
 					self.object:setvelocity(v)
 				end
 			end
@@ -360,7 +360,7 @@ function logic_mob_step (self, dtime)
 	-- movement: jump whenever stuck
 	if self.jump and self.v_start and self.get_velocity(self) <= 1 and self.object:getvelocity().y == 0 then
 		local v = self.object:getvelocity()
-		v.y = self.jump_velocity
+		v.y = self.jump_velocity * 0.75
 		self.object:setvelocity(v)
 	end
 
