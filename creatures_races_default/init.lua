@@ -1,4 +1,10 @@
--- Default mob formspec:
+-- #1 - Settings | #1 - Misc settings
+
+creatures.player_default = "creatures_races_default:ghost"
+creatures.teams_neutral = 0.1
+
+-- #1 - Settings | #2 - Mob formspec
+
 local function formspec(self, clicker)
 	if not self.traits_set or not self.names_set then return end
 
@@ -48,11 +54,11 @@ local function formspec(self, clicker)
 		formspec = formspec.."button_exit[0,3;3,1;possess;Possess]"
 		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
 	-- Special button for rats
-	elseif self.name == "creatures_races_default:rat" then
+	elseif self.name == "creatures_races_default:animal_rat" then
 		formspec = formspec.."button_exit[0,3;3,1;rat;Take]"
 		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
 	-- Special button for sheep
-	elseif self.name == "creatures_races_default:sheep" then
+	elseif self.name == "creatures_races_default:animal_sheep" then
 		formspec = formspec.."button_exit[0,3;3,1;sheep;Shear / Breed]"
 		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
 	-- No special buttons
@@ -75,7 +81,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Handle rats:
 			elseif fields["rat"] then
 				if player:is_player() and player:get_inventory() then
-					player:get_inventory():add_item("main", "creatures_races_default:rat")
+					player:get_inventory():add_item("main", "creatures_races_default:animal_rat")
 					creature.object:remove()
 				end
 			-- Handle sheep:
@@ -128,7 +134,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
--- Inventory formspec for players:
+-- #1 - Settings | #3 - Player formspec
+
 creatures.player_formspec = function(def)
 	if minetest.setting_getbool("creative_mode") then
 		return nil
@@ -178,13 +185,96 @@ creatures.player_formspec = function(def)
 	return formspec
 end
 
--- Default settings:
-creatures.player_default = "creatures_races_default:ghost"
-creatures.teams_neutral = 0.1
+-- #1 - Settings | #4 - Common settings
 
--- Default player definitions:
+local nodes_human_male = {
+	-- go to bed if it's dark
+	{nodes = {"group:bed"},
+	light_min = 0,
+	light_max = 7,
+	objective = "follow",
+	stay = true,
+	priority = 0.75,},
+	-- interact with functional nodes (chests, furnaces, etc) if it's not midday
+	{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
+	light_min = 7,
+	light_max = 14,
+	objective = "follow",
+	priority = 0.5,},
+	-- do some farming if it's midday
+	{nodes = {"group:field"},
+	light_min = 15,
+	light_max = 15,
+	objective = "follow",
+	priority = 0.5,},
+	-- wander around idly
+	{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+	light_min = 7,
+	light_max = 15,
+	objective = "follow",
+	priority = 0.1,},
+}
 
--- player ghost, don't spawn as a mob
+local nodes_human_female = {
+	-- go to bed if it's dark
+	{nodes = {"group:bed"},
+	light_min = 0,
+	light_max = 7,
+	objective = "follow",
+	stay = true,
+	priority = 0.75,},
+	-- interact with functional nodes (chests, furnaces, etc) if it's not midday
+	{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
+	light_min = 7,
+	light_max = 14,
+	objective = "follow",
+	priority = 0.5,},
+	-- do some farming if it's midday
+	{nodes = {"group:field"},
+	light_min = 15,
+	light_max = 15,
+	objective = "follow",
+	priority = 0.5,},
+	-- wander around idly
+	{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+	light_min = 7,
+	light_max = 15,
+	objective = "follow",
+	priority = 0.1,},
+}
+
+local nodes_anthro_male = nodes_human_male
+
+local nodes_anthro_female = nodes_human_female
+
+local drops_human_male = {
+	{name = "default:sword_bronze",
+	chance = 40,
+	min = 1,
+	max = 1,},
+	{name = "default:sword_steel",
+	chance = 60,
+	min = 1,
+	max = 1,},
+	{name = "default:sword_diamond",
+	chance = 80,
+	min = 1,
+	max = 1,},
+}
+
+local drops_human_female = {
+	{name = "farming:bread",
+	chance = 30,
+	min = 1,
+	max = 1,},
+}
+
+local drops_anthro_male = drops_human_male
+
+local drops_anthro_female = drops_human_female
+
+-- #2 - Creatures | #1 - Ghosts (don't spawn as a mob)
+
 creatures:register_creature("creatures_races_default:ghost", {
 	-- Common properties:
 	icon = "mobs_ghost_icon.png",
@@ -270,7 +360,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 	custom = {},
 })
 
--- Creature definitions:
+-- #2 - Creatures | #2 - Humans
 
 creatures:register_creature("creatures_races_default:human_male", {
 	-- Common properties:
@@ -320,49 +410,10 @@ creatures:register_creature("creatures_races_default:human_male", {
 	teams = {monsters = -0.6, humans = 1, anthropomorphics = -0.1, animals = 0},
 
 	-- Mob properties:
-	drops = {
-		{name = "default:sword_bronze",
-		chance = 40,
-		min = 1,
-		max = 1,},
-		{name = "default:sword_steel",
-		chance = 60,
-		min = 1,
-		max = 1,},
-		{name = "default:sword_diamond",
-		chance = 80,
-		min = 1,
-		max = 1,},
-	},
+	drops = drops_human_male,
 	attack_damage = 1,
 	attack_type = "melee",
-	nodes = {
-		-- go to bed if it's dark
-		{nodes = {"group:bed"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		stay = true,
-		priority = 0.75,},
-		-- interact with functional nodes (chests, furnaces, etc) if it's not midday
-		{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
-		light_min = 7,
-		light_max = 14,
-		objective = "follow",
-		priority = 0.5,},
-		-- do some farming if it's midday
-		{nodes = {"group:field"},
-		light_min = 15,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.5,},
-		-- wander around idly
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 7,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.1,},
-	},
+	nodes = nodes_human_male,
 	traits = {
 		attack_interval = {0.75, 1.25},
 		think = {0.25, 0.5},
@@ -415,7 +466,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:human_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 9000, 1, 31000)
+creatures:register_spawn("creatures_races_default:human_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 15, 7, 16000, 1, 31000)
 
 creatures:register_creature("creatures_races_default:human_female", {
 	-- Common properties:
@@ -458,41 +509,10 @@ creatures:register_creature("creatures_races_default:human_female", {
 	teams = {monsters = -0.5, humans = 1, anthropomorphics = -0.1, animals = 0.1},
 
 	-- Mob properties:
-	drops = {
-		{name = "farming:bread",
-		chance = 30,
-		min = 1,
-		max = 1,},
-	},
+	drops = drops_human_female,
 	attack_damage = 1,
 	attack_type = "melee",
-	nodes = {
-		-- go to bed if it's dark
-		{nodes = {"group:bed"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		stay = true,
-		priority = 0.75,},
-		-- interact with functional nodes (chests, furnaces, etc) if it's not midday
-		{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
-		light_min = 7,
-		light_max = 14,
-		objective = "follow",
-		priority = 0.5,},
-		-- do some farming if it's midday
-		{nodes = {"group:field"},
-		light_min = 15,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.5,},
-		-- wander around idly
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 7,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.1,},
-	},
+	nodes = nodes_human_female,
 	traits = {
 		attack_interval = {1, 1.5},
 		think = {0.25, 0.5},
@@ -545,7 +565,9 @@ creatures:register_creature("creatures_races_default:human_female", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:human_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 13000, 1, 31000)
+creatures:register_spawn("creatures_races_default:human_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 15, 7, 18000, 1, 31000)
+
+-- #2 - Creatures | #3 - Anthros
 
 creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	-- Common properties:
@@ -588,61 +610,20 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	teams = {monsters = -0.4, humans = -0.1, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
-	drops = {
-		{name = "default:sword_bronze",
-		chance = 40,
-		min = 1,
-		max = 1,},
-		{name = "default:sword_steel",
-		chance = 60,
-		min = 1,
-		max = 1,},
-		{name = "default:sword_diamond",
-		chance = 80,
-		min = 1,
-		max = 1,},
-	},
+	drops = drops_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
-	nodes = {
-		-- go to bed if it's dark
-		{nodes = {"group:bed"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		stay = true,
-		priority = 0.75,},
-		-- interact with functional nodes (chests, furnaces, etc) if it's not midday
-		{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
-		light_min = 7,
-		light_max = 14,
-		objective = "follow",
-		priority = 0.5,},
-		-- do some farming if it's midday
-		{nodes = {"group:field"},
-		light_min = 15,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.5,},
-		-- wander around idly
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 7,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.1,},
-	},
+	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.75, 1.25},
-		think = {0.25, 0.5},
-		vision = {25, 35},
+		think = {0.2, 0.4},
+		vision = {20, 30},
 		loyalty = {0.75, 1},
 		fear = {0.25, 0.75},
 		aggressivity = {0.25, 1},
 		determination = {0.5, 1},
 	},
-	names = {
-		{"Fox", "Angel",},
-	},
+	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -682,7 +663,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_fox_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 9000, 1, 31000)
+creatures:register_spawn("creatures_races_default:anthro_fox_male", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 15, 7, 24000, 1, 31000)
 
 creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	-- Common properties:
@@ -725,53 +706,20 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	teams = {monsters = -0.3, humans = -0.1, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
-	drops = {
-		{name = "farming:bread",
-		chance = 30,
-		min = 1,
-		max = 1,},
-	},
+	drops = drops_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
-	nodes = {
-		-- go to bed if it's dark
-		{nodes = {"group:bed"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		stay = true,
-		priority = 0.75,},
-		-- interact with functional nodes (chests, furnaces, etc) if it's not midday
-		{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
-		light_min = 7,
-		light_max = 14,
-		objective = "follow",
-		priority = 0.5,},
-		-- do some farming if it's midday
-		{nodes = {"group:field"},
-		light_min = 15,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.5,},
-		-- wander around idly
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 7,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.1,},
-	},
+	nodes = nodes_anthro_female,
 	traits = {
-		attack_interval = {1, 1.5},
-		think = {0.25, 0.5},
-		vision = {25, 35},
+		attack_interval = {1, 1.25},
+		think = {0.2, 0.4},
+		vision = {20, 30},
 		loyalty = {0.75, 1},
 		fear = {0.25, 1},
 		aggressivity = {0, 0.5},
 		determination = {0.5, 1},
 	},
-	names = {
-		{"Vulpes", "Trixie",},
-	},
+	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -811,9 +759,775 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:anthro_fox_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 20, -1, 13000, 1, 31000)
+creatures:register_spawn("creatures_races_default:anthro_fox_female", {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"}, 15, 7, 24000, 1, 31000)
 
-creatures:register_creature("creatures_races_default:dirt_monster", {
+creatures:register_creature("creatures_races_default:anthro_wolf_male", {
+	-- Common properties:
+	icon = "mobs_anthro_wolf_male_icon.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = {
+		{"mobs_anthro_wolf_male_1.png"},
+		{"mobs_anthro_wolf_male_2.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_male_attack",
+		damage = "creatures_human_male_damage",
+		die = "creatures_human_male_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1.25,
+		gravity = 1.25,
+	},
+	teams = {monsters = -0.5, humans = -0.2, anthropomorphics = 1, animals = 0.2},
+
+	-- Mob properties:
+	drops = drops_anthro_male,
+	attack_damage = 1,
+	attack_type = "melee",
+	nodes = nodes_anthro_male,
+	traits = {
+		attack_interval = {0.5, 0.75},
+		think = {0.25, 0.5},
+		vision = {25, 35},
+		loyalty = {0.75, 1},
+		fear = {0.25, 0.5},
+		aggressivity = {0.5, 1},
+		determination = {0.75, 1},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:anthro_wolf_male", {"default:dirt_with_snow", "default:snowblock"}, 15, 3, 18000, 1, 31000)
+
+creatures:register_creature("creatures_races_default:anthro_wolf_female", {
+	-- Common properties:
+	icon = "mobs_anthro_wolf_female_icon.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = {
+		{"mobs_anthro_wolf_female_1.png"},
+		{"mobs_anthro_wolf_female_2.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_female_attack",
+		damage = "creatures_human_female_damage",
+		die = "creatures_human_female_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1.25,
+		gravity = 1.25,
+	},
+	teams = {monsters = -0.4, humans = -0.2, anthropomorphics = 1, animals = 0.3},
+
+	-- Mob properties:
+	drops = drops_anthro_female,
+	attack_damage = 1,
+	attack_type = "melee",
+	nodes = nodes_anthro_female,
+	traits = {
+		attack_interval = {0.5, 0.75},
+		think = {0.25, 0.5},
+		vision = {25, 35},
+		loyalty = {0.75, 1},
+		fear = {0.25, 0.75},
+		aggressivity = {0.25, 0.75},
+		determination = {0.75, 1},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:anthro_wolf_female", {"default:dirt_with_snow", "default:snowblock"}, 15, 3, 20000, 1, 31000)
+
+creatures:register_creature("creatures_races_default:anthro_leopard_male", {
+	-- Common properties:
+	icon = "mobs_anthro_leopard_male_icon.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = {
+		{"mobs_anthro_leopard_male_1.png"},
+		{"mobs_anthro_leopard_male_2.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_male_attack",
+		damage = "creatures_human_male_damage",
+		die = "creatures_human_male_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1.5,
+		jump = 1,
+		gravity = 1,
+	},
+	teams = {monsters = -0.6, humans = -0.2, anthropomorphics = 1, animals = 0.2},
+
+	-- Mob properties:
+	drops = drops_anthro_male,
+	attack_damage = 1,
+	attack_type = "melee",
+	nodes = nodes_anthro_male,
+	traits = {
+		attack_interval = {0.25, 0.75},
+		think = {0.4, 0.6},
+		vision = {30, 40},
+		loyalty = {0, 0.5},
+		fear = {0.25, 0.75},
+		aggressivity = {0.5, 1},
+		determination = {0.25, 1},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:anthro_leopard_male", {"default:sand", "default:desert_sand"}, 15, 7, 20000, 1, 31000)
+
+creatures:register_creature("creatures_races_default:anthro_leopard_female", {
+	-- Common properties:
+	icon = "mobs_anthro_leopard_female_icon.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = {
+		{"mobs_anthro_leopard_female_1.png"},
+		{"mobs_anthro_leopard_female_2.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_female_attack",
+		damage = "creatures_human_female_damage",
+		die = "creatures_human_female_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1.5,
+		jump = 1,
+		gravity = 1,
+	},
+	teams = {monsters = -0.5, humans = -0.2, anthropomorphics = 1, animals = 0.3},
+
+	-- Mob properties:
+	drops = drops_anthro_female,
+	attack_damage = 1,
+	attack_type = "melee",
+	nodes = nodes_anthro_female,
+	traits = {
+		attack_interval = {0.5, 0.75},
+		think = {0.4, 0.6},
+		vision = {30, 40},
+		loyalty = {0, 0.75},
+		fear = {0.5, 0.75},
+		aggressivity = {0.25, 0.75},
+		determination = {0.25, 1},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:anthro_leopard_female", {"default:sand", "default:desert_sand"}, 15, 7, 22000, 1, 31000)
+
+creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
+	-- Common properties:
+	icon = "mobs_anthro_rabbit_male_icon.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = {
+		{"mobs_anthro_rabbit_male_1.png"},
+		{"mobs_anthro_rabbit_male_2.png"},
+		{"mobs_anthro_rabbit_male_3.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_male_attack",
+		damage = "creatures_human_male_damage",
+		die = "creatures_human_male_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1.5,
+		gravity = 1,
+	},
+	teams = {monsters = -0.4, humans = 0, anthropomorphics = 1, animals = 0.4},
+
+	-- Mob properties:
+	drops = drops_anthro_male,
+	attack_damage = 1,
+	attack_type = "melee",
+	nodes = nodes_anthro_male,
+	traits = {
+		attack_interval = {1.5, 2},
+		think = {0.5, 0.75},
+		vision = {15, 25},
+		loyalty = {0.75, 1},
+		fear = {0.5, 1},
+		aggressivity = {0, 0.75},
+		determination = {0.5, 1},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:anthro_rabbit_male", {"default:dirt", "default:dirt_with_grass"}, 15, 11, 20000, 1, 31000)
+
+creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
+	-- Common properties:
+	icon = "mobs_anthro_rabbit_female_icon.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = {
+		{"mobs_anthro_rabbit_female_1.png"},
+		{"mobs_anthro_rabbit_female_2.png"},
+		{"mobs_anthro_rabbit_female_3.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_female_attack",
+		damage = "creatures_human_female_damage",
+		die = "creatures_human_female_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1.5,
+		gravity = 1,
+	},
+	teams = {monsters = -0.3, humans = 0, anthropomorphics = 1, animals = 0.5},
+
+	-- Mob properties:
+	drops = drops_anthro_female,
+	attack_damage = 1,
+	attack_type = "melee",
+	nodes = nodes_anthro_female,
+	traits = {
+		attack_interval = {1.75, 2},
+		think = {0.5, 0.75},
+		vision = {15, 25},
+		loyalty = {0.75, 1},
+		fear = {0.75, 1},
+		aggressivity = {0, 0.5},
+		determination = {0.5, 1},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:anthro_rabbit_female", {"default:dirt", "default:dirt_with_grass"}, 15, 11, 18000, 1, 31000)
+
+creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
+	-- Common properties:
+	icon = "mobs_anthro_squirrel_male_icon.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = {
+		{"mobs_anthro_squirrel_male_1.png"},
+		{"mobs_anthro_squirrel_male_2.png"},
+		{"mobs_anthro_squirrel_male_3.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_male_attack",
+		damage = "creatures_human_male_damage",
+		die = "creatures_human_male_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 0.75,
+	},
+	teams = {monsters = -0.4, humans = -0.1, anthropomorphics = 1, animals = 0.2},
+
+	-- Mob properties:
+	drops = drops_anthro_male,
+	attack_damage = 1,
+	attack_type = "melee",
+	nodes = nodes_anthro_male,
+	traits = {
+		attack_interval = {1.25, 1.75},
+		think = {0.2, 0.4},
+		vision = {20, 30},
+		loyalty = {0.25, 0.75},
+		fear = {0.25, 0.75},
+		aggressivity = {0.25, 0.5},
+		determination = {0.25, 0.75},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:anthro_squirrel_male", {"default:leaves", "default:jungleleaves"}, 15, 7, 18000, 1, 31000)
+
+creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
+	-- Common properties:
+	icon = "mobs_anthro_squirrel_female_icon.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = {
+		{"mobs_anthro_squirrel_female_1.png"},
+		{"mobs_anthro_squirrel_female_2.png"},
+		{"mobs_anthro_squirrel_female_3.png"},
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_human_female_attack",
+		damage = "creatures_human_female_damage",
+		die = "creatures_human_female_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 0,
+	},
+	physics = {
+		speed = 1,
+		jump = 1,
+		gravity = 0.75,
+	},
+	teams = {monsters = -0.3, humans = -0.1, anthropomorphics = 1, animals = 0.3},
+
+	-- Mob properties:
+	drops = drops_anthro_female,
+	attack_damage = 1,
+	attack_type = "melee",
+	nodes = nodes_anthro_female,
+	traits = {
+		attack_interval = {1.5, 1.75},
+		think = {0.2, 0.4},
+		vision = {20, 30},
+		loyalty = {0.25, 0.75},
+		fear = {0.25, 1},
+		aggressivity = {0, 0.5},
+		determination = {0.25, 0.75},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:anthro_squirrel_female", {"default:leaves", "default:jungleleaves"}, 15, 7, 18000, 1, 31000)
+
+-- #2 - Creatures | #4 - Monsters
+
+creatures:register_creature("creatures_races_default:monster_dirt", {
 	-- Common properties:
 	icon = "mobs_dirt_monster_icon.png",
 	hp_max = 5,
@@ -915,13 +1629,13 @@ creatures:register_creature("creatures_races_default:dirt_monster", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:dirt_monster", {"default:dirt", "default:dirt_with_grass"}, 3, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures_races_default:monster_dirt", {"default:dirt", "default:dirt_with_grass"}, 7, 0, 8000, 3, 31000)
 
-creatures:register_creature("creatures_races_default:stone_monster", {
+creatures:register_creature("creatures_races_default:monster_stone", {
 	-- Common properties:
 	icon = "mobs_stone_monster_icon.png",
 	hp_max = 10,
-	armor = 80,
+	armor = 90,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_stone_monster.x",
@@ -1019,9 +1733,9 @@ creatures:register_creature("creatures_races_default:stone_monster", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:stone_monster", {"default:stone", "default:cobblestone"}, 3, -1, 7000, 3, 0)
+creatures:register_spawn("creatures_races_default:monster_stone", {"default:stone", "default:cobblestone"}, 3, 0, 12000, 3, 0)
 
-creatures:register_creature("creatures_races_default:sand_monster", {
+creatures:register_creature("creatures_races_default:monster_sand", {
 	-- Common properties:
 	icon = "mobs_sand_monster_icon.png",
 	hp_max = 5,
@@ -1123,9 +1837,9 @@ creatures:register_creature("creatures_races_default:sand_monster", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:sand_monster", {"default:sand", "default:desert_sand"}, 20, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures_races_default:monster_sand", {"default:sand", "default:desert_sand"}, 7, 3, 8000, 3, 31000)
 
-creatures:register_creature("creatures_races_default:snow_monster", {
+creatures:register_creature("creatures_races_default:monster_snow", {
 	-- Common properties:
 	icon = "mobs_snow_monster_icon.png",
 	hp_max = 5,
@@ -1227,13 +1941,13 @@ creatures:register_creature("creatures_races_default:snow_monster", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:snow_monster", {"default:dirt_with_snow", "default:snowblock"}, 3, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures_races_default:monster_snow", {"default:dirt_with_snow", "default:snowblock"}, 3, 0, 8000, 3, 31000)
 
-creatures:register_creature("creatures_races_default:tree_monster", {
+creatures:register_creature("creatures_races_default:monster_tree", {
 	-- Common properties:
 	icon = "mobs_tree_monster_icon.png",
 	hp_max = 10,
-	armor = 100,
+	armor = 90,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_tree_monster.x",
@@ -1336,9 +2050,258 @@ creatures:register_creature("creatures_races_default:tree_monster", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:tree_monster", {"default:leaves", "default:jungleleaves"}, 20, -1, 7000, 3, 31000)
+creatures:register_spawn("creatures_races_default:monster_tree", {"default:leaves", "default:jungleleaves"}, 11, 0, 10000, 3, 31000)
 
-creatures:register_creature("creatures_races_default:sheep", {
+creatures:register_creature("creatures_races_default:monster_oerkki", {
+	-- Common properties:
+	icon = "mobs_oerkki_icon.png",
+	hp_max = 10,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_oerkki.x",
+	textures = {"mobs_oerkki.png"},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 40,
+		stand = {0, 23},
+		walk = {24, 36},
+		walk_punch = {37, 49},
+		punch = {37, 49},
+	},
+	sounds = {
+		random_idle = "creatures_human_male_attack", -- must be implemented as a custom function
+		damage = "creatures_human_male_damage",
+		die = "creatures_human_male_die",
+	},
+	makes_footstep_sound = false,
+	env_damage = {
+		water = 0,
+		lava = 1,
+		light = 1,
+	},
+	physics = {
+		speed = 1.25,
+		jump = 1.25,
+		gravity = 1,
+	},
+	teams = {monsters = 0.5, humans = 0.5, anthropomorphics = -0.5, animals = 0.5},
+
+	-- Mob properties:
+	drops = {},
+	attack_damage = 3,
+	attack_type = "melee",
+	nodes = {
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		objective = "follow",
+		priority = 0.1,},
+	},
+	traits = {
+		attack_interval = {0.75, 1},
+		think = {0.75, 1.25},
+		vision = {15, 25},
+		loyalty = {0.25, 0.75},
+		fear = {0.2, 0.4},
+		aggressivity = {0.4, 0.6},
+		determination = {0.4, 0.8},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:monster_oerkki", {"default:stone"}, 7, 0, 14000, 3, -10)
+
+creatures:register_creature("creatures_races_default:monster_dungeon_master", {
+	-- Common properties:
+	icon = "mobs_dungeon_master_icon.png",
+	hp_max = 10,
+	armor = 80,
+	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
+	visual = "mesh",
+	mesh = "mobs_dungeon_master.x",
+	textures = {"mobs_dungeon_master.png"},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 20,
+		stand = {0, 19},
+		walk = {20, 35},
+		punch = {36, 48},
+	},
+	sounds = {
+		random_idle = "creatures_monster_large_random", -- must be implemented as a custom function
+		attack = "creatures_fireball",
+		damage = "creatures_monster_damage",
+		die = "creatures_monster_die",
+	},
+	makes_footstep_sound = true,
+	env_damage = {
+		water = 0,
+		lava = 1,
+		light = 0,
+	},
+	physics = {
+		speed = 0.75,
+		jump = 1.25,
+		gravity = 1.25,
+	},
+	teams = {monsters = 1, humans = -1, anthropomorphics = -1, animals = -0.2},
+
+	-- Mob properties:
+	drops = {
+		{name = "default:mese",
+		chance = 50,
+		min = 1,
+		max = 2,},
+	},
+	attack_damage = 4,
+	attack_type = "shoot",
+	nodes = {
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		objective = "follow",
+		priority = 0.1,},
+	},
+	attack_projectile = "creatures_races_default:fireball",
+	traits = {
+		attack_interval = {2.5, 3},
+		think = {1.25, 1.75},
+		vision = {15, 20},
+		loyalty = {0.3, 0.7},
+		fear = {0, 0.25},
+		aggressivity = {0.75, 1},
+		determination = {0.75, 1},
+	},
+	names = {},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+		formspec(self, clicker)
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 5, z = 0}, {x = 0, y = 5, z = 0}},
+	fog = nil,
+	screen = "",
+	ambience = "",
+	player_join = function(player)
+		logic_player_join (player)
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+creatures:register_spawn("creatures_races_default:monster_dungeon_master", {"default:stone"}, 3, 0, 18000, 1, -50)
+
+creatures:register_projectile("creatures_races_default:fireball", {
+	visual = "sprite",
+	visual_size = {x=1, y=1},
+	textures = {"mobs_fireball.png"},
+	velocity = 5,
+	hit_player = function(self, player)
+		local s = self.object:getpos()
+		local p = player:getpos()
+		local vec = {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z}
+		player:punch(self.object, 1,  {
+			full_punch_interval=1,
+			damage_groups = {fleshy=4},
+		}, vec)
+		local pos = self.object:getpos()
+		for dx=-1,1 do
+			for dy=-1,1 do
+				for dz=-1,1 do
+					local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
+					local n = minetest.env:get_node(pos).name
+					if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
+						minetest.env:set_node(p, {name="fire:basic_flame"})
+					else
+						minetest.env:remove_node(p)
+					end
+				end
+			end
+		end
+	end,
+	hit_node = function(self, pos, node)
+		for dx=-1,1 do
+			for dy=-2,1 do
+				for dz=-1,1 do
+					local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
+					local n = minetest.env:get_node(pos).name
+					if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
+						minetest.env:set_node(p, {name="fire:basic_flame"})
+					else
+						minetest.env:remove_node(p)
+					end
+				end
+			end
+		end
+	end
+})
+
+-- #2 - Creatures | #5 - Animals
+
+creatures:register_creature("creatures_races_default:animal_sheep", {
 	-- Common properties:
 	icon = "mobs_sheep_icon.png",
 	hp_max = 5,
@@ -1448,7 +2411,7 @@ creatures:register_creature("creatures_races_default:sheep", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:sheep", {"default:dirt_with_grass"}, 20, 8, 9000, 1, 31000)
+creatures:register_spawn("creatures_races_default:animal_sheep", {"default:dirt_with_grass"}, 15, 7, 12000, 1, 31000)
 
 minetest.register_craftitem("creatures_races_default:meat_raw", {
 	description = "Raw Meat",
@@ -1468,7 +2431,7 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
-creatures:register_creature("creatures_races_default:rabbit", {
+creatures:register_creature("creatures_races_default:animal_rabbit", {
 	-- Common properties:
 	icon = "mobs_rabbit_icon.png",
 	hp_max = 2,
@@ -1564,9 +2527,9 @@ creatures:register_creature("creatures_races_default:rabbit", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:rabbit", {"default:dirt_with_grass"}, 20, 8, 6000, 1, 31000)
+creatures:register_spawn("creatures_races_default:animal_rabbit", {"default:dirt_with_grass"}, 15, 7, 14000, 1, 31000)
 
-creatures:register_creature("creatures_races_default:rat", {
+creatures:register_creature("creatures_races_default:animal_rat", {
 	-- Common properties:
 	icon = "mobs_rat_icon.png",
 	hp_max = 1,
@@ -1653,22 +2616,22 @@ creatures:register_creature("creatures_races_default:rat", {
 	-- Module properties:
 	custom = {},
 })
-creatures:register_spawn("creatures_races_default:rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 20, -1, 3000, 1, 31000)
+creatures:register_spawn("creatures_races_default:animal_rat", {"default:dirt", "default:dirt_with_grass", "default:stone", "default:cobblestone"}, 15, 0, 8000, 1, 31000)
 
-minetest.register_craftitem("creatures_races_default:rat", {
+minetest.register_craftitem("creatures_races_default:animal_rat", {
 	description = "Rat",
 	inventory_image = "mobs_rat_inventory.png",
 
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.above then
-			minetest.env:add_entity(pointed_thing.above, "creatures_races_default:rat")
+			minetest.env:add_entity(pointed_thing.above, "creatures_races_default:animal_rat")
 			itemstack:take_item()
 		end
 		return itemstack
 	end,
 })
 
-minetest.register_craftitem("creatures_races_default:rat_cooked", {
+minetest.register_craftitem("creatures_races_default:animal_rat_cooked", {
 	description = "Cooked Rat",
 	inventory_image = "mobs_cooked_rat.png",
 
@@ -1677,256 +2640,9 @@ minetest.register_craftitem("creatures_races_default:rat_cooked", {
 
 minetest.register_craft({
 	type = "cooking",
-	output = "creatures_races_default:rat_cooked",
-	recipe = "creatures_races_default:rat",
+	output = "creatures_races_default:animal_rat_cooked",
+	recipe = "creatures_races_default:animal_rat",
 	cooktime = 5,
-})
-
-creatures:register_creature("creatures_races_default:oerkki", {
-	-- Common properties:
-	icon = "mobs_oerkki_icon.png",
-	hp_max = 10,
-	armor = 100,
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
-	visual = "mesh",
-	mesh = "mobs_oerkki.x",
-	textures = {"mobs_oerkki.png"},
-	visual_size = {x=1, y=1},
-	drawtype = "front",
-	animation = {
-		speed = 40,
-		stand = {0, 23},
-		walk = {24, 36},
-		walk_punch = {37, 49},
-		punch = {37, 49},
-	},
-	sounds = {
-		random_idle = "creatures_human_male_attack", -- must be implemented as a custom function
-		damage = "creatures_human_male_damage",
-		die = "creatures_human_male_die",
-	},
-	makes_footstep_sound = false,
-	env_damage = {
-		water = 0,
-		lava = 1,
-		light = 1,
-	},
-	physics = {
-		speed = 1.25,
-		jump = 1.25,
-		gravity = 1,
-	},
-	teams = {monsters = 0.5, humans = 0.5, anthropomorphics = -0.5, animals = 0.5},
-
-	-- Mob properties:
-	drops = {},
-	attack_damage = 3,
-	attack_type = "melee",
-	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
-	},
-	traits = {
-		attack_interval = {0.75, 1},
-		think = {0.75, 1.25},
-		vision = {15, 25},
-		loyalty = {0.25, 0.75},
-		fear = {0.2, 0.4},
-		aggressivity = {0.4, 0.6},
-		determination = {0.4, 0.8},
-	},
-	names = {},
-	teams_target = {attack = true, avoid = true, follow = true},
-	on_activate = function(self, staticdata, dtime_s)
-		logic_mob_activate(self, staticdata, dtime_s)
-	end,
-	on_step = function(self, dtime)
-		logic_mob_step(self, dtime)
-	end,
-	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
-		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
-	end,
-	on_rightclick = function(self, clicker)
-		logic_mob_rightclick(self, clicker)
-		formspec(self, clicker)
-	end,
-
-	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
-	ghost = "",
-	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
-	fog = nil,
-	screen = "",
-	ambience = "",
-	player_join = function(player)
-		logic_player_join (player)
-	end,
-	player_step = function(player, dtime)
-		logic_player_step (player, dtime)
-	end,
-	player_die = function(player)
-		logic_player_die (player)
-	end,
-	player_respawn = function(player)
-		logic_player_respawn (player)
-	end,
-
-	-- Module properties:
-	custom = {},
-})
-creatures:register_spawn("creatures_races_default:oerkki", {"default:stone"}, 2, -1, 7000, 3, -10)
-
-creatures:register_creature("creatures_races_default:dungeon_master", {
-	-- Common properties:
-	icon = "mobs_dungeon_master_icon.png",
-	hp_max = 10,
-	armor = 60,
-	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
-	visual = "mesh",
-	mesh = "mobs_dungeon_master.x",
-	textures = {"mobs_dungeon_master.png"},
-	visual_size = {x=1, y=1},
-	drawtype = "front",
-	animation = {
-		speed = 20,
-		stand = {0, 19},
-		walk = {20, 35},
-		punch = {36, 48},
-	},
-	sounds = {
-		random_idle = "creatures_monster_large_random", -- must be implemented as a custom function
-		attack = "creatures_fireball",
-		damage = "creatures_monster_damage",
-		die = "creatures_monster_die",
-	},
-	makes_footstep_sound = true,
-	env_damage = {
-		water = 0,
-		lava = 1,
-		light = 0,
-	},
-	physics = {
-		speed = 0.75,
-		jump = 1.25,
-		gravity = 1.25,
-	},
-	teams = {monsters = 1, humans = -1, anthropomorphics = -1, animals = -0.2},
-
-	-- Mob properties:
-	drops = {
-		{name = "default:mese",
-		chance = 50,
-		min = 1,
-		max = 2,},
-	},
-	attack_damage = 4,
-	attack_type = "shoot",
-	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
-	},
-	attack_projectile = "creatures_races_default:fireball",
-	traits = {
-		attack_interval = {2.5, 3},
-		think = {1.25, 1.75},
-		vision = {15, 20},
-		loyalty = {0.3, 0.7},
-		fear = {0, 0.25},
-		aggressivity = {0.75, 1},
-		determination = {0.75, 1},
-	},
-	names = {},
-	teams_target = {attack = true, avoid = true, follow = true},
-	on_activate = function(self, staticdata, dtime_s)
-		logic_mob_activate(self, staticdata, dtime_s)
-	end,
-	on_step = function(self, dtime)
-		logic_mob_step(self, dtime)
-	end,
-	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
-		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
-	end,
-	on_rightclick = function(self, clicker)
-		logic_mob_rightclick(self, clicker)
-		formspec(self, clicker)
-	end,
-
-	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
-	ghost = "",
-	eye_offset = {{x = 0, y = 5, z = 0}, {x = 0, y = 5, z = 0}},
-	fog = nil,
-	screen = "",
-	ambience = "",
-	player_join = function(player)
-		logic_player_join (player)
-	end,
-	player_step = function(player, dtime)
-		logic_player_step (player, dtime)
-	end,
-	player_die = function(player)
-		logic_player_die (player)
-	end,
-	player_respawn = function(player)
-		logic_player_respawn (player)
-	end,
-
-	-- Module properties:
-	custom = {},
-})
-creatures:register_spawn("creatures_races_default:dungeon_master", {"default:stone"}, 2, -1, 7000, 1, -50)
-
-creatures:register_projectile("creatures_races_default:fireball", {
-	visual = "sprite",
-	visual_size = {x=1, y=1},
-	textures = {"mobs_fireball.png"},
-	velocity = 5,
-	hit_player = function(self, player)
-		local s = self.object:getpos()
-		local p = player:getpos()
-		local vec = {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z}
-		player:punch(self.object, 1,  {
-			full_punch_interval=1,
-			damage_groups = {fleshy=4},
-		}, vec)
-		local pos = self.object:getpos()
-		for dx=-1,1 do
-			for dy=-1,1 do
-				for dz=-1,1 do
-					local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.env:get_node(pos).name
-					if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
-						minetest.env:set_node(p, {name="fire:basic_flame"})
-					else
-						minetest.env:remove_node(p)
-					end
-				end
-			end
-		end
-	end,
-	hit_node = function(self, pos, node)
-		for dx=-1,1 do
-			for dy=-2,1 do
-				for dz=-1,1 do
-					local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.env:get_node(pos).name
-					if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
-						minetest.env:set_node(p, {name="fire:basic_flame"})
-					else
-						minetest.env:remove_node(p)
-					end
-				end
-			end
-		end
-	end
 })
 
 if minetest.setting_get("log_mods") then
