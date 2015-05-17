@@ -348,7 +348,7 @@ function logic_mob_step (self, dtime)
 		(self.v_avoid and dist / dist_max < 1 - self.target_current.priority)) then
 			self:set_animation("walk")
 			self.v_speed = self.run_velocity
-		elseif self.v_avoid or dist > math.max(2, dist_max / 10) then
+		elseif self.v_avoid or dist > math.max(5, dist_max / 10) then
 			self:set_animation("walk")
 			self.v_speed = self.walk_velocity
 		else
@@ -357,38 +357,36 @@ function logic_mob_step (self, dtime)
 		end
 	end
 
+	-- pathfinding: calculate path, when none exists or the target position changed
+	if self.v_pos and self.v_speed and self.v_speed > 0 and not self.v_avoid and minetest.setting_getbool("pathfinding") and
+	(not self.v_path or #self.v_path == 0 or vector.distance(self.v_path[#self.v_path], self.v_pos) > 1) then
+		self.v_path = nil
+		local p1 = {x = s.x, y = s.y, z = s.z}
+		local p2 = {x =self.v_pos.x, y = self.v_pos.y, z = self.v_pos.z}
+		local new_path = minetest.find_path(p1, p2, self.traits_set.vision, 1, 5, nil)
+		if new_path and #new_path > 0 then
+			self.v_path = new_path
+		end
+	end
+
+	-- pathfinding: if we have reached the first node in the path, remove it
+	if self.v_path and #self.v_path > 0 then
+		if vector.distance(s, self.v_path[1]) <= 1 then
+			table.remove(self.v_path, 1)
+		end
+	end
+
+	-- pathfinding: set our destination to the first node in the path, or the target if no path is present
+	local pos = self.v_pos
+	if self.v_path and #self.v_path > 0 then
+		pos = self.v_path[1]
+	end
+
 	-- movement: jump whenever stuck
 	if self.jump and self.v_start and self.get_velocity(self) <= 1 and self.object:getvelocity().y == 0 then
 		local v = self.object:getvelocity()
 		v.y = self.jump_velocity * 0.75
 		self.object:setvelocity(v)
-	end
-
-	-- movement: handle pathfinding
-	local pos = self.v_pos
-	if pos and self.v_speed and self.v_speed > 0 and minetest.setting_getbool("pathfinding") and not self.v_avoid then
-		pos = nil
-		if not self.v_start or (self.v_path and #self.v_path == 0) then
-			self.v_path = nil
-		end
-		-- only calculate path when none exists or the target position changed
-		if not self.v_path or vector.distance(self.v_path[#self.v_path], self.v_pos) > 1 then
-			local p1 = {x = math.floor(s.x), y = math.floor(s.y), z = math.floor(s.z)}
-			local p2 = {x = math.floor(self.v_pos.x), y = math.floor(self.v_pos.y), z = math.floor(self.v_pos.z)}
-			local new_path = minetest.find_path(p1, p2, self.traits_set.vision, 1, 5, nil)
-			if new_path and #new_path > 0 then
-				self.v_path = new_path
-			end
-		end
-		-- if the next entry is closer than 1 block, it's a destination we have reached, so remove it
-		if self.v_path then
-			if vector.distance(s, self.v_path[1]) <= 1 then
-				table.remove(self.v_path, 1)
-			end
-			if #self.v_path > 0 then
-				pos = self.v_path[1]
-			end
-		end
 	end
 
 	-- movement: handle orientation and walking
