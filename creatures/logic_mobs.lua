@@ -235,7 +235,7 @@ function logic_mob_step (self, dtime)
 					local pos = {x = target.position.x, y = target.position.y - 1, z = target.position.z}
 					local name = minetest.env:get_node(pos).name
 					local light = minetest.get_node_light(target.position, nil)
-					if name ~= target.name or light < target.light_min or light > target.light_max then
+					if name ~= target.name or not light or light < target.light_min or light > target.light_max then
 						self.targets[obj] = nil
 					end
 				-- remove entity targets which are dead
@@ -363,7 +363,7 @@ function logic_mob_step (self, dtime)
 		self.v_path = nil
 		local p1 = {x = s.x, y = s.y, z = s.z}
 		local p2 = {x =self.v_pos.x, y = self.v_pos.y, z = self.v_pos.z}
-		local new_path = minetest.find_path(p1, p2, self.traits_set.vision, 1, 5, nil)
+		local new_path = minetest.find_path(p1, p2, self.traits_set.vision, 1, 5, "Dijkstra")
 		if new_path and #new_path > 0 then
 			self.v_path = new_path
 		end
