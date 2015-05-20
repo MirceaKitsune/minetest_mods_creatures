@@ -34,11 +34,14 @@ function logic_player_step (player, dtime)
 		end
 	end
 
-	-- play damage sounds
 	if player_data[name].last_hp and player:get_hp() < player_data[name].last_hp and player:get_hp() > 0 then
+		-- play damage sounds
 		if race_settings.sounds and race_settings.sounds.damage then
 			minetest.sound_play(race_settings.sounds.damage, {object = player})
 		end
+
+		-- spawn damage particles
+		creatures:particles(player, nil)
 	end
 	player_data[name].last_hp = player:get_hp()
 

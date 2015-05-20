@@ -22,6 +22,15 @@
 	mesh = "": 3D model of the player and mob, when mesh visual is used.
 	textures = {"clear.png", ...}: Textures used by the player and mob.
 	textures = {{"clear.png", ...}, ...}: Texture sets used by the player and mob. When defined like this, a skin is randomly chosen for each creature.
+	particles = {...}: Defines the special particles spawned by the creatures:particles command. If nil, particles are not used for this creature. Definition parameters:
+		pos_min_x = 0: Minimum X position on the texture.
+		pos_min_y = 0: Minimum Y position on the texture.
+		pos_max_x = 64: Maximum X position on the texture.
+		pos_max_y = 32: Maximum Y position on the texture.
+		size_x = 4: Size of the section to be randomly selected between the minimum and maximum X position.
+		size_y = 4: Size of the section to be randomly selected between the minimum and maximum Y position.
+		amount = 10: Number of particles to be spawned.
+		time = 1: How many seconds particles live for.
 	visual_size = {x=1, y=1}: Scales the visual of the player and mob.
 	animation = {speed = 0, stand = {1, 31}, ...}: List of animation ranges, containing the following entries: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end.
 	sounds = {attack = "filename", ...}: A list containing sound effects for various actions. Valid entries: attack, damage, die.
@@ -96,8 +105,9 @@
 	creatures.selected[player]: The creature which was last right-clicked by 'player'.
 	creatures:player_get(player): Gets the race of a player as a table: [1] = name, [2] = skin
 	creatures:player_set(player, settings): Sets the race of a player from a table: [1] = name, [2] = skin
-	creatures:alliance(creature1, creature2): Returns the alliance between two mobs and / or players, ranging between -1 and 1.
 	creatures:possess(player, creature): Causes a player to possess a creature.
+	creatures:alliance(creature1, creature2): Returns the alliance between two mobs and / or players, ranging between -1 and 1.
+	creatures:particles(creature, multiplier): Triggers a particle burst using pieces of the creature's skin, by default used when the creature is damaged. You can optionally specify a value to multiply the particle count by.
 
 * Scripting - Formspec:
 	A formspec should be defined for each creature, in order to allow interaction between players and mobs (including possession). Formspec settings should be defined together with creatures, ideally as a common function.

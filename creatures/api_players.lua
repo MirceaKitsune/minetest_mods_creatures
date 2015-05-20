@@ -10,6 +10,7 @@ function creatures:register_player(name, def)
 	creatures.player_def[name].visual = def.visual
 	creatures.player_def[name].mesh = def.mesh
 	creatures.player_def[name].textures = def.textures
+	creatures.player_def[name].particles = def.particles
 	creatures.player_def[name].visual_size = def.visual_size
 	creatures.player_def[name].animation = def.animation
 	creatures.player_def[name].sounds = def.sounds

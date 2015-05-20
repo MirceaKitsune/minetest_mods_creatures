@@ -81,6 +81,7 @@ function logic_mob_step (self, dtime)
 			and minetest.env:get_timeofday() < 0.8
 		then
 			self.object:set_hp(self.object:get_hp() - self.env_damage.light)
+			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
 				if self.sounds and self.sounds.die then
 					minetest.sound_play(self.sounds.die, {object = self.object})
@@ -97,6 +98,7 @@ function logic_mob_step (self, dtime)
 			minetest.get_item_group(n.name, "water") ~= 0
 		then
 			self.object:set_hp(self.object:get_hp() - self.env_damage.water)
+			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
 				if self.sounds and self.sounds.die then
 					minetest.sound_play(self.sounds.die, {object = self.object})
@@ -120,6 +122,7 @@ function logic_mob_step (self, dtime)
 			minetest.get_item_group(n.name, "lava") ~= 0
 		then
 			self.object:set_hp(self.object:get_hp()-self.env_damage.lava)
+			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
 				if self.sounds and self.sounds.die then
 					minetest.sound_play(self.sounds.die, {object = self.object})
@@ -444,9 +447,14 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 	local s = self.object:getpos()
 	local delay = time_from_last_punch < 1 and hitter:is_player()
 
-	-- trigger the player's attack sound
-	if not delay and hitter:is_player() and psettings.sounds and psettings.sounds.attack then
-		minetest.sound_play(psettings.sounds.attack, {object = hitter})
+	if not delay then
+		-- trigger the player's attack sound
+		if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
+			minetest.sound_play(psettings.sounds.attack, {object = hitter})
+		end
+
+		-- spawn damage particles
+		creatures:particles(self.object, nil)
 	end
 
 	-- handle mob death

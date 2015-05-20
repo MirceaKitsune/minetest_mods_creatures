@@ -15,6 +15,7 @@ function creatures:register_mob(name, def)
 		visual_size = def.visual_size,
 		mesh = def.mesh,
 		textures = def.textures,
+		particles = def.particles,
 		makes_footstep_sound = def.makes_footstep_sound,
 		env_damage = def.env_damage,
 		disable_fall_damage = def.disable_fall_damage,
