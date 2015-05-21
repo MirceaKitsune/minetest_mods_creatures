@@ -372,16 +372,9 @@ creatures:register_creature("creatures_races_default:human_male", {
 	visual = "mesh",
 	mesh = "mobs_human.x",
 	textures = {
-		{"mobs_human_1.png"},
-		{"mobs_human_2.png"},
-		{"mobs_human_3.png"},
-		{"mobs_human_4.png"},
-		{"mobs_human_6.png"},
-		{"mobs_human_9.png"},
-		{"mobs_human_10.png"},
-		{"mobs_human_11.png"},
-		{"mobs_human_12.png"},
-		{"mobs_human_13.png"},
+		{"mobs_human_male_1.png"},
+		{"mobs_human_male_2.png"},
+		{"mobs_human_male_3.png"},
 	},
 	particles = {
 		pos_min_x = 0,
@@ -498,9 +491,9 @@ creatures:register_creature("creatures_races_default:human_female", {
 	visual = "mesh",
 	mesh = "mobs_human.x",
 	textures = {
-		{"mobs_human_5.png"},
-		{"mobs_human_7.png"},
-		{"mobs_human_8.png"},
+		{"mobs_human_female_1.png"},
+		{"mobs_human_female_2.png"},
+		{"mobs_human_female_3.png"},
 	},
 	particles = {
 		pos_min_x = 0,

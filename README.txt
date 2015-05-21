@@ -7,11 +7,9 @@ PilzAdam, MirceaKitsune (WTFPL):
 MirceaKitsune (WTFPL):
   mobs_human.*
   mobs_anthro.*
+  mobs_anthro_*.png
 
-Jordach (CC BY-SA 3.0):
-  mobs_human_1.png
-
-jmf, Chinchow, Stuart Jones (WTFPL):
+Stuart Jones (WTFPL):
   mobs_human_*.png
 
 PavelS (WTFPL):
