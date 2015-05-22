@@ -97,47 +97,60 @@ end
 
 -- Generates an outfit using multiple textures and colors
 function creatures:outfit(def)
-	local skins = {}
+	local layers = {}
 
-	-- colorize each texture with each color
+	-- colorize each material with each color
 	for i, entry in pairs(def) do
-		local skin = {}
+		local layer = {}
 		for _, texture in pairs(entry.textures) do
+			-- colors are defined, colorize each texture in the material
 			if entry.colors and #entry.colors > 0 then
 				for _, color in pairs(entry.colors) do
-					table.insert(skin, {texture.."^[colorize:"..color..":"..entry.colors_ratio})
+					local sub_textures = {}
+					for _, sub_texture in pairs(texture) do
+						table.insert(sub_textures, sub_texture.."^[colorize:"..color..":"..entry.colors_ratio)
+					end
+					table.insert(layer, sub_textures)
 				end
+			-- no colors are defined, apply the material as is
 			else
-				table.insert(skin, {texture})
+				table.insert(layer, texture)
 			end
 		end
-		table.insert(skins, skin)
+		table.insert(layers, layer)
 	end
 
-	-- function to combine combine the entries of two tables in order
+	-- function that combines the paired textures of two materials in order
 	local function product(t1, t2)
 		local t = {}
 		local n = 1
 		for _, v1 in pairs(t1) do
 			for _, v2 in pairs(t2) do
-				t[n] = v1.."^"..v2
-				n = n + 1
+				local sub_t = {}
+				local sub_count = math.min(#v1, #v2)
+				for i = 1, sub_count do
+					table.insert(sub_t, v1[i].."^"..v2[i])
+				end
+				if #sub_t > 0 then
+					t[n] = sub_t
+					n = n + 1
+				end
 			end
 		end
 		return t
 	end
 
-	-- combine all of the textures
-	local result = skins[1]
-	if #skins > 1 then
-		for i, entry in pairs(skins) do
+	-- obtain all possible material combinations into a single skin table
+	local skins = layers[1]
+	if #layers > 1 then
+		for i, entry in pairs(layers) do
 			if i > 1 then
-				result = product(result, skins[i])
+				skins = product(skins, layers[i])
 			end
 		end
 	end
 
-	return result
+	return skins
 end
 
 -- Pipe the creature registration function into the player and mob api

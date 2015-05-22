@@ -109,7 +109,7 @@
 	creatures:alliance(creature1, creature2): Returns the alliance between two mobs and / or players, ranging between -1 and 1.
 	creatures:particles(creature, multiplier): Triggers a particle burst using pieces of the creature's skin, by default used when the creature is damaged. You can optionally specify a value to multiply the particle count by.
 	creatures:outfit({{...}, ...}): Uses lists of textures and colors to generate all possible combinations, and outputs a full skin table. Each entry represents a layer, all images are overlayed in order (transparent textures). When used, the "textures" parameter of the creature should point directly to the product of this function. Definition parameters:
-		textures = {"body_1.png", ...}: Contains all possible textures for this layer. Note that materials are not currently supported, which means you cannot define multiple texture slots.
+		textures = {{"body_1.png", ...}, ...}: The first level of tables contains the texture sets, while the second level contains the textures for each material. Materials are always combined in pairs, and material slots not present in all sets will be discarded. Example: {{"body_1.png", "hair_1.png"}, {"body_2.png", "hair_2.png"}}
 		colors = {"#ffffff", ...}: Contains all possible colors for this layer. All textures will be colorized by all colors listed here. If nil, colorization is not used on this layer.
 		colors_ratio = 128: How much to colorize the textures. 0 means no colorization, 255 fully replaces the texture with this color.
 
