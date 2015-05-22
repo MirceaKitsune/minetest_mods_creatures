@@ -275,6 +275,19 @@ local drops_anthro_female = drops_human_female
 
 -- #1 - Settings | #5 - Outfits and colors
 
+local colors_clothes = {
+	"#ff0000", -- red
+	"#ffcc00", -- orange
+	"#ffff00", -- yellow
+	"#00ff00", -- green
+	"#00ccff", -- blue
+	"#cc00ff", -- purple
+	"#ff00ff", -- pink
+	"#ffffff", -- white
+	"#cccccc", -- gray
+	"#000000", -- black
+}
+
 local colors_fur = {
 	"#ff0000", -- red
 	"#ffcc00", -- orange
@@ -304,7 +317,46 @@ local colors_hair = {
 	"#000000", -- black
 }
 
-local function outfit(race, hair)
+local function outfit_human(female)
+	local textures = {
+		{
+			textures = {{"mobs_human_fabric.png"},},
+			colors = colors_clothes,
+			colors_ratio = 96,
+		},
+		{
+			textures = {{"mobs_human_detail_1.png"}, {"mobs_human_detail_2.png"}, {"mobs_human_detail_3.png"},},
+		},
+		{
+			textures = {{"mobs_human_clothing_1.png"}, {"mobs_human_clothing_2.png"}, {"mobs_human_clothing_3.png"},},
+		},
+		{
+			textures = {{"mobs_human_eyes.png"},},
+			colors = colors_eyes,
+			colors_ratio = 128,
+		},
+	}
+	if female then
+		table.insert(textures,
+			{
+				textures = {{"mobs_human_hair_female_1.png"}, {"mobs_human_hair_female_2.png"}, {"mobs_human_hair_female_3.png"},},
+				colors = colors_hair,
+				colors_ratio = 192,
+			}
+		)
+	else
+		table.insert(textures,
+			{
+				textures = {{"mobs_human_hair_male_1.png"}, {"mobs_human_hair_male_2.png"}, {"mobs_human_hair_male_3.png"},},
+				colors = colors_hair,
+				colors_ratio = 192,
+			}
+		)
+	end
+	return creatures:outfit(textures)
+end
+
+local function outfit_anthro(race, female)
 	local textures = {
 		{
 			textures = {{"mobs_anthro_"..race.."_fur.png"},},
@@ -320,7 +372,7 @@ local function outfit(race, hair)
 			colors_ratio = 128,
 		},
 	}
-	if hair then
+	if female then
 		table.insert(textures,
 			{
 				textures = {{"mobs_anthro_"..race.."_hair.png"},},
@@ -430,11 +482,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_human.x",
-	textures = {
-		{"mobs_human_male_1.png"},
-		{"mobs_human_male_2.png"},
-		{"mobs_human_male_3.png"},
-	},
+	textures = outfit_human(false),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -549,11 +597,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_human.x",
-	textures = {
-		{"mobs_human_female_1.png"},
-		{"mobs_human_female_2.png"},
-		{"mobs_human_female_3.png"},
-	},
+	textures = outfit_human(true),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -670,7 +714,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("fox", false),
+	textures = outfit_anthro("fox", false),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -782,7 +826,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("fox", true),
+	textures = outfit_anthro("fox", true),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -894,7 +938,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("wolf", false),
+	textures = outfit_anthro("wolf", false),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -1006,7 +1050,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("wolf", true),
+	textures = outfit_anthro("wolf", true),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -1118,7 +1162,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("leopard", false),
+	textures = outfit_anthro("leopard", false),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -1230,7 +1274,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("leopard", true),
+	textures = outfit_anthro("leopard", true),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -1342,7 +1386,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("rabbit", false),
+	textures = outfit_anthro("rabbit", false),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -1454,7 +1498,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("rabbit", true),
+	textures = outfit_anthro("rabbit", true),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -1566,7 +1610,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("squirrel", false),
+	textures = outfit_anthro("squirrel", false),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
@@ -1678,7 +1722,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.x",
-	textures = outfit("squirrel", true),
+	textures = outfit_anthro("squirrel", true),
 	particles = {
 		pos_min_x = 0,
 		pos_min_y = 0,
