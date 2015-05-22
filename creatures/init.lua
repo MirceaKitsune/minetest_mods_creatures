@@ -105,10 +105,11 @@ function creatures:outfit(def)
 		for _, texture in pairs(entry.textures) do
 			-- colors are defined, colorize each texture in the material
 			if entry.colors and #entry.colors > 0 then
+				local ratio = entry.colors_ratio or 0
 				for _, color in pairs(entry.colors) do
 					local sub_textures = {}
 					for _, sub_texture in pairs(texture) do
-						table.insert(sub_textures, sub_texture.."^[colorize:"..color..":"..entry.colors_ratio)
+						table.insert(sub_textures, sub_texture.."^[colorize:"..color..":"..ratio)
 					end
 					table.insert(layer, sub_textures)
 				end
@@ -129,7 +130,7 @@ function creatures:outfit(def)
 				local sub_t = {}
 				local sub_count = math.min(#v1, #v2)
 				for i = 1, sub_count do
-					table.insert(sub_t, v1[i].."^"..v2[i])
+					table.insert(sub_t, v1[i].."^("..v2[i]..")")
 				end
 				if #sub_t > 0 then
 					t[n] = sub_t
