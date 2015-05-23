@@ -414,6 +414,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 		water = 0,
 		lava = 0,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -516,6 +517,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -631,6 +633,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -748,6 +751,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -860,6 +864,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -972,6 +977,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -1084,6 +1090,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -1196,6 +1203,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1.5,
@@ -1308,6 +1316,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1.5,
@@ -1420,6 +1429,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -1532,6 +1542,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -1644,6 +1655,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -1756,6 +1768,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -1871,6 +1884,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 		water = 1,
 		lava = 5,
 		light = 1,
+		light_level = 7,
 	},
 	physics = {
 		speed = 0.5,
@@ -1995,6 +2009,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 		water = 0,
 		lava = 0,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 0.75,
@@ -2119,6 +2134,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 		water = 3,
 		lava = 1,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 0.5,
@@ -2243,6 +2259,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 		water = 3,
 		lava = 5,
 		light = 1,
+		light_level = 7,
 	},
 	physics = {
 		speed = 0.75,
@@ -2367,6 +2384,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 		water = 1,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 0.75,
@@ -2495,6 +2513,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 		water = 0,
 		lava = 1,
 		light = 1,
+		light_level = 7,
 	},
 	physics = {
 		speed = 1.25,
@@ -2613,6 +2632,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 		water = 0,
 		lava = 1,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 0.75,
@@ -2788,6 +2808,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 		water = 0,
 		lava = 5,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 0.5,
@@ -2936,6 +2957,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 		water = 0,
 		lava = 1,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -3045,6 +3067,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 		water = 0,
 		lava = 1,
 		light = 0,
+		light_level = 0,
 	},
 	physics = {
 		speed = 1,
@@ -3191,6 +3214,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 		water = 0,
 		lava = 5,
 		light = 1,
+		light_level = 15,
 	},
 	physics = {
 		speed = 2,

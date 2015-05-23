@@ -63,24 +63,18 @@ function logic_player_step (player, dtime)
 	-- handle player environment damage
 	local pos = player:getpos()
 	local n = minetest.env:get_node(pos)
-	if race_settings.env_damage.light and race_settings.env_damage.light ~= 0
-		and pos.y > 0
-		and minetest.env:get_node_light(pos)
-		and minetest.env:get_node_light(pos) > 4
-		and minetest.env:get_timeofday() > 0.2
-		and minetest.env:get_timeofday() < 0.8
-	then
+	local l = minetest.env:get_node_light(pos)
+	if race_settings.env_damage.light and race_settings.env_damage.light ~= 0 and l and
+	(l >= race_settings.env_damage.light_level or l < -race_settings.env_damage.light_level) then
 		player:set_hp(player:get_hp() - race_settings.env_damage.light)
 	end
 	if race_settings.env_damage.water and race_settings.env_damage.water ~= 0 and
-		minetest.get_item_group(n.name, "water") ~= 0
-	then
+	minetest.get_item_group(n.name, "water") ~= 0 then
 		player:set_hp(player:get_hp() - race_settings.env_damage.water)
 	end
 	-- NOTE: Lava damage is applied on top of normal player lava damage
 	if race_settings.env_damage.lava and race_settings.env_damage.lava ~= 0 and
-		minetest.get_item_group(n.name, "lava") ~= 0
-	then
+	minetest.get_item_group(n.name, "lava") ~= 0 then
 		player:set_hp(player:get_hp() - race_settings.env_damage.lava)
 	end
 end

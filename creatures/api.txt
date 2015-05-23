@@ -35,7 +35,11 @@
 	animation = {speed = 0, stand = {1, 31}, ...}: List of animation ranges, containing the following entries: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end.
 	sounds = {attack = "filename", ...}: A list containing sound effects for various actions. Valid entries: attack, damage, die.
 	makes_footstep_sound = false: Whether the player and mob make footstep sounds while walking. (TODO: Currently works only for mobs, engine implementation needed for players!)
-	env_damage = {water = 0, ...}: Enrivonment damage. Valid entries: water, lava, light.
+	env_damage = {water = 0, ...}: Enrivonment damage, dealt once every second. Valid entries:
+		water = 0: Amount of damage the creature takes if submerged in water. If negative, this will instead heal the creature.
+		lava = 0: Amount of damage the creature takes if submerged in lava. If negative, this will instead heal the creature.
+		light = 0: Amount of damage the creature takes if exposed to light. If negative, this will instead heal the creature.
+		light_level = 0: Minimum light level this creature must be exposed to for damage to occur. Ranges between 0 and 15. If negative, the creature will instead take damage when it's darker than this light level.
 	physics = {speed = 1, ...}: Modifies player and mob movement, as an offset to the physics settings in minetest.conf. Valid entries: speed, jump, gravity.
 	teams = {monsters = 1, ...}: Contains an interest list, where 1 means "pro" and -1 means "con". Friend or foe relationships are determined based on how many things two creatures have in common here.
 

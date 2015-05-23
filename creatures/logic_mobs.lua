@@ -72,14 +72,10 @@ function logic_mob_step (self, dtime)
 		local pos = s
 		pos.y = pos.y - 1 -- exclude player offset
 		local n = minetest.env:get_node(pos)
-		
-		if self.env_damage.light and self.env_damage.light ~= 0
-			and pos.y > 0
-			and minetest.env:get_node_light(pos)
-			and minetest.env:get_node_light(pos) > 4
-			and minetest.env:get_timeofday() > 0.2
-			and minetest.env:get_timeofday() < 0.8
-		then
+		local l = minetest.env:get_node_light(pos)
+
+		if self.env_damage.light and self.env_damage.light ~= 0 and l and
+		(l >= self.env_damage.light_level or l < -self.env_damage.light_level) then
 			self.object:set_hp(self.object:get_hp() - self.env_damage.light)
 			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
@@ -95,8 +91,7 @@ function logic_mob_step (self, dtime)
 		end
 
 		if self.env_damage.water and self.env_damage.water ~= 0 and
-			minetest.get_item_group(n.name, "water") ~= 0
-		then
+		minetest.get_item_group(n.name, "water") ~= 0 then
 			self.object:set_hp(self.object:get_hp() - self.env_damage.water)
 			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
@@ -119,8 +114,7 @@ function logic_mob_step (self, dtime)
 		end
 
 		if self.env_damage.lava and self.env_damage.lava ~= 0 and
-			minetest.get_item_group(n.name, "lava") ~= 0
-		then
+		minetest.get_item_group(n.name, "lava") ~= 0 then
 			self.object:set_hp(self.object:get_hp()-self.env_damage.lava)
 			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
