@@ -307,84 +307,88 @@ local colors_eyes = {
 }
 
 local colors_hair = {
-	"#ff0000", -- red
-	"#ffcc00", -- orange
+	"#ff4444", -- red
+	"#ffcc22", -- orange
 	"#ffff00", -- yellow
-	"#00ffff", -- cyan
-	"#0000ff", -- blue
-	"#ff00ff", -- pink
+	"#88ffff", -- cyan
+	"#2222ff", -- blue
+	"#ff44ff", -- pink
 	"#ffffff", -- white
 	"#000000", -- black
 }
 
 local function outfit_human(female)
-	local textures = {
-		{
-			textures = {{"mobs_human_fabric.png"},},
-			colors = colors_clothes,
-			colors_ratio = 96,
-		},
-		{
-			textures = {{"mobs_human_detail_1.png"}, {"mobs_human_detail_2.png"}, {"mobs_human_detail_3.png"},},
-		},
-		{
-			textures = {{"mobs_human_clothing_1.png"}, {"mobs_human_clothing_2.png"}, {"mobs_human_clothing_3.png"},},
-		},
-		{
-			textures = {{"mobs_human_eyes.png"},},
-			colors = colors_eyes,
-			colors_ratio = 128,
-		},
-	}
+	local textures = {}
+
+	table.insert(textures, {
+		textures = {{"mobs_human_fabric.png"},},
+		colors = colors_clothes,
+		colors_ratio = 96,
+	})
+
+	table.insert(textures, {
+		textures = {{"mobs_human_detail_1.png"}, {"mobs_human_detail_2.png"}, {"mobs_human_detail_3.png"},},
+	})
+
+	table.insert(textures, {
+		textures = {{"mobs_human_eyes.png"},},
+		colors = colors_eyes,
+		colors_ratio = 128,
+	})
+
 	if female then
-		table.insert(textures,
-			{
-				textures = {{"mobs_human_hair_female_1.png"}, {"mobs_human_hair_female_2.png"}, {"mobs_human_hair_female_3.png"},},
-				colors = colors_hair,
-				colors_ratio = 192,
-			}
-		)
+		table.insert(textures, {
+			textures = {{"mobs_human_hair_female_1.png"}, {"mobs_human_hair_female_2.png"}, {"mobs_human_hair_female_3.png"},},
+			colors = colors_hair,
+			colors_ratio = 128,
+		})
 	else
-		table.insert(textures,
-			{
-				textures = {{"mobs_human_hair_male_1.png"}, {"mobs_human_hair_male_2.png"}, {"mobs_human_hair_male_3.png"},},
-				colors = colors_hair,
-				colors_ratio = 192,
-			}
-		)
+		table.insert(textures, {
+			textures = {{"mobs_human_hair_male_1.png"}, {"mobs_human_hair_male_2.png"}, {"mobs_human_hair_male_3.png"},},
+			colors = colors_hair,
+			colors_ratio = 128,
+		})
 	end
+
+	table.insert(textures, {
+		textures = {{"mobs_human_clothing_1.png"}, {"mobs_human_clothing_2.png"}, {"mobs_human_clothing_3.png"},},
+	})
+
 	return creatures:outfit(textures)
 end
 
 local function outfit_anthro(race, female)
-	local textures = {
-		{
-			textures = {{"mobs_anthro_"..race.."_fur.png"},},
-			colors = colors_fur,
-			colors_ratio = 96,
-		},
-		{
-			textures = {{"mobs_anthro_"..race.."_detail.png"},},
-		},
-		{
-			textures = {{"mobs_anthro_"..race.."_eyes.png"},},
-			colors = colors_eyes,
-			colors_ratio = 128,
-		},
-	}
+	local textures = {}
+
+	table.insert(textures, {
+		textures = {{"mobs_anthro_"..race.."_fur.png"},},
+		colors = colors_fur,
+		colors_ratio = 96,
+	})
+
+	table.insert(textures, {
+		textures = {{"mobs_anthro_"..race.."_detail.png"},},
+	})
+
+	table.insert(textures, {
+		textures = {{"mobs_anthro_"..race.."_eyes.png"},},
+		colors = colors_eyes,
+		colors_ratio = 128,
+	})
+
 	if female then
-		table.insert(textures,
-			{
-				textures = {{"mobs_anthro_"..race.."_hair.png"},},
-				colors = colors_hair,
-				colors_ratio = 192,
-			}
-		)
+		table.insert(textures, {
+			textures = {{"mobs_anthro_"..race.."_hair.png"},},
+			colors = colors_hair,
+			colors_ratio = 128,
+		})
 	end
+
 	return creatures:outfit(textures)
 end
 
--- #2 - Creatures | #1 - Ghosts (don't spawn as a mob)
+-- #2 - Creatures | #1 - Ghosts
+-- The ghost is intended for players only, and should not be spawned as a mob
 
 creatures:register_creature("creatures_races_default:ghost", {
 	-- Common properties:
@@ -3144,6 +3148,169 @@ minetest.register_craft({
 	output = "creatures_races_default:animal_rat_cooked",
 	recipe = "creatures_races_default:animal_rat",
 	cooktime = 5,
+})
+
+-- #2 - Creatures | #6 - Easter Eggs
+-- This section contains rare and secret creatures. Don't look here if you don't want spoilers.
+
+creatures:register_creature("creatures_races_default:anthro_fox_demon", {
+	-- Common properties:
+	icon = "clear.png",
+	hp_max = 20,
+	armor = 100,
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
+	visual = "mesh",
+	mesh = "mobs_anthro.x",
+	textures = outfit_anthro("fox", math.random() > 0.5),
+	particles = {
+		pos_min_x = 0,
+		pos_min_y = 0,
+		pos_max_x = 64,
+		pos_max_y = 32,
+		size_x = 4,
+		size_y = 4,
+		amount = 10,
+		time = 1,
+	},
+	visual_size = {x=1, y=1},
+	drawtype = "front",
+	animation = {
+		speed = 30,
+		stand = {0, 79},
+		walk = {168, 187},
+		walk_punch = {200, 219},
+		punch = {189, 198},
+	},
+	sounds = {
+		attack = "creatures_ghost_attack",
+		damage = "creatures_ghost_damage",
+		die = "creatures_ghost_die",
+	},
+	makes_footstep_sound = false,
+	env_damage = {
+		water = 0,
+		lava = 5,
+		light = 1,
+	},
+	physics = {
+		speed = 2,
+		jump = 1,
+		gravity = 1,
+	},
+	teams = {monsters = 0, humans = 0, anthropomorphics = 0, animals = 0},
+
+	-- Mob properties:
+	drops = nil,
+	attack_damage = 4,
+	attack_type = "melee",
+	nodes = {
+		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 0,
+		light_max = 7,
+		objective = "follow",
+		priority = 0.1,},
+	},
+	traits = {
+		attack_interval = {0.25, 0.25},
+		think = {0.25, 0.25},
+		vision = {20, 20},
+		loyalty = {0, 0},
+		fear = {0, 0},
+		aggressivity = {1, 1},
+		determination = {1, 1},
+	},
+	names = {{"Help me.", "You found me...", "Stay away...", "Run!", "No... please!", "It hurts!", "He has me.", "He's behind you..."},},
+	teams_target = {attack = true, avoid = true, follow = true},
+	on_activate = function(self, staticdata, dtime_s)
+		logic_mob_activate(self, staticdata, dtime_s)
+
+		-- unkasked demons are not persisted
+		if self.actor then
+			self.object:remove()
+		end
+	end,
+	on_step = function(self, dtime)
+		logic_mob_step(self, dtime)
+	end,
+	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir)
+		logic_mob_punch(self, hitter, time_from_last_punch, tool_capabilities, dir)
+
+		-- unmask the demon when we punch it
+		if not self.actor then
+			self.object:set_properties({textures = {"mobs_anthro_fox_demon_mob.png"}})
+			self.actor = true
+		end
+	end,
+	on_rightclick = function(self, clicker)
+		logic_mob_rightclick(self, clicker)
+
+		if self.actor then
+			-- 50/50 chance of the player dying or becoming the demon
+			if math.random() > 0.5 then
+				creatures:player_set(clicker, {name = self.name, skin = self.skin, hp = 20})
+				clicker:set_properties({textures = {"mobs_anthro_fox_demon_player.png"}})
+			else
+				clicker:set_hp(0)
+			end
+			self.object:remove()
+		else
+			-- unmask the demon if we haven't already
+			formspec(self, clicker)
+			self.object:set_properties({textures = {"mobs_anthro_fox_demon_mob.png"}})
+			self.actor = true
+		end
+	end,
+
+	-- Player properties:
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
+	ghost = "",
+	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	fog = {r = 64, g = 0, b = 0},
+	screen = "",
+	ambience = "creatures_ambient_ghost",
+	player_join = function(player)
+		logic_player_join (player)
+
+		-- become a normal fox when rejoining
+		local creature = "creatures_races_default:anthro_fox_male"
+		if math.random() > 0.5 then
+			creature = "creatures_races_default:anthro_fox_female"
+		end
+		creatures:player_set(player, {name = creature, hp = 20})
+	end,
+	player_step = function(player, dtime)
+		logic_player_step (player, dtime)
+	end,
+	player_die = function(player)
+		logic_player_die (player)
+	end,
+	player_respawn = function(player)
+		logic_player_respawn (player)
+	end,
+
+	-- Module properties:
+	custom = {},
+})
+
+creatures:register_spawn("creatures_races_default:anthro_fox_demon", {
+	nodes = {"default:dirt", "default:dirt_with_grass", "default:sand", "default:desert_sand", "default:dirt_with_snow", "default:snowblock"},
+	neighbors = {"air"},
+	interval = 100,
+	chance = 1000000,
+	min_height = -31000,
+	max_height = 31000,
+	min_light = 0,
+	max_light = 7,
+	on_spawn = function(pos, node)
+		-- the mob will only spawn if it's between 6PM and 6AM, both in the game and in real life
+		local hour_real = os.date('*t').hour
+		local hour_game = minetest.get_timeofday()
+		if (hour_game >= 0.75 or hour_game < 0.25) and (hour_real >= 18 or hour_real < 6) then
+			return true
+		end
+		return false
+	end,
 })
 
 if minetest.setting_get("log_mods") then

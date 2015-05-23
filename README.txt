@@ -9,7 +9,7 @@ MirceaKitsune (WTFPL):
   mobs_anthro.*
   mobs_anthro_*.png
 
-Stuart Jones (WTFPL):
+Stuart Jones, MirceaKitsune (WTFPL):
   mobs_human_*.png
 
 PavelS (WTFPL):
