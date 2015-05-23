@@ -35,6 +35,7 @@ function creatures:particles(creature, multiplier)
 		texture = textures[skin]
 	end
 	texture = texture[math.random(1, #texture)]
+	texture = texture.."^[noalpha"
 
 	-- determine the area on the player texture to pick
 	local texture_pos_x_min = particles.pos_min_x
