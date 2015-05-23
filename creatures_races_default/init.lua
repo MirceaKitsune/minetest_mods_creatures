@@ -2216,7 +2216,7 @@ creatures:register_spawn("creatures_races_default:monster_sand", {
 	chance = 8000,
 	min_height = -31000,
 	max_height = 31000,
-	min_light = 3,
+	min_light = 0,
 	max_light = 7,
 })
 
@@ -3327,11 +3327,20 @@ creatures:register_spawn("creatures_races_default:anthro_fox_demon", {
 	min_light = 0,
 	max_light = 7,
 	on_spawn = function(pos, node)
-		-- the mob will only spawn if it's between 6PM and 6AM, both in the game and in real life
-		local hour_real = os.date('*t').hour
-		local hour_game = minetest.get_timeofday()
-		if (hour_game >= 0.75 or hour_game < 0.25) and (hour_real >= 18 or hour_real < 6) then
-			return true
+		-- this must not be a creative server
+		if not minetest.setting_getbool("creative_mode") then
+			-- the world must be older than a week
+			if minetest.get_gametime() >= (60 * 60 * 24 * 7) then
+				-- it must be between sunset and sunrise in the game
+				local hour_game = minetest.get_timeofday()
+				if hour_game > 0.75 or hour_game < 0.25 then
+					-- the system clock must be between 6PM and 6AM
+					local hour_real = os.date('*t').hour
+					if hour_real >= 18 or hour_real < 6 then
+						return true
+					end
+				end
+			end
 		end
 		return false
 	end,
