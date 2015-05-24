@@ -28,27 +28,34 @@ function logic_mob_step (self, dtime)
 	end
 
 	local s = self.object:getpos()
+	local v = self.object:getvelocity()
+	local v_xz = self.get_velocity(self)
 
 	-- physics: apply gravity
-	if self.object:getvelocity().y > 0.1 then
+	if v.y > 0.1 then
 		self.object:setacceleration({x = 0, y= -self.gravity, z = 0})
 	end
 
 	-- physics: float toward the liquid surface
 	if self.in_liquid then
-		local v = self.object:getvelocity()
 		self.object:setacceleration({x = 0, y = self.gravity/(math.max(1, v.y) ^ 2), z = 0})
 	end
 
+	-- physics: always push forward when airborne, to help with jumping or other movements
+	if self.v_start and self.v_speed and self.v_speed > 0 and v_xz <= 1 and v.y ~= 0 then
+		self.set_velocity(self, self.v_speed)
+	end
+
 	-- damage: handle fall damage
-	if self.disable_fall_damage and self.object:getvelocity().y == 0 then
+	if v.y == 0 then
 		if not self.old_y then
-			self.old_y = self.object:getpos().y
+			self.old_y = s.y
 		else
-			local d = self.old_y - self.object:getpos().y
+			local d = self.old_y - s.y
 			if d > 5 then
 				local damage = d - 5
 				self.object:set_hp(self.object:get_hp() - damage)
+				creatures:particles(self.object, nil)
 				if self.object:get_hp() == 0 then
 					if self.sounds and self.sounds.die then
 						minetest.sound_play(self.sounds.die, {object = self.object})
@@ -60,7 +67,7 @@ function logic_mob_step (self, dtime)
 					end
 				end
 			end
-			self.old_y = self.object:getpos().y
+			self.old_y = s.y
 		end
 	end
 
@@ -107,7 +114,6 @@ function logic_mob_step (self, dtime)
 				end
 
 				-- jump if we're standing on something solid
-				local v = self.object:getvelocity()
 				if self.jump and v.y == 0 then
 					v.y = self.jump_velocity * 0.75
 					self.object:setvelocity(v)
@@ -131,7 +137,6 @@ function logic_mob_step (self, dtime)
 				end
 
 				-- jump if we're standing on something solid
-				local v = self.object:getvelocity()
 				if self.jump and v.y == 0 then
 					v.y = self.jump_velocity * 0.75
 					self.object:setvelocity(v)
@@ -169,7 +174,7 @@ function logic_mob_step (self, dtime)
 
 		-- targets: add player or mob targets
 		if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
-			local objects = minetest.env:get_objects_inside_radius(self.object:getpos(), self.traits_set.vision)
+			local objects = minetest.env:get_objects_inside_radius(s, self.traits_set.vision)
 			for _, obj in pairs(objects) do
 				local ent = obj:get_luaentity()
 				if obj ~= self.object and (obj:is_player() or (ent and ent.teams)) and not self.targets[obj] then
@@ -398,8 +403,7 @@ function logic_mob_step (self, dtime)
 		end
 
 		-- movement: jump whenever stuck
-		if self.jump and self.v_start and self.get_velocity(self) <= 1 and self.object:getvelocity().y == 0 then
-			local v = self.object:getvelocity()
+		if self.jump and self.v_start and v_xz <= 1 and v.y == 0 then
 			v.y = self.jump_velocity * 0.75
 			self.object:setvelocity(v)
 		end
@@ -427,19 +431,21 @@ end
 
 -- logic_mob_activate: Executed in on_activate, handles: initialization, static data management
 function logic_mob_activate (self, staticdata, dtime_s)
-	self.object:set_armor_groups({fleshy = self.armor})
-	self.object:setacceleration({x = 0, y = -10, z = 0})
-	self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
-	self.object:setyaw(math.random(1, 360) / 180 * math.pi)
 	if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
 		self.object:remove()
+		return
 	end
 	self.timer_life = 600 - dtime_s
+
+	self.object:set_armor_groups({fleshy = self.armor})
+	self.object:setacceleration({x = 0, y = -self.gravity, z = 0})
+	self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
 
 	self.set_staticdata(self, staticdata, dtime_s)
 
 	if self.timer_life <= 0 and not self.actor then
 		self.object:remove()
+		return
 	end
 
 	creatures:configure_mob(self)

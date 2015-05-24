@@ -18,7 +18,6 @@ function creatures:register_mob(name, def)
 		particles = def.particles,
 		makes_footstep_sound = def.makes_footstep_sound,
 		env_damage = def.env_damage,
-		disable_fall_damage = def.disable_fall_damage,
 		drops = def.drops,
 		armor = def.armor,
 		icon = def.icon,
@@ -128,6 +127,7 @@ function creatures:register_mob(name, def)
 
 		get_staticdata = function(self)
 			local tmp = {}
+			tmp.yaw = self.object:getyaw()
 			tmp.hp = self.object:get_hp()
 			tmp.skin = self.skin
 			tmp.timer_life = self.timer_life
@@ -147,6 +147,9 @@ function creatures:register_mob(name, def)
 		set_staticdata = function(self, staticdata, dtime_s)
 			if staticdata then
 				local tmp = minetest.deserialize(staticdata)
+				if tmp and tmp.yaw then
+					self.object:setyaw(tmp.yaw)
+				end
 				if tmp and tmp.hp then
 					self.object:set_hp(tmp.hp)
 				end
