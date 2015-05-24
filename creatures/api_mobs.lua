@@ -23,6 +23,7 @@ function creatures:register_mob(name, def)
 		armor = def.armor,
 		icon = def.icon,
 		nodes = def.nodes,
+		think = def.think,
 		attack_damage = def.attack_damage,
 		attack_type = def.attack_type,
 		attack_projectile = def.attack_projectile,
@@ -48,6 +49,7 @@ function creatures:register_mob(name, def)
 		-- dynamic properties:
 		timer_life = 60,
 		timer_think = 0,
+		timer_decision = 0,
 		timer_attack = 0,
 		timer_env_damage = 0,
 		walk_velocity = tonumber(minetest.setting_get("movement_speed_walk")) * def.physics.speed,

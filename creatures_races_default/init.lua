@@ -34,7 +34,7 @@ local function formspec(self, clicker)
 	if alliance > creatures.teams_neutral then
 		info = info
 			.."Traits - Attack: "..string.format("%.3f", 1 / self.traits_set.attack_interval)..","
-			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits_set.think)..","
+			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits_set.decision_interval)..","
 			.."Traits - Vision: "..string.format("%.3f", self.traits_set.vision)..","
 			.."Traits - Loyalty: "..string.format("%.3f", self.traits_set.loyalty)..","
 			.."Traits - Fear: "..string.format("%.3f", self.traits_set.fear)..","
@@ -424,13 +424,14 @@ creatures:register_creature("creatures_races_default:ghost", {
 	teams = {monsters = 1, humans = 1, anthropomorphics = 1, animals = 1},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = {},
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = {},
 	traits = {
 		attack_interval = {1, 1},
-		think = {1, 1},
+		decision_interval = {1, 1},
 		vision = {15, 15},
 		loyalty = {0.5, 0.5},
 		fear = {0.5, 0.5},
@@ -527,13 +528,14 @@ creatures:register_creature("creatures_races_default:human_male", {
 	teams = {monsters = -0.6, humans = 1, anthropomorphics = -0.1, animals = 0},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_human_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_human_male,
 	traits = {
 		attack_interval = {0.75, 1.25},
-		think = {0.25, 0.5},
+		decision_interval = {1, 2},
 		vision = {25, 35},
 		loyalty = {0.25, 1},
 		fear = {0, 0.5},
@@ -643,13 +645,14 @@ creatures:register_creature("creatures_races_default:human_female", {
 	teams = {monsters = -0.5, humans = 1, anthropomorphics = -0.1, animals = 0.1},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_human_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_human_female,
 	traits = {
 		attack_interval = {1, 1.5},
-		think = {0.25, 0.5},
+		decision_interval = {1, 2},
 		vision = {25, 35},
 		loyalty = {0.5, 1},
 		fear = {0.5, 1},
@@ -761,13 +764,14 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	teams = {monsters = -0.4, humans = -0.1, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.75, 1.25},
-		think = {0.2, 0.4},
+		decision_interval = {0.5, 1},
 		vision = {20, 30},
 		loyalty = {0.75, 1},
 		fear = {0.25, 0.75},
@@ -874,13 +878,14 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	teams = {monsters = -0.3, humans = -0.1, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1, 1.25},
-		think = {0.2, 0.4},
+		decision_interval = {0.5, 1},
 		vision = {20, 30},
 		loyalty = {0.75, 1},
 		fear = {0.25, 1},
@@ -987,13 +992,14 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	teams = {monsters = -0.5, humans = -0.2, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.5, 0.75},
-		think = {0.25, 0.5},
+		decision_interval = {1.5, 2},
 		vision = {25, 35},
 		loyalty = {0.75, 1},
 		fear = {0.25, 0.5},
@@ -1100,13 +1106,14 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	teams = {monsters = -0.4, humans = -0.2, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {0.5, 0.75},
-		think = {0.25, 0.5},
+		decision_interval = {1.5, 2},
 		vision = {25, 35},
 		loyalty = {0.75, 1},
 		fear = {0.25, 0.75},
@@ -1213,13 +1220,14 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	teams = {monsters = -0.6, humans = -0.2, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.25, 0.75},
-		think = {0.4, 0.6},
+		decision_interval = {1, 2},
 		vision = {30, 40},
 		loyalty = {0, 0.5},
 		fear = {0.25, 0.75},
@@ -1326,13 +1334,14 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	teams = {monsters = -0.5, humans = -0.2, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {0.5, 0.75},
-		think = {0.4, 0.6},
+		decision_interval = {1, 2},
 		vision = {30, 40},
 		loyalty = {0, 0.75},
 		fear = {0.5, 0.75},
@@ -1439,13 +1448,14 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	teams = {monsters = -0.4, humans = 0, anthropomorphics = 1, animals = 0.4},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {1.5, 2},
-		think = {0.5, 0.75},
+		decision_interval = {1.5, 2},
 		vision = {15, 25},
 		loyalty = {0.75, 1},
 		fear = {0.5, 1},
@@ -1552,13 +1562,14 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	teams = {monsters = -0.3, humans = 0, anthropomorphics = 1, animals = 0.5},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1.75, 2},
-		think = {0.5, 0.75},
+		decision_interval = {1.5, 2},
 		vision = {15, 25},
 		loyalty = {0.75, 1},
 		fear = {0.75, 1},
@@ -1665,13 +1676,14 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	teams = {monsters = -0.4, humans = -0.1, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {1.25, 1.75},
-		think = {0.2, 0.4},
+		decision_interval = {1, 1.5},
 		vision = {20, 30},
 		loyalty = {0.25, 0.75},
 		fear = {0.25, 0.75},
@@ -1778,13 +1790,14 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	teams = {monsters = -0.3, humans = -0.1, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = drops_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1.5, 1.75},
-		think = {0.2, 0.4},
+		decision_interval = {1, 1.5},
 		vision = {20, 30},
 		loyalty = {0.25, 0.75},
 		fear = {0.25, 1},
@@ -1894,6 +1907,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	teams = {monsters = 1, humans = -0.4, anthropomorphics = -0.4, animals = 0},
 
 	-- Mob properties:
+	think = 1,
 	drops = {
 		{name = "default:dirt",
 		chance = 1,
@@ -1911,7 +1925,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	},
 	traits = {
 		attack_interval = {1.5, 1.75},
-		think = {1.25, 1.5},
+		decision_interval = {3, 4},
 		vision = {10, 15},
 		loyalty = {0, 0},
 		fear = {0, 0.25},
@@ -2019,6 +2033,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	teams = {monsters = 1, humans = -0.8, anthropomorphics = -0.8, animals = -0.2},
 
 	-- Mob properties:
+	think = 1,
 	drops = {
 		{name = "default:mossycobble",
 		chance = 1,
@@ -2036,7 +2051,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	},
 	traits = {
 		attack_interval = {1, 1.25},
-		think = {1, 1.25},
+		decision_interval = {2, 3},
 		vision = {15, 20},
 		loyalty = {0, 0.25},
 		fear = {0, 0},
@@ -2144,6 +2159,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	teams = {monsters = 1, humans = -0.6, anthropomorphics = -0.4, animals = -0.4},
 
 	-- Mob properties:
+	think = 1,
 	drops = {
 		{name = "default:sand",
 		chance = 1,
@@ -2161,7 +2177,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	},
 	traits = {
 		attack_interval = {1.25, 1.5},
-		think = {1, 1.25},
+		decision_interval = {2.5, 3.5},
 		vision = {30, 30},
 		loyalty = {0.25, 0.5},
 		fear = {0.15, 0.3},
@@ -2269,6 +2285,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	teams = {monsters = 1, humans = -0.6, anthropomorphics = -0.4, animals = 0.2},
 
 	-- Mob properties:
+	think = 1,
 	drops = {
 		{name = "default:snowblock",
 		chance = 1,
@@ -2286,7 +2303,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	},
 	traits = {
 		attack_interval = {1, 1.25},
-		think = {1, 1.25},
+		decision_interval = {2, 3},
 		vision = {15, 20},
 		loyalty = {0.3, 0.6},
 		fear = {0.1, 0.25},
@@ -2394,6 +2411,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	teams = {monsters = 0.8, humans = -0.4, anthropomorphics = 0, animals = 0.6},
 
 	-- Mob properties:
+	think = 1,
 	drops = {
 		{name = "default:sapling",
 		chance = 3,
@@ -2416,7 +2434,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	},
 	traits = {
 		attack_interval = {1, 1.25},
-		think = {0.75, 1},
+		decision_interval = {2, 2.5},
 		vision = {25, 30},
 		loyalty = {0.6, 0.8},
 		fear = {0.4, 0.6},
@@ -2523,6 +2541,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	teams = {monsters = 0.5, humans = 0.5, anthropomorphics = -0.5, animals = 0.5},
 
 	-- Mob properties:
+	think = 1,
 	drops = {},
 	attack_damage = 3,
 	attack_type = "melee",
@@ -2535,7 +2554,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	},
 	traits = {
 		attack_interval = {0.75, 1},
-		think = {0.75, 1.25},
+		decision_interval = {1.5, 2.5},
 		vision = {15, 25},
 		loyalty = {0.25, 0.75},
 		fear = {0.2, 0.4},
@@ -2642,6 +2661,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	teams = {monsters = 1, humans = -1, anthropomorphics = -1, animals = -0.2},
 
 	-- Mob properties:
+	think = 1,
 	drops = {
 		{name = "default:mese",
 		chance = 50,
@@ -2660,7 +2680,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	attack_projectile = "creatures_races_default:fireball",
 	traits = {
 		attack_interval = {2.5, 3},
-		think = {1.25, 1.75},
+		decision_interval = {2, 3},
 		vision = {15, 20},
 		loyalty = {0.3, 0.7},
 		fear = {0, 0.25},
@@ -2818,6 +2838,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	teams = {monsters = -0.4, humans = 0.2, anthropomorphics = 0, animals = 1},
 
 	-- Mob properties:
+	think = 1.5,
 	drops = {
 		{name = "creatures_races_default:meat_raw",
 		chance = 1,
@@ -2840,7 +2861,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	},
 	traits = {
 		attack_interval = {2, 3},
-		think = {1.5, 1.75},
+		decision_interval = {4, 6},
 		vision = {15, 20},
 		loyalty = {0.6, 0.8},
 		fear = {0.8, 1},
@@ -2967,6 +2988,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	teams = {monsters = -0.4, humans = -0.2, anthropomorphics = 0, animals = 1},
 
 	-- Mob properties:
+	think = 1.5,
 	drops = {},
 	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2977,7 +2999,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	},
 	traits = {
 		attack_interval = {2, 2.5},
-		think = {1, 1.25},
+		decision_interval = {4, 5},
 		vision = {15, 20},
 		loyalty = {0.25, 0.5},
 		fear = {0.75, 1},
@@ -3077,6 +3099,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	teams = {monsters = 0.4, humans = -0.6, anthropomorphics = -0.2, animals = 1},
 
 	-- Mob properties:
+	think = 1.5,
 	drops = {},
 	nodes = {
 		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -3087,7 +3110,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	},
 	traits = {
 		attack_interval = {1.5, 2},
-		think = {1.25, 1.5},
+		decision_interval = {4, 5},
 		vision = {10, 15},
 		loyalty = {0, 0.5},
 		fear = {0.3, 0.7},
@@ -3224,6 +3247,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	teams = {monsters = 0, humans = 0, anthropomorphics = 0, animals = 0},
 
 	-- Mob properties:
+	think = 0.5,
 	drops = nil,
 	attack_damage = 4,
 	attack_type = "melee",
@@ -3236,7 +3260,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	},
 	traits = {
 		attack_interval = {0.25, 0.25},
-		think = {0.25, 0.25},
+		decision_interval = {0.5, 1},
 		vision = {20, 20},
 		loyalty = {0, 0},
 		fear = {0, 0},

@@ -44,6 +44,7 @@
 	teams = {monsters = 1, ...}: Contains an interest list, where 1 means "pro" and -1 means "con". Friend or foe relationships are determined based on how many things two creatures have in common here.
 
 - Mob only parameters:
+	think = 0.5: How fast the base AI executes for this creature. Lower values offer more responsive movement, but also increase server load and the number of packets sent over the network!
 	drops = {{name = "default:sword_bronze", chance = 40, min = 1, max = 1,}, ...}: Contains a list of items and probabilities, which determines what the player gets after killing a mob.
 	on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
 	attack_damage = 1: How much damage the mob deals each punch or shot.
@@ -56,8 +57,8 @@
 		priority = 0: Target priority. The higher, the more importance the mob will give to this node.
 	names = {{"Mike", "Dan", ...}, {...}}: A random name will be chosen from this list for each mob. Can be empty for mobs that shouldn't have a name (eg: monsters).
 	traits = {attack_interval = {1, 1}, ...}: Personality traits. Each individual mob gets a value between min and max when it first spawns. Actor mobs persist those settings between server restarts. Default traits:
-		attack_interval = {1, 1}: How many seconds the mob shoots or punches. Lower means a greater attack skill.
-		think = {1, 1}: How many seconds the mob makes new decisions or takes actions. While attacking, 'attack_interval' is used instead if it's lower. Lower values mean smarter mobs, but also mean more server load!
+		attack_interval = {1, 1}: How often the mob shoots or punches. Lower values mean a greater attack skill.
+		decision_interval = {1, 1}: How often the mob scans for targets and takes new decisions. Lower values mean smarter mobs, but can greatly increase server load!
 		vision = {15, 15}: View distance of the mob, and the range in which objectives are detected.
 		loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them. Must range between 0 and 1!
 		fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first). Must range between 0 and 1!
