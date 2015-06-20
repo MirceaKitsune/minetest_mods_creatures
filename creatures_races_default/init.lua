@@ -1,3 +1,7 @@
+-- Default creatures for the Creatures mod
+
+creatures_races_default = {}
+
 -- #1 - Settings | #1 - Misc settings
 
 creatures.player_default = "creatures_races_default:ghost"
@@ -3175,7 +3179,7 @@ minetest.register_craftitem("creatures_races_default:animal_rat", {
 
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.above then
-			minetest.env:add_entity(pointed_thing.above, "creatures_races_default:animal_rat")
+			creatures:spawn("creatures_races_default:animal_rat", pointed_thing.above)
 			itemstack:take_item()
 		end
 		return itemstack

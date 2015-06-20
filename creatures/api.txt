@@ -88,6 +88,8 @@
 	traits = {mytrait = {0.25, 0.75}, ...}: Apart from the default traits, custom personality traits for modules may also be defined, as long as they use the same format (mytrait = {min_value, max_value}).
 	on_* = function(...) & player_* = function(...): You can include functions from your modules in the builtin execution functions, to run custom code for players and mobs. For example, in on_step, you can add a mymod_step() function after the essential logic_mob_step() function.
 
+* creatures:spawn("creatures:human", {...}): Spawns the given creature at the specified position.
+
 * creatures:register_spawn("creatures:human", {...}): Configures a mob to spawn on a given node. Parameters:
 	nodes = {"default:dirt_with_grass", ...}: List of nodes this spawn applies to.
 	neighbors = {"air", ...}: The above nodes must be surrounded by at least one node in this list in order to work. You will almost always want this to be {"air"}

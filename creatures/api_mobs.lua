@@ -207,6 +207,14 @@ end
 
 -- Mob spawning:
 
+function creatures:spawn(name, pos)
+	pos.y = pos.y + 1
+	if minetest.setting_getbool("display_mob_spawn") then
+		minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
+	end
+	minetest.env:add_entity(pos, name)
+end
+
 function creatures:register_spawn(name, def)
 	minetest.register_abm({
 		nodenames = def.nodes,
@@ -233,11 +241,7 @@ function creatures:register_spawn(name, def)
 				return
 			end
 
-			pos.y = pos.y + 1
-			if minetest.setting_getbool("display_mob_spawn") then
-				minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
-			end
-			minetest.env:add_entity(pos, name)
+			creatures:spawn(name, pos)
 		end
 	})
 end
