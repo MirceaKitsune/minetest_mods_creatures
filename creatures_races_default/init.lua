@@ -355,7 +355,7 @@ local function outfit_human(female)
 	end
 
 	table.insert(textures, {
-		textures = {{"mobs_human_clothing_1.png"}, {"mobs_human_clothing_2.png"}, {"mobs_human_clothing_3.png"},},
+		textures = {{"clear.png"}, {"mobs_clothing_1.png"}, {"mobs_clothing_2.png"}, {"mobs_clothing_3.png"},},
 	})
 
 	return creatures:outfit(textures)
@@ -387,6 +387,10 @@ local function outfit_anthro(race, female)
 			colors_ratio = 128,
 		})
 	end
+
+	table.insert(textures, {
+		textures = {{"clear.png"}, {"mobs_clothing_1.png"}, {"mobs_clothing_2.png"}, {"mobs_clothing_3.png"},},
+	})
 
 	return creatures:outfit(textures)
 end

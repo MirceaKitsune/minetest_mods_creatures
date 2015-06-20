@@ -11,6 +11,7 @@ MirceaKitsune (WTFPL):
 
 Stuart Jones, MirceaKitsune (WTFPL):
   mobs_human_*.png
+  mobs_clothing_*.png
 
 PavelS (WTFPL):
   mobs_deer.*
