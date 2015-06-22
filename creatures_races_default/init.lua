@@ -467,6 +467,13 @@ local module_custom = {
 	},
 }
 
+local function module_on_activate (self, staticdata, dtime_s)
+	-- #1 - Items module
+	if creatures_module_items then
+		creatures_module_items:on_activate(self, staticdata, dtime_s)
+	end
+end
+
 local function module_player_join (player)
 	-- #1 - Items module
 	if creatures_module_items then
@@ -637,6 +644,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -755,6 +763,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -872,6 +881,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -987,6 +997,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -1102,6 +1113,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -1217,6 +1229,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -1332,6 +1345,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -1447,6 +1461,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -1562,6 +1577,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -1677,6 +1693,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -1792,6 +1809,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
@@ -1907,6 +1925,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	teams_target = {attack = true, avoid = true, follow = true},
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
+		module_on_activate(self, staticdata, dtime_s)
 	end,
 	on_step = function(self, dtime)
 		logic_mob_step(self, dtime)
