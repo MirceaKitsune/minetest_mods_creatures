@@ -109,7 +109,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 							creature.naked = false
 							creature.object:set_properties({
 								textures = {"mobs_sheep.png"},
-								mesh = "mobs_sheep.x",
+								mesh = "mobs_sheep.b3d",
 							})
 						end
 					end
@@ -130,7 +130,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 					end
 					creature.object:set_properties({
 						textures = {"mobs_sheep_shaved.png"},
-						mesh = "mobs_sheep_shaved.x",
+						mesh = "mobs_sheep_shaved.b3d",
 					})
 				end
 			end
@@ -189,7 +189,7 @@ creatures.player_formspec = function(def)
 	return formspec
 end
 
--- #1 - Settings | #4 - Nodes and items
+-- #1 - Settings | #4 - Nodes, items, functions
 
 local nodes_human_male = {
 	-- go to bed if it's dark
@@ -395,7 +395,63 @@ local function outfit_anthro(race, female)
 	return creatures:outfit(textures)
 end
 
+-- #1 - Settings | #6 - Module functions
+
+-- This area contains local functions which provide shortcuts to all module functions
+-- They should be used for sentient mobs (humans, anthros, etc)
+
+local module_custom = {
+	-- #1 - Items module
+	creatures_module_items = {
+		slots = {
+			{
+				inventory = "main",
+				bone = "Arm_Right",
+				pos = {x = 0, y = 9, z = 3},
+				rot = {x = 90, y = 270, z = 270},
+				size = 0.3,
+			},
+			{
+				inventory = "main",
+				bone = "Body",
+				pos = {x = 2, y = 0, z = -1},
+				rot = {x = 0, y = 0, z = 0},
+				size = 0.15,
+			},
+			{
+				inventory = "main",
+				bone = "Body",
+				pos = {x = -2, y = 0, z = -1},
+				rot = {x = 0, y = 0, z = 0},
+				size = 0.15,
+			},
+			{
+				inventory = "main",
+				bone = "Body",
+				pos = {x = 2, y = 0, z = 1},
+				rot = {x = 0, y = 0, z = 0},
+				size = 0.15,
+			},
+			{
+				inventory = "main",
+				bone = "Body",
+				pos = {x = -2, y = 0, z = 1},
+				rot = {x = 0, y = 0, z = 0},
+				size = 0.15,
+			},
+		},
+	},
+}
+
+local function module_player_join (player)
+	-- #1 - Items module
+	if creatures_module_items then
+		creatures_module_items:player_join(player)
+	end
+end
+
 -- #2 - Creatures | #1 - Ghosts
+
 -- The ghost is intended for players only, and should not be spawned as a mob
 
 creatures:register_creature("creatures_races_default:ghost", {
@@ -495,7 +551,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_human.x",
+	mesh = "mobs_human.b3d",
 	textures = outfit_human(false),
 	particles = {
 		pos_min_x = 0,
@@ -579,6 +635,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -591,7 +648,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:human_male", {
@@ -612,7 +669,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_human.x",
+	mesh = "mobs_human.b3d",
 	textures = outfit_human(true),
 	particles = {
 		pos_min_x = 0,
@@ -696,6 +753,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -708,7 +766,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:human_female", {
@@ -731,7 +789,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("fox", false),
 	particles = {
 		pos_min_x = 0,
@@ -812,6 +870,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -824,7 +883,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_fox_male", {
@@ -845,7 +904,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("fox", true),
 	particles = {
 		pos_min_x = 0,
@@ -926,6 +985,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -938,7 +998,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_fox_female", {
@@ -959,7 +1019,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("wolf", false),
 	particles = {
 		pos_min_x = 0,
@@ -1040,6 +1100,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -1052,7 +1113,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_wolf_male", {
@@ -1073,7 +1134,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("wolf", true),
 	particles = {
 		pos_min_x = 0,
@@ -1154,6 +1215,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -1166,7 +1228,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_wolf_female", {
@@ -1187,7 +1249,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("leopard", false),
 	particles = {
 		pos_min_x = 0,
@@ -1268,6 +1330,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -1280,7 +1343,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_leopard_male", {
@@ -1301,7 +1364,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("leopard", true),
 	particles = {
 		pos_min_x = 0,
@@ -1382,6 +1445,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -1394,7 +1458,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_leopard_female", {
@@ -1415,7 +1479,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("rabbit", false),
 	particles = {
 		pos_min_x = 0,
@@ -1496,6 +1560,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -1508,7 +1573,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_rabbit_male", {
@@ -1529,7 +1594,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("rabbit", true),
 	particles = {
 		pos_min_x = 0,
@@ -1610,6 +1675,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -1622,7 +1688,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_rabbit_female", {
@@ -1643,7 +1709,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("squirrel", false),
 	particles = {
 		pos_min_x = 0,
@@ -1724,6 +1790,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -1736,7 +1803,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_squirrel_male", {
@@ -1757,7 +1824,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("squirrel", true),
 	particles = {
 		pos_min_x = 0,
@@ -1838,6 +1905,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	ambience = "",
 	player_join = function(player)
 		logic_player_join (player)
+		module_player_join (player)
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
@@ -1850,7 +1918,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	end,
 
 	-- Module properties:
-	custom = {},
+	custom = module_custom,
 })
 
 creatures:register_spawn("creatures_races_default:anthro_squirrel_female", {
@@ -1873,7 +1941,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_stone_monster.x",
+	mesh = "mobs_stone_monster.b3d",
 	textures = {"mobs_dirt_monster.png"},
 	particles = {
 		pos_min_x = 0,
@@ -1999,7 +2067,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	armor = 90,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_stone_monster.x",
+	mesh = "mobs_stone_monster.b3d",
 	textures = {"mobs_stone_monster.png"},
 	particles = {
 		pos_min_x = 0,
@@ -2125,7 +2193,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_sand_monster.x",
+	mesh = "mobs_sand_monster.b3d",
 	textures = {"mobs_sand_monster.png"},
 	particles = {
 		pos_min_x = 0,
@@ -2251,7 +2319,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_sand_monster.x",
+	mesh = "mobs_sand_monster.b3d",
 	textures = {"mobs_snow_monster.png"},
 	particles = {
 		pos_min_x = 0,
@@ -2377,7 +2445,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	armor = 90,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_tree_monster.x",
+	mesh = "mobs_tree_monster.b3d",
 	textures = {"mobs_tree_monster.png"},
 	particles = {
 		pos_min_x = 0,
@@ -2508,7 +2576,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_oerkki.x",
+	mesh = "mobs_oerkki.b3d",
 	textures = {"mobs_oerkki.png"},
 	particles = {
 		pos_min_x = 0,
@@ -2628,7 +2696,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	armor = 80,
 	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
 	visual = "mesh",
-	mesh = "mobs_dungeon_master.x",
+	mesh = "mobs_dungeon_master.b3d",
 	textures = {"mobs_dungeon_master.png"},
 	particles = {
 		pos_min_x = 0,
@@ -2801,7 +2869,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	armor = 100,
 	collisionbox = {-0.5, -0.01, -0.5, 0.65, 1, 0.5},
 	visual = "mesh",
-	mesh = "mobs_sheep.x",
+	mesh = "mobs_sheep.b3d",
 	textures = {
 		{"mobs_sheep_white.png"},
 		{"mobs_sheep_grey.png"},
@@ -2953,7 +3021,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	armor = 100,
 	collisionbox = {-0.25, -0.01, -0.25, 0.25, 0.5, 0.25},
 	visual = "mesh",
-	mesh = "mobs_rabbit.x",
+	mesh = "mobs_rabbit.b3d",
 	textures = {
 		{"mobs_rabbit_white_blue.png"},
 		{"mobs_rabbit_white_brown.png"},
@@ -3073,7 +3141,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	armor = 100,
 	collisionbox = {-0.2, -0.01, -0.2, 0.2, 0.2, 0.2},
 	visual = "mesh",
-	mesh = "mobs_rat.x",
+	mesh = "mobs_rat.b3d",
 	textures = {"mobs_rat.png"},
 	particles = {
 		pos_min_x = 0,
@@ -3214,7 +3282,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	armor = 100,
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
-	mesh = "mobs_anthro.x",
+	mesh = "mobs_anthro.b3d",
 	textures = outfit_anthro("fox", math.random() > 0.5),
 	particles = {
 		pos_min_x = 0,
