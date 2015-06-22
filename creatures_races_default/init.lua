@@ -267,39 +267,57 @@ local nodes_anthro_male = nodes_human_male
 
 local nodes_anthro_female = nodes_human_female
 
-local items_human_male = {
+local items_all = {
+	-- tools this mob possesses
 	{
-		name = "default:sword_bronze",
-		chance = 40,
+		name = {
+			"default:sword_wood", "default:sword_stone", "default:sword_steel", "default:sword_bronze",
+			"default:axe_wood", "default:axe_stone", "default:axe_steel", "default:axe_bronze",
+			"default:pick_wood", "default:pick_stone", "default:pick_steel", "default:pick_bronze",
+			"default:shovel_wood", "default:shovel_stone", "default:shovel_steel", "default:shovel_bronze",
+			"farming:hoe_wood", "farming:hoe_stone", "farming:hoe_steel", "farming:hoe_bronze",
+		},
+		chance = 5,
 		min = 1,
 		max = 1,
 	},
+	-- blocks the mob could have mined
 	{
-		name = "default:sword_steel",
-		chance = 60,
-		min = 1,
-		max = 1,
+		name = {"default:dirt", "default:stone", "default:cobble", "default:tree", "default:jungletree", "default:pinetree", "default:wood", "default:junglewood", "default:pinewood",},
+		chance = 20,
+		min = 5,
+		max = 10,
 	},
+	-- materials the mob could have mined
 	{
-		name = "default:sword_diamond",
-		chance = 80,
+		name = {"default:steel_ingot", "default:bronze_ingot", "default:coal_lump", "default:clay_lump", "default:iron_lump", "default:copper_lump", "default:gold_lump",},
+		chance = 10,
+		min = 5,
+		max = 10,
+	},
+	-- plants or other farming items
+	{
+		name = {"default:sapling", "default:junglesapling", "default:pine_sapling", "farming:seed_wheat", "farming:seed_cotton", "farming:wheat",},
+		chance = 10,
+		min = 10,
+		max = 25,
+	},
+	-- food or other misc items
+	{
+		name = {"default:apple", "farming:bread", "default:book", "default:stick",},
+		chance = 5,
 		min = 1,
-		max = 1,
+		max = 5,
 	},
 }
 
-local items_human_female = {
-	{
-		name = "farming:bread",
-		chance = 30,
-		min = 1,
-		max = 1,
-	},
-}
+local items_human_male = items_all
 
-local items_anthro_male = items_human_male
+local items_human_female = items_all
 
-local items_anthro_female = items_human_female
+local items_anthro_male = items_all
+
+local items_anthro_female = items_all
 
 -- #1 - Settings | #5 - Outfits and colors
 
