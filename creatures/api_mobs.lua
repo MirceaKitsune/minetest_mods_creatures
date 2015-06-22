@@ -24,8 +24,6 @@ function creatures:register_mob(name, def)
 		nodes = def.nodes,
 		think = def.think,
 		attack_damage = def.attack_damage,
-		attack_type = def.attack_type,
-		attack_projectile = def.attack_projectile,
 		sounds = def.sounds,
 		animation = def.animation,
 		jump = def.jump or true,
@@ -259,38 +257,6 @@ function creatures:register_spawn(name, def)
 			end
 
 			creatures:spawn(name, pos)
-		end
-	})
-end
-
--- Mob projectiles:
-
-function creatures:register_projectile(name, def)
-	minetest.register_entity(name, {
-		physical = false,
-		visual = def.visual,
-		visual_size = def.visual_size,
-		textures = def.textures,
-		velocity = def.velocity,
-		hit_player = def.hit_player,
-		hit_node = def.hit_node,
-		
-		on_step = function(self, dtime)
-		-- TODO: This must damage other mobs as well
-			local pos = self.object:getpos()
-			if minetest.env:get_node(self.object:getpos()).name ~= "air" then
-				self.hit_node(self, pos, node)
-				self.object:remove()
-				return
-			end
-			pos.y = pos.y-1
-			for _,player in pairs(minetest.env:get_objects_inside_radius(pos, 1)) do
-				if player:is_player() then
-					self.hit_player(self, player)
-					self.object:remove()
-					return
-				end
-			end
 		end
 	})
 end

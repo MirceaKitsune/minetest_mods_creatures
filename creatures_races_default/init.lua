@@ -540,7 +540,6 @@ creatures:register_creature("creatures_races_default:ghost", {
 	think = 0.5,
 	items = {},
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = {},
 	traits = {
 		attack_interval = {1, 1},
@@ -646,7 +645,6 @@ creatures:register_creature("creatures_races_default:human_male", {
 	think = 0.5,
 	items = items_human_male,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_human_male,
 	traits = {
 		attack_interval = {0.75, 1.25},
@@ -765,7 +763,6 @@ creatures:register_creature("creatures_races_default:human_female", {
 	think = 0.5,
 	items = items_human_female,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_human_female,
 	traits = {
 		attack_interval = {1, 1.5},
@@ -886,7 +883,6 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	think = 0.5,
 	items = items_anthro_male,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.75, 1.25},
@@ -1002,7 +998,6 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	think = 0.5,
 	items = items_anthro_female,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1, 1.25},
@@ -1118,7 +1113,6 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	think = 0.5,
 	items = items_anthro_male,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.5, 0.75},
@@ -1234,7 +1228,6 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	think = 0.5,
 	items = items_anthro_female,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {0.5, 0.75},
@@ -1350,7 +1343,6 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	think = 0.5,
 	items = items_anthro_male,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.25, 0.75},
@@ -1466,7 +1458,6 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	think = 0.5,
 	items = items_anthro_female,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {0.5, 0.75},
@@ -1582,7 +1573,6 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	think = 0.5,
 	items = items_anthro_male,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {1.5, 2},
@@ -1698,7 +1688,6 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	think = 0.5,
 	items = items_anthro_female,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1.75, 2},
@@ -1814,7 +1803,6 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	think = 0.5,
 	items = items_anthro_male,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {1.25, 1.75},
@@ -1930,7 +1918,6 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	think = 0.5,
 	items = items_anthro_female,
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1.5, 1.75},
@@ -2056,7 +2043,6 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 		},
 	},
 	attack_damage = 1,
-	attack_type = "melee",
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2188,7 +2174,6 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 		},
 	},
 	attack_damage = 3,
-	attack_type = "melee",
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2320,7 +2305,6 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 		},
 	},
 	attack_damage = 2,
-	attack_type = "melee",
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2452,7 +2436,6 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 		},
 	},
 	attack_damage = 2,
-	attack_type = "melee",
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2591,7 +2574,6 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	},
 	disable_fall_damage = true,
 	attack_damage = 2,
-	attack_type = "melee",
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2715,7 +2697,6 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	think = 1,
 	items = {},
 	attack_damage = 3,
-	attack_type = "melee",
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2846,7 +2827,6 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 		},
 	},
 	attack_damage = 4,
-	attack_type = "shoot",
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2856,7 +2836,6 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 			priority = 0.1,
 		},
 	},
-	attack_projectile = "creatures_races_default:fireball",
 	traits = {
 		attack_interval = {2.5, 3},
 		decision_interval = {2, 3},
@@ -2918,51 +2897,6 @@ creatures:register_spawn("creatures_races_default:monster_dungeon_master", {
 	max_height = -50,
 	min_light = 0,
 	max_light = 3,
-})
-
-creatures:register_projectile("creatures_races_default:fireball", {
-	visual = "sprite",
-	visual_size = {x=1, y=1},
-	textures = {"mobs_fireball.png"},
-	velocity = 5,
-	hit_player = function(self, player)
-		local s = self.object:getpos()
-		local p = player:getpos()
-		local vec = {x=s.x-p.x, y=s.y-p.y, z=s.z-p.z}
-		player:punch(self.object, 1,  {
-			full_punch_interval=1,
-			damage_groups = {fleshy=4},
-		}, vec)
-		local pos = self.object:getpos()
-		for dx=-1,1 do
-			for dy=-1,1 do
-				for dz=-1,1 do
-					local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.env:get_node(pos).name
-					if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
-						minetest.env:set_node(p, {name="fire:basic_flame"})
-					else
-						minetest.env:remove_node(p)
-					end
-				end
-			end
-		end
-	end,
-	hit_node = function(self, pos, node)
-		for dx=-1,1 do
-			for dy=-2,1 do
-				for dz=-1,1 do
-					local p = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.env:get_node(pos).name
-					if minetest.registered_nodes[n].groups.flammable or math.random(1, 100) <= 30 then
-						minetest.env:set_node(p, {name="fire:basic_flame"})
-					else
-						minetest.env:remove_node(p)
-					end
-				end
-			end
-		end
-	end
 })
 
 -- #2 - Creatures | #5 - Animals
@@ -3447,7 +3381,6 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	think = 0.5,
 	items = nil,
 	attack_damage = 4,
-	attack_type = "melee",
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},

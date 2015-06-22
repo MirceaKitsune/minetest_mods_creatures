@@ -6,10 +6,6 @@
 function logic_mob_step (self, dtime)
 	if not self.traits_set then return end
 
-	if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
-		self.object:remove()
-	end
-
 	self.timer_life = self.timer_life - dtime
 	if self.timer_life <= 0 and not self.actor then
 		local player_count = 0
@@ -52,7 +48,7 @@ function logic_mob_step (self, dtime)
 	end
 
 	-- damage: handle fall damage
-	if v.y == 0 then
+	if v.y == 0 and minetest.setting_getbool("enable_damage") then
 		if not self.old_y then
 			self.old_y = s.y
 		else
@@ -78,7 +74,7 @@ function logic_mob_step (self, dtime)
 
 	-- timer: limit the execution of this code by timer_env_damage, threshold set to 1 second
 	self.timer_env_damage = self.timer_env_damage + dtime
-	if self.timer_env_damage >= 1 then
+	if self.timer_env_damage >= 1 and minetest.setting_getbool("enable_damage") then
 		self.timer_env_damage = 0
 
 		local pos = s
@@ -195,7 +191,7 @@ function logic_mob_step (self, dtime)
 						end
 
 						-- attack targets
-						if self.teams_target.attack and self.attack_type and minetest.setting_getbool("enable_damage") and relation * self.traits_set.aggressivity <= -action then
+						if self.teams_target.attack and minetest.setting_getbool("enable_damage") and relation * self.traits_set.aggressivity <= -action then
 							self.targets[obj] = {entity = obj, name = name, objective = "attack", priority = math.abs(relation) * self.traits_set.aggressivity}
 						-- avoid targets
 						elseif self.teams_target.avoid and relation * self.traits_set.fear <= -action then
@@ -302,8 +298,8 @@ function logic_mob_step (self, dtime)
 			self.v_speed = nil
 			return
 
-		-- state: attacking, melee
-		elseif self.target_current.objective == "attack" and (self.attack_type == "melee" or (not self.attack_type and self.target_current.position)) then
+		-- state: attacking
+		elseif self.target_current.objective == "attack" then
 			self.v_pos = dest
 			self.v_avoid = false
 			local dist = vector.distance(s, dest)
@@ -338,31 +334,6 @@ function logic_mob_step (self, dtime)
 						self.target_current.entity:punch(self.object, self.traits_set.attack_interval, tool_capabilities, dir)
 					end
 				end
-			end
-
-		-- state: attacking, shoot
-		elseif self.target_current.objective == "attack" and self.attack_type == "shoot" then
-			self:set_animation("punch")
-			self.v_pos = dest
-			self.v_avoid = false
-			self.v_speed = 0
-
-			if self.timer_attack >= self.traits_set.attack_interval then
-				self.timer_attack = 0
-				if self.sounds and self.sounds.attack then
-					minetest.sound_play(self.sounds.attack, {object = self.object})
-				end
-
-				s.y = s.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
-				local obj = minetest.env:add_entity(s, self.attack_projectile)
-				local dir = vector.direction(self.v_pos, s)
-				local amount = (dir.x ^ 2 + dir.y ^ 2 + dir.z ^ 2) ^ 0.5
-				local v = obj:get_luaentity().velocity
-				dir.y = dir.y + 1
-				dir.x = dir.x * v / amount
-				dir.y = dir.y * v / amount
-				dir.z = dir.z * v / amount
-				obj:setvelocity(dir)
 			end
 
 		-- state: following or avoiding
@@ -440,15 +411,16 @@ end
 
 -- logic_mob_activate: Executed in on_activate, handles: initialization, static data management
 function logic_mob_activate (self, staticdata, dtime_s)
-	if self.attack_type and minetest.setting_getbool("only_peaceful_mobs") then
-		self.object:remove()
-		return
-	end
 	self.timer_life = 600 - dtime_s
-
-	self.object:set_armor_groups({fleshy = self.armor})
 	self.object:setacceleration({x = 0, y = -self.gravity, z = 0})
 	self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
+
+	-- if damage is disabled, make mobs invincible
+	if minetest.setting_getbool("enable_damage") then
+		self.object:set_armor_groups({fleshy = self.armor})
+	else
+		self.object:set_armor_groups({fleshy = 0})
+	end
 
 	self.set_staticdata(self, staticdata, dtime_s)
 
@@ -485,7 +457,9 @@ end
 
 -- logic_mob_punch: Executed in on_punch, handles: damage, death, target management
 function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities, dir)
-	if not self.traits_set then return end
+	if not self.traits_set or not minetest.setting_getbool("enable_damage") then
+		return
+	end
 
 	local psettings = creatures.player_def[creatures:player_get(hitter)]
 	local relation = creatures:alliance(self.object, hitter)
@@ -526,7 +500,7 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 					name = hitter:get_player_name()
 				end
 
-				if self.teams_target.attack and self.attack_type and minetest.setting_getbool("enable_damage") and importance * self.traits_set.aggressivity >= action then
+				if self.teams_target.attack and minetest.setting_getbool("enable_damage") and importance * self.traits_set.aggressivity >= action then
 					if not self.targets[hitter] then
 						self.targets[hitter] = {entity = hitter, name = name, objective = "attack", priority = importance * self.traits_set.aggressivity}
 					else

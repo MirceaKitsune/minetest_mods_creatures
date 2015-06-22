@@ -47,8 +47,7 @@
 	think = 0.5: How fast the base AI executes for this creature. Lower values offer more responsive movement, but also increase server load and the number of packets sent over the network!
 	items = {{name = "default:sword_bronze", chance = 10, min = 1, max = 1,}, ...}: Contains a list of items and probabilities, which determines what items the mob might spawn with. The name can optionally be a table, in which case a random entry is picked.
 	on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
-	attack_damage = 1: How much damage the mob deals each punch or shot.
-	attack_type = "melee": Can be "melee" (mob punches the player) or "shoot" (mob throws projectiles toward the player).
+	attack_damage = 1: How much damage the mob deals each punch. If the mob is wielding a tool, the capabilities of that tool are used instead.
 	nodes = {{nodes = "default:dirt", ...}, ...}: A list of parameters, which specifies how mobs react to certain nodes. Each entry represents one target per mob. Parameters include:
 		nodes = {"default:dirt", ...}: List of nodes or node groups that mobs will search for.
 		light_min = 0: Minimum light level the node most have to be considered an objective.
@@ -100,13 +99,6 @@
 	min_light = 0: Minimum light value at which mobs will spawn.
 	max_light = 15: Maximum light value at which mobs will spawn.
 	on_spawn = function(pos, node) ... end: Custom spawn function. If present, it must return true for the spawn to occur.
-
-* creatures:register_projectile("creatures:fireball", {...}): Defines a projectile, used by mobs with the "shoot" attack type. Parameters:
-	visual = "sprite": Visual type of the projectile.
-	visual_size = {x=1, y=1}: Scale of the projectile visual.
-	textures = {"mobs_fireball.png"}: Texture of the projectile visual.
-	velocity = 5: Velocity at which the projectile travels.
-	hit_player = function(self, player) {...}: Function which executes when the projectile hits a player. Use player:punch to apply damage.
 
 * Scripting - Public functions:
 	creatures.selected[player]: The creature which was last right-clicked by 'player'.
