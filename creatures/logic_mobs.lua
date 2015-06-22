@@ -448,6 +448,15 @@ function logic_mob_activate (self, staticdata, dtime_s)
 		return
 	end
 
+	-- set initial mob inventory
+	for i, item in pairs(self.items) do
+		self.inventory[i] = {}
+		if math.random(1, item.chance) == 1 then
+			self.inventory[i].name = item.name
+			self.inventory[i].count = math.random(item.min, item.max)
+		end
+	end
+
 	creatures:configure_mob(self)
 	self:set_animation("stand")
 
@@ -480,9 +489,9 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 	-- handle mob death
 	if self.object:get_hp() <= 0 then
 		if hitter and hitter:is_player() and hitter:get_inventory() then
-			for _,drop in ipairs(self.drops) do
-				if math.random(1, drop.chance) == 1 then
-					hitter:get_inventory():add_item("main", ItemStack(drop.name.." "..math.random(drop.min, drop.max)))
+			for _, item in ipairs(self.inventory) do
+				if item.name and item.count then
+					hitter:get_inventory():add_item("main", ItemStack(item.name.." "..item.count))
 				end
 			end
 		end

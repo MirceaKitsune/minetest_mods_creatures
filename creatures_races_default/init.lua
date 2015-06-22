@@ -193,89 +193,113 @@ end
 
 local nodes_human_male = {
 	-- go to bed if it's dark
-	{nodes = {"group:bed"},
-	light_min = 0,
-	light_max = 7,
-	objective = "follow",
-	stay = true,
-	priority = 0.75,},
+	{
+		nodes = {"group:bed"},
+		light_min = 0,
+		light_max = 7,
+		objective = "follow",
+		stay = true,
+		priority = 0.75,
+	},
 	-- interact with functional nodes (chests, furnaces, etc) if it's not midday
-	{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
-	light_min = 7,
-	light_max = 14,
-	objective = "follow",
-	priority = 0.5,},
+	{
+		nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
+		light_min = 7,
+		light_max = 14,
+		objective = "follow",
+		priority = 0.5,
+	},
 	-- do some farming if it's midday
-	{nodes = {"group:field"},
-	light_min = 15,
-	light_max = 15,
-	objective = "follow",
-	priority = 0.5,},
+	{
+		nodes = {"group:field"},
+		light_min = 15,
+		light_max = 15,
+		objective = "follow",
+		priority = 0.5,
+	},
 	-- wander around idly
-	{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-	light_min = 7,
-	light_max = 15,
-	objective = "follow",
-	priority = 0.1,},
+	{
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 7,
+		light_max = 15,
+		objective = "follow",
+		priority = 0.1,
+	},
 }
 
 local nodes_human_female = {
 	-- go to bed if it's dark
-	{nodes = {"group:bed"},
-	light_min = 0,
-	light_max = 7,
-	objective = "follow",
-	stay = true,
-	priority = 0.75,},
+	{
+		nodes = {"group:bed"},
+		light_min = 0,
+		light_max = 7,
+		objective = "follow",
+		stay = true,
+		priority = 0.75,
+	},
 	-- interact with functional nodes (chests, furnaces, etc) if it's not midday
-	{nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
-	light_min = 7,
-	light_max = 14,
-	objective = "follow",
-	priority = 0.5,},
+	{
+		nodes = {"default:chest", "default:chest_locked", "default:furnace", "default:furnace_active", "default:sign_wall", "default:bookshelf", "group:door"},
+		light_min = 7,
+		light_max = 14,
+		objective = "follow",
+		priority = 0.5,
+	},
 	-- do some farming if it's midday
-	{nodes = {"group:field"},
-	light_min = 15,
-	light_max = 15,
-	objective = "follow",
-	priority = 0.5,},
+	{
+		nodes = {"group:field"},
+		light_min = 15,
+		light_max = 15,
+		objective = "follow",
+		priority = 0.5,
+	},
 	-- wander around idly
-	{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-	light_min = 7,
-	light_max = 15,
-	objective = "follow",
-	priority = 0.1,},
+	{
+		nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+		light_min = 7,
+		light_max = 15,
+		objective = "follow",
+		priority = 0.1,
+	},
 }
 
 local nodes_anthro_male = nodes_human_male
 
 local nodes_anthro_female = nodes_human_female
 
-local drops_human_male = {
-	{name = "default:sword_bronze",
-	chance = 40,
-	min = 1,
-	max = 1,},
-	{name = "default:sword_steel",
-	chance = 60,
-	min = 1,
-	max = 1,},
-	{name = "default:sword_diamond",
-	chance = 80,
-	min = 1,
-	max = 1,},
+local items_human_male = {
+	{
+		name = "default:sword_bronze",
+		chance = 40,
+		min = 1,
+		max = 1,
+	},
+	{
+		name = "default:sword_steel",
+		chance = 60,
+		min = 1,
+		max = 1,
+	},
+	{
+		name = "default:sword_diamond",
+		chance = 80,
+		min = 1,
+		max = 1,
+	},
 }
 
-local drops_human_female = {
-	{name = "farming:bread",
-	chance = 30,
-	min = 1,
-	max = 1,},
+local items_human_female = {
+	{
+		name = "farming:bread",
+		chance = 30,
+		min = 1,
+		max = 1,
+	},
 }
 
-local drops_anthro_male = drops_human_male
+local items_anthro_male = items_human_male
 
-local drops_anthro_female = drops_human_female
+local items_anthro_female = items_human_female
 
 -- #1 - Settings | #5 - Outfits and colors
 
@@ -489,7 +513,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = {},
+	items = {},
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = {},
@@ -593,7 +617,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_human_male,
+	items = items_human_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_human_male,
@@ -711,7 +735,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_human_female,
+	items = items_human_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_human_female,
@@ -831,7 +855,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_male,
+	items = items_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
@@ -946,7 +970,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_female,
+	items = items_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
@@ -1061,7 +1085,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_male,
+	items = items_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
@@ -1176,7 +1200,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_female,
+	items = items_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
@@ -1291,7 +1315,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_male,
+	items = items_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
@@ -1406,7 +1430,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_female,
+	items = items_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
@@ -1521,7 +1545,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_male,
+	items = items_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
@@ -1636,7 +1660,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_female,
+	items = items_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
@@ -1751,7 +1775,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_male,
+	items = items_anthro_male,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_male,
@@ -1866,7 +1890,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = drops_anthro_female,
+	items = items_anthro_female,
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = nodes_anthro_female,
@@ -1984,20 +2008,24 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 
 	-- Mob properties:
 	think = 1,
-	drops = {
-		{name = "default:dirt",
-		chance = 1,
-		min = 3,
-		max = 5,},
+	items = {
+		{
+			name = "default:dirt",
+			chance = 1,
+			min = 3,
+			max = 5,
+		},
 	},
 	attack_damage = 1,
 	attack_type = "melee",
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 7,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {1.5, 1.75},
@@ -2110,20 +2138,24 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 
 	-- Mob properties:
 	think = 1,
-	drops = {
-		{name = "default:mossycobble",
-		chance = 1,
-		min = 3,
-		max = 5,},
+	items = {
+		{
+			name = "default:mossycobble",
+			chance = 1,
+			min = 3,
+			max = 5,
+		},
 	},
 	attack_damage = 3,
 	attack_type = "melee",
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 7,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
@@ -2236,20 +2268,24 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 
 	-- Mob properties:
 	think = 1,
-	drops = {
-		{name = "default:sand",
-		chance = 1,
-		min = 3,
-		max = 5,},
+	items = {
+		{
+			name = "default:sand",
+			chance = 1,
+			min = 3,
+			max = 5,
+		},
 	},
 	attack_damage = 2,
 	attack_type = "melee",
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 15,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {1.25, 1.5},
@@ -2362,20 +2398,24 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 
 	-- Mob properties:
 	think = 1,
-	drops = {
-		{name = "default:snowblock",
-		chance = 1,
-		min = 3,
-		max = 5,},
+	items = {
+		{
+			name = "default:snowblock",
+			chance = 1,
+			min = 3,
+			max = 5,
+		},
 	},
 	attack_damage = 2,
 	attack_type = "melee",
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 7,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
@@ -2488,25 +2528,31 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 
 	-- Mob properties:
 	think = 1,
-	drops = {
-		{name = "default:sapling",
-		chance = 3,
-		min = 1,
-		max = 2,},
-		{name = "default:junglesapling",
-		chance = 3,
-		min = 1,
-		max = 2,},
+	items = {
+		{
+			name = "default:sapling",
+			chance = 3,
+			min = 1,
+			max = 2,
+		},
+		{
+			name = "default:junglesapling",
+			chance = 3,
+			min = 1,
+			max = 2,
+		},
 	},
 	disable_fall_damage = true,
 	attack_damage = 2,
 	attack_type = "melee",
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 15,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {1, 1.25},
@@ -2618,15 +2664,17 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 
 	-- Mob properties:
 	think = 1,
-	drops = {},
+	items = {},
 	attack_damage = 3,
 	attack_type = "melee",
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 7,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {0.75, 1},
@@ -2738,20 +2786,24 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 
 	-- Mob properties:
 	think = 1,
-	drops = {
-		{name = "default:mese",
-		chance = 50,
-		min = 1,
-		max = 2,},
+	items = {
+		{
+			name = "default:mese",
+			chance = 50,
+			min = 1,
+			max = 2,
+		},
 	},
 	attack_damage = 4,
 	attack_type = "shoot",
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 7,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	attack_projectile = "creatures_races_default:fireball",
 	traits = {
@@ -2915,25 +2967,31 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 
 	-- Mob properties:
 	think = 1.5,
-	drops = {
-		{name = "creatures_races_default:meat_raw",
-		chance = 1,
-		min = 2,
-		max = 3,},
+	items = {
+		{
+			name = "creatures_races_default:meat_raw",
+			chance = 1,
+			min = 2,
+			max = 3,
+		},
 	},
 	nodes = {
 		-- eat grass if it's midday
-		{nodes = {"group:flora"},
-		light_min = 15,
-		light_max = 15,
-		objective = "attack",
-		priority = 0.5,},
+		{
+			nodes = {"group:flora"},
+			light_min = 15,
+			light_max = 15,
+			objective = "attack",
+			priority = 0.5,
+		},
 		-- wander around idly
-		{nodes = {"group:crumbly"},
-		light_min = 7,
-		light_max = 15,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly"},
+			light_min = 7,
+			light_max = 15,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {2, 3},
@@ -3065,13 +3123,15 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 
 	-- Mob properties:
 	think = 1.5,
-	drops = {},
+	items = {},
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 7,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {2, 2.5},
@@ -3176,13 +3236,15 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 
 	-- Mob properties:
 	think = 1.5,
-	drops = {},
+	items = {},
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 7,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {1.5, 2},
@@ -3324,15 +3386,17 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 
 	-- Mob properties:
 	think = 0.5,
-	drops = nil,
+	items = nil,
 	attack_damage = 4,
 	attack_type = "melee",
 	nodes = {
-		{nodes = {"group:crumbly", "group:cracky", "group:choppy"},
-		light_min = 0,
-		light_max = 7,
-		objective = "follow",
-		priority = 0.1,},
+		{
+			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
+			light_min = 0,
+			light_max = 7,
+			objective = "follow",
+			priority = 0.1,
+		},
 	},
 	traits = {
 		attack_interval = {0.25, 0.25},

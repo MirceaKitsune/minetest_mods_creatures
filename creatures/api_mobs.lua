@@ -18,7 +18,7 @@ function creatures:register_mob(name, def)
 		particles = def.particles,
 		makes_footstep_sound = def.makes_footstep_sound,
 		env_damage = def.env_damage,
-		drops = def.drops,
+		items = def.items,
 		armor = def.armor,
 		icon = def.icon,
 		nodes = def.nodes,
@@ -46,6 +46,7 @@ function creatures:register_mob(name, def)
 		skin = 0,
 
 		-- dynamic properties:
+		inventory = {},
 		timer_life = 60,
 		timer_think = 0,
 		timer_decision = 0,
