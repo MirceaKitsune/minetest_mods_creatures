@@ -31,6 +31,11 @@ function logic_mob_step (self, dtime)
 	local v = self.object:getvelocity()
 	local v_xz = self.get_velocity(self)
 
+	-- inventory: make sure the wielded item index doesn't exceed our total number of items
+	if self.inventory and #self.inventory > 0 and self.inventory_wield > #self.inventory then
+		self.inventory_wield = #self.inventory
+	end
+
 	-- physics: apply gravity
 	if v.y > 0.1 then
 		self.object:setacceleration({x = 0, y= -self.gravity, z = 0})
@@ -322,11 +327,15 @@ function logic_mob_step (self, dtime)
 						local pos = {x = self.target_current.position.x, y = self.target_current.position.y - 1, z = self.target_current.position.z}
 						minetest.dig_node(pos)
 					elseif self.target_current.entity then
+						-- use the tool capabilities of the wielded item if one is present
+						local tool = self.inventory and self.inventory[self.inventory_wield]
+						local tool_capabilities = {full_punch_interval = self.traits_set.attack_interval, damage_groups = {fleshy = self.attack_damage}}
+						if tool then
+							tool_capabilities = tool:get_tool_capabilities()
+						end
 						local dir = vector.direction(self.v_pos, s)
-						self.target_current.entity:punch(self.object, self.attack_interval, {
-							full_punch_interval = self.attack_interval,
-							damage_groups = {fleshy = self.attack_damage}
-						}, dir)
+
+						self.target_current.entity:punch(self.object, self.traits_set.attack_interval, tool_capabilities, dir)
 					end
 				end
 			end
@@ -449,11 +458,18 @@ function logic_mob_activate (self, staticdata, dtime_s)
 	end
 
 	-- set initial mob inventory
-	for i, item in pairs(self.items) do
-		self.inventory[i] = {}
-		if math.random(1, item.chance) == 1 then
-			self.inventory[i].name = item.name
-			self.inventory[i].count = math.random(item.min, item.max)
+	if not self.inventory then
+		self.inventory = {}
+		for i, item in pairs(self.items) do
+			if math.random(1, item.chance) == 1 then
+				local count = math.random(item.min, item.max)
+				local name = item.name
+				if type(item.name) == "table" then
+					name = item.name[math.random(1, #item.name)]
+				end
+
+				table.insert(self.inventory, ItemStack(name.." "..count))
+			end
 		end
 	end
 
@@ -488,11 +504,9 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 
 	-- handle mob death
 	if self.object:get_hp() <= 0 then
-		if hitter and hitter:is_player() and hitter:get_inventory() then
+		if self.inventory and hitter and hitter:is_player() and hitter:get_inventory() then
 			for _, item in ipairs(self.inventory) do
-				if item.name and item.count then
-					hitter:get_inventory():add_item("main", ItemStack(item.name.." "..item.count))
-				end
+				hitter:get_inventory():add_item("main", item)
 			end
 		end
 		if self.sounds and self.sounds.die then

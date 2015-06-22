@@ -45,7 +45,7 @@
 
 - Mob only parameters:
 	think = 0.5: How fast the base AI executes for this creature. Lower values offer more responsive movement, but also increase server load and the number of packets sent over the network!
-	drops = {{name = "default:sword_bronze", chance = 40, min = 1, max = 1,}, ...}: Contains a list of items and probabilities, which determines what the player gets after killing a mob.
+	items = {{name = "default:sword_bronze", chance = 10, min = 1, max = 1,}, ...}: Contains a list of items and probabilities, which determines what items the mob might spawn with. The name can optionally be a table, in which case a random entry is picked.
 	on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
 	attack_damage = 1: How much damage the mob deals each punch or shot.
 	attack_type = "melee": Can be "melee" (mob punches the player) or "shoot" (mob throws projectiles toward the player).
@@ -141,3 +141,8 @@
 		distance = 10: Optional. When set, the target will be taken into account if no further away than this value. If not set, only if it's within the mob's radius of vision.
 		priority = 0.5: The importance of this target. The target with the highest priority will be the task carried on by the mob. This also determines the probability for the target to be added at all (per think).
 		persist = true: Prevents the logic code from modifying this target, and also persists it on the mob entity. Always set this to true!
+
+* Scripting - Inventories:
+	Mobs can have inventories, which are located in the "inventory" property. You can access self.inventory in a custom function (such as on_step) and read or modify it as desired.
+	The inventory is a table of item stacks. For example: If you want to get the name of the first item in the mob's inventory, you would do: self.inventory[1]:get_name().
+	The index of the item selected by the mob is stored in the "inventory_wield" property. To get the wielded itemstack, you would use self.inventory[self.inventory_wield].

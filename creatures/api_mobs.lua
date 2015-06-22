@@ -46,7 +46,8 @@ function creatures:register_mob(name, def)
 		skin = 0,
 
 		-- dynamic properties:
-		inventory = {},
+		inventory = nil,
+		inventory_wield = 1,
 		timer_life = 60,
 		timer_think = 0,
 		timer_decision = 0,

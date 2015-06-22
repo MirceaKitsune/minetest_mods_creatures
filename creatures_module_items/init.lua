@@ -25,8 +25,17 @@ local function item_step_mob (self)
 	if not self.enabled then return end
 
 	-- determine the inventory slot this item represents
-	local inv = ent.inventory[self.number]
-	local item = inv and inv.name
+	-- the first entry always represents the wielded item
+	local item = nil
+	if self.number == 1 then
+		local num = ent.inventory_wield
+		local stack = ent.inventory and ent.inventory[num]
+		item = stack and stack:get_name()
+	elseif self.number - 1 ~= ent.inventory_wield then
+		local num = self.number - 1
+		local stack = ent.inventory and ent.inventory[num]
+		item = stack and stack:get_name()
+	end
 
 	-- if the item has changed, update visual appearance
 	if self.owner_item ~= item then
