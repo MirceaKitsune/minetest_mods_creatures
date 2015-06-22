@@ -136,6 +136,14 @@ function creatures:register_mob(name, def)
 			tmp.actor = self.actor
 			tmp.traits_set = self.traits_set
 			tmp.names_set = self.names_set
+			-- add inventory entries
+			if self.inventory then
+				tmp.inventory = {}
+				for obj, item in pairs(self.inventory) do
+					-- userdata cannot be serialized, convert to table
+					tmp.inventory[obj] = item:to_table()
+				end
+			end
 			-- only add persistent targets
 			tmp.targets = {}
 			for obj, target in pairs(self.targets) do
@@ -169,6 +177,13 @@ function creatures:register_mob(name, def)
 				end
 				if tmp and tmp.names_set then
 					self.names_set = tmp.names_set
+				end
+				if tmp and tmp.inventory then
+					self.inventory = {}
+					for obj, item in pairs(tmp.inventory) do
+						-- userdata cannot be serialized, convert from table
+						self.inventory[obj] = ItemStack(item)
+					end
 				end
 				if tmp and tmp.targets then
 					self.targets = tmp.targets
@@ -283,10 +298,23 @@ end
 -- Causes a player to possess a mob:
 
 function creatures:possess(player, creature)
+	-- set player position and race
 	player:setpos(creature.object:getpos())
 	player:set_look_yaw(creature.object:getyaw())
 	player:set_look_pitch(0)
 	creatures:player_set(player, {name = creature.name, skin = creature.skin, hp = creature.object:get_hp()})
+
+	-- copy inventory from mob to player
+	local inv_player = player:get_inventory()
+	local inv_mob = creature.object:get_luaentity().inventory
+	if inv_player then
+		inv_player:set_list("main", {})
+		for _, entry in pairs(inv_mob) do
+			inv_player:add_item("main", entry)
+		end
+	end
+
+	-- remove the mob
 	creature.object:remove()
 end
 
