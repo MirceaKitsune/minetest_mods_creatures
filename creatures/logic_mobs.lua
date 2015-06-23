@@ -200,11 +200,18 @@ function logic_mob_step (self, dtime)
 					if vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
 						-- this is a dropped item
 						if ent and ent.name == "__builtin:item" and creatures.item_priority then
-							-- set this as an attack target, which will make the mob walk toward it and pick it up
+							-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
 							-- since we have no better criteria to establish the value of an item, use the count of the stack to determine target priority
 							local stack = ItemStack(ent.itemstring)
 							local count = stack:get_count()
-							self.targets[obj] = {entity = obj, name = "__builtin:item", objective = "attack", priority = math.min(1, count / creatures.item_priority)}
+							local on_punch = function (self, target)
+								local ent = target.entity:get_luaentity()
+								local stack = ItemStack(ent.itemstring)
+								table.insert(self.inventory, stack)
+								target.entity:remove()
+								return false
+							end
+							self.targets[obj] = {entity = obj, name = "__builtin:item", objective = "attack", priority = math.min(1, count / creatures.item_priority), on_punch = on_punch}
 						-- this is a creature target
 						elseif relation and math.abs(relation) > creatures.teams_neutral then
 							local action = math.random()
@@ -325,6 +332,13 @@ function logic_mob_step (self, dtime)
 			end
 		end
 
+		-- targets: if the target has an on_step function, only continue if it returns true
+		if self.target_current and self.target_current.on_step then
+			if not self.target_current.on_step(self, self.target_current) then
+				return
+			end
+		end
+
 		-- state: idle
 		if not self.target_current or not dest then
 			self:set_animation("stand")
@@ -349,14 +363,23 @@ function logic_mob_step (self, dtime)
 				self.v_speed = 0
 				if self.timer_attack >= self.traits_set.attack_interval then
 					self.timer_attack = 0
-
-					-- if the wielded item has an on_mob_punch function, only punch if it returns true
 					local can_punch = true
+
+					-- inventory: if the wielded item has an on_mob_punch function, only punch if it returns true
 					if tool_item and tool_item.on_mob_punch then
 						can_punch = tool_item.on_mob_punch(self)
 					end
 
+					-- targets: if the target has an on_punch function, only punch if it returns true
+					if can_punch and self.target_current.on_punch then
+						can_punch = self.target_current.on_punch(self, self.target_current)
+					end
+
 					if can_punch then
+						if self.sounds and self.sounds.attack then
+							minetest.sound_play(self.sounds.attack, {object = self.object})
+						end
+
 						-- this is a node target
 						if self.target_current.position then
 							-- dig the node
@@ -368,39 +391,26 @@ function logic_mob_step (self, dtime)
 							table.insert(self.inventory, stack)
 						-- this is an entity target
 						elseif self.target_current.entity then
-							-- if this is an item, pick it up
-							if self.target_current.name == "__builtin:item" then
-								local ent = self.target_current.entity:get_luaentity()
-								local stack = ItemStack(ent.itemstring)
-								table.insert(self.inventory, stack)
-								self.target_current.entity:remove()
-							-- if this is a creature, punch it
-							else
-								if self.sounds and self.sounds.attack then
-									minetest.sound_play(self.sounds.attack, {object = self.object})
-								end
-
-								local capabilities = {
-									full_punch_interval = self.traits_set.attack_interval,
-									damage_groups = {fleshy = self.attack_damage},
-								}
-								if tool then
-									local tool_capabilities = tool:get_tool_capabilities()
-									local tool_damage = tool_capabilities.damage_groups and tool_capabilities.damage_groups.fleshy
-									if tool_damage then
-										-- multiply with the tool capabilities of the wielded item
-										capabilities.full_punch_interval = capabilities.full_punch_interval * tool_capabilities.full_punch_interval
-										capabilities.damage_groups.fleshy = capabilities.damage_groups.fleshy * tool_damage
-										-- wear out the tool
-										if creatures.item_wear and not minetest.setting_getbool("creative_mode") then
-											tool:add_wear(creatures.item_wear / tool_damage)
-										end
+							local capabilities = {
+								full_punch_interval = self.traits_set.attack_interval,
+								damage_groups = {fleshy = self.attack_damage},
+							}
+							if tool then
+								local tool_capabilities = tool:get_tool_capabilities()
+								local tool_damage = tool_capabilities.damage_groups and tool_capabilities.damage_groups.fleshy
+								if tool_damage then
+									-- multiply with the tool capabilities of the wielded item
+									capabilities.full_punch_interval = capabilities.full_punch_interval * tool_capabilities.full_punch_interval
+									capabilities.damage_groups.fleshy = capabilities.damage_groups.fleshy * tool_damage
+									-- wear out the tool
+									if creatures.item_wear and not minetest.setting_getbool("creative_mode") then
+										tool:add_wear(creatures.item_wear / tool_damage)
 									end
 								end
-								local dir = vector.direction(self.v_pos, s)
-
-								self.target_current.entity:punch(self.object, self.traits_set.attack_interval, capabilities, dir)
 							end
+							local dir = vector.direction(self.v_pos, s)
+
+							self.target_current.entity:punch(self.object, self.traits_set.attack_interval, capabilities, dir)
 						end
 					end
 				end

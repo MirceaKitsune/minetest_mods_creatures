@@ -144,6 +144,8 @@
 		distance = 10: Optional. When set, the target will be taken into account if no further away than this value. If not set, only if it's within the mob's radius of vision.
 		priority = 0.5: The importance of this target. The target with the highest priority will be the task carried on by the mob. This also determines the probability for the target to be added at all (per think).
 		persist = true: Prevents the logic code from modifying this target, and also persists it on the mob entity. Always set this to true!
+		on_step = function(self, target) ... end: This function executes per mob think if this is the current target. It's called from the mob's on_step function, after targets are chosen and before actions are taken. 'self' is the mob, 'target' is this target. If it returns false, the mob won't carry out any actions.
+		on_punch = function(self, target) ... end: If this is an attack target and the mob is punching, this function is executed if this is the current target. 'self' is the mob, 'target' is this target. If it returns false, the punch is aborted.
 
 * Scripting - Inventories:
 	Mobs can have inventories, which are located in the "inventory" property. You can access self.inventory in a custom function (such as on_step) and read or modify it as desired.
