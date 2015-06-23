@@ -92,6 +92,19 @@ function logic_player_die (player)
 	if race_settings.sounds and race_settings.sounds.die then
 		minetest.sound_play(race_settings.sounds.die, {object = player})
 	end
+
+	-- drop the player's inventory
+	local pos = player:getpos()
+	local inv = player:get_inventory()
+	local size = inv:get_size("main")
+	for i = 1, size do
+		local stack = inv:get_stack("main", i)
+		if not stack:is_empty() then
+			local obj = minetest.env:add_item(pos, stack)
+			obj:setvelocity({x = 1 - math.random() * 2, y = obj:getvelocity().y, z = 1 - math.random() * 2})
+		end
+	end
+	inv:set_list("main", {})
 end
 
 -- logic_player_respawn: Executed in minetest.register_on_respawnplayer, handles: respawn, creature settings

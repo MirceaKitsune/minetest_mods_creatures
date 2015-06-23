@@ -2,6 +2,23 @@
 
 -- This file contains the default AI functions for mobs. Advanced users can use a different AI instead of this, or execute additional code.
 
+-- drop all of the mob's items
+local function inventory_drop (self)
+	if not self.inventory then
+		return
+	end
+
+	local pos = self.object:getpos()
+	for _, stack in ipairs(self.inventory) do
+		if not stack:is_empty() then
+			local obj = minetest.env:add_item(pos, stack)
+			obj:setvelocity({x = 1 - math.random() * 2, y = obj:getvelocity().y, z = 1 - math.random() * 2})
+		end
+	end
+
+	self.inventory = {}
+end
+
 -- logic_mob_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
 function logic_mob_step (self, dtime)
 	if not self.traits_set or not self.inventory then return end
@@ -76,6 +93,7 @@ function logic_mob_step (self, dtime)
 					if self.sounds and self.sounds.die then
 						minetest.sound_play(self.sounds.die, {object = self.object})
 					end
+					inventory_drop(self)
 					self.object:remove()
 				else
 					if self.sounds and self.sounds.damage then
@@ -106,6 +124,7 @@ function logic_mob_step (self, dtime)
 				if self.sounds and self.sounds.die then
 					minetest.sound_play(self.sounds.die, {object = self.object})
 				end
+				inventory_drop(self)
 				self.object:remove()
 			else
 				if self.sounds and self.sounds.damage then
@@ -123,6 +142,7 @@ function logic_mob_step (self, dtime)
 				if self.sounds and self.sounds.die then
 					minetest.sound_play(self.sounds.die, {object = self.object})
 				end
+				inventory_drop(self)
 				self.object:remove()
 			else
 				if self.sounds and self.sounds.damage then
@@ -146,6 +166,7 @@ function logic_mob_step (self, dtime)
 				if self.sounds and self.sounds.die then
 					minetest.sound_play(self.sounds.die, {object = self.object})
 				end
+				inventory_drop(self)
 				self.object:remove()
 			else
 				if self.sounds and self.sounds.damage then
@@ -211,7 +232,7 @@ function logic_mob_step (self, dtime)
 								target.entity:remove()
 								return false
 							end
-							self.targets[obj] = {entity = obj, name = "__builtin:item", objective = "attack", priority = math.min(1, count / creatures.item_priority), on_punch = on_punch}
+							self.targets[obj] = {entity = obj, name = ent.name, objective = "attack", priority = math.min(1, count / creatures.item_priority), on_punch = on_punch}
 						-- this is a creature
 						elseif relation and math.abs(relation) > creatures.teams_neutral then
 							local action = math.random()
@@ -506,6 +527,7 @@ function logic_mob_activate (self, staticdata, dtime_s)
 	self.set_staticdata(self, staticdata, dtime_s)
 
 	if self.timer_life <= 0 and not self.actor then
+		inventory_drop(self)
 		self.object:remove()
 		return
 	end
@@ -554,14 +576,10 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 
 	-- handle mob death
 	if self.object:get_hp() <= 0 then
-		if self.inventory and hitter and hitter:is_player() and hitter:get_inventory() then
-			for _, item in ipairs(self.inventory) do
-				hitter:get_inventory():add_item("main", item)
-			end
-		end
 		if self.sounds and self.sounds.die then
 			minetest.sound_play(self.sounds.die, {object = self.object})
 		end
+		inventory_drop(self)
 	elseif not delay and relation then
 		-- targets: take action toward the creature who hit us
 		if self.teams_target.attack or self.teams_target.avoid then
