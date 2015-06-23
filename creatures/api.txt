@@ -43,11 +43,20 @@
 		light = 0: Amount of damage the creature takes if exposed to light. If negative, this will instead heal the creature.
 		light_level = 0: Minimum light level this creature must be exposed to for damage to occur. Ranges between 0 and 15. If negative, the creature will instead take damage when it's darker than this light level.
 	physics = {speed = 1, ...}: Modifies player and mob movement, as an offset to the physics settings in minetest.conf. Valid entries: speed, jump, gravity.
+	inventory_main = {x = 8, y = 4}: Size of the main inventory for players which are part of this race.
+	inventory_craft = {x = 1, y = 1}: Size of the craft area for players which are part of this race.
 	teams = {monsters = 1, ...}: Contains an interest list, where 1 means "pro" and -1 means "con". Friend or foe relationships are determined based on how many things two creatures have in common here.
 
 - Mob only parameters:
 	think = 0.5: How fast the base AI executes for this creature. Lower values offer more responsive movement, but also increase server load and the number of packets sent over the network!
-	items = {{name = "default:sword_bronze", chance = 10, min = 1, max = 1,}, ...}: Contains a list of items and probabilities, which determines what items the mob might spawn with. The name can optionally be a table, in which case a random entry is picked.
+	items = {{...}, ...}: Contains a list of items and probabilities, which determines what items the mob might spawn with. Parameters:
+		name = "default:dirt": The name of the item. It can optionally be a table of strings, in which case a random name is picked.
+		chance = 20: Probability that the item will be offered, 1 in this.
+		count_min = 1: Minimum number of items in the stack.
+		count_max = 99: Maximum number of items in the stack.
+		wear_min = 0: Minimum wear. Ranges between 0 and 65535, and should only be used on tools.
+		wear_max = 65535: Maximum wear. Ranges between 0 and 65535, and should only be used on tools.
+		metadata = nil: Optional metadata of the item stack.
 	on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
 	attack_damage = 1: How much damage the mob deals each punch. If the mob is wielding a tool, the capabilities of that tool are used instead.
 	nodes = {{nodes = "default:dirt", ...}, ...}: A list of parameters, which specifies how mobs react to certain nodes. Each entry represents one target per mob. Parameters include:
@@ -72,8 +81,6 @@
 	on_rightclick = function(self, clicker) ... end: Function executed when the mob is right-clicked. By default, this should call the logic_mob_rightclick function.
 
 - Player only parameters:
-	inventory_main = {x = 8, y = 4}: Size of the main inventory for players which are part of this race.
-	inventory_craft = {x = 1, y = 1}: Size of the craft area for players which are part of this race.
 	ghost = "": What creature the player becomes upon death. If blank, creatures.player_default is used.
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}}: Camera offset for 1st and 3rd person views, used to adjust the camera to eye position for creatures of various shapes and sizes.
 	fog = {r = 0, g = 0, b = 0}: If set, this fog color is seen by players who are part of this race.

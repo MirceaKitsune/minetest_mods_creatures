@@ -27,6 +27,8 @@ function creatures:register_mob(name, def)
 		sounds = def.sounds,
 		animation = def.animation,
 		jump = def.jump or true,
+		inventory_main = def.inventory_main,
+		inventory_craft = def.inventory_craft,
 		teams = def.teams,
 		teams_target = def.teams_target or {attack = true, avoid = true, follow = true},
 		traits = def.traits,

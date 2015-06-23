@@ -31,9 +31,12 @@ function logic_mob_step (self, dtime)
 
 	-- inventory: handle items
 	if self.inventory and #self.inventory > 0 then
-		-- remove worn out items
 		for i, entry in pairs(self.inventory) do
-			if entry:get_wear() >= 65535 then
+			-- don't allow more items than the inventory size
+			if i > self.inventory_main.x * self.inventory_main.y then
+				self.inventory[i] = nil
+			-- remove worn out items
+			elseif entry:get_wear() >= 65535 then
 				self.inventory[i] = nil
 			end
 		end
@@ -474,13 +477,24 @@ function logic_mob_activate (self, staticdata, dtime_s)
 		self.inventory = {}
 		for i, item in pairs(self.items) do
 			if math.random(1, item.chance) == 1 then
-				local count = math.random(item.min, item.max)
 				local name = item.name
 				if type(item.name) == "table" then
 					name = item.name[math.random(1, #item.name)]
 				end
+				local count = math.random(item.count_min, item.count_max)
+				local wear = nil
+				if item.wear_min and item.wear_max and item.wear_max > 0 then
+					wear = math.random(item.wear_min, item.wear_max)
+				end
+				local metadata = item.metadata
 
-				table.insert(self.inventory, ItemStack(name.." "..count))
+				local stack = {
+					name = name,
+					count = count,
+					wear = wear,
+					metadata = metadata,
+				}
+				table.insert(self.inventory, ItemStack(stack))
 			end
 		end
 	end

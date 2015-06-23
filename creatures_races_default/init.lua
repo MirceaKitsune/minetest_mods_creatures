@@ -279,36 +279,51 @@ local items_all = {
 			"farming:hoe_wood", "farming:hoe_stone", "farming:hoe_steel", "farming:hoe_bronze",
 		},
 		chance = 5,
-		min = 1,
-		max = 1,
+		count_min = 1,
+		count_max = 1,
+		wear_min = 0,
+		wear_max = 65535 * 0.75, -- 1 / 4 wear max
+		metadata = nil,
 	},
 	-- blocks the mob could have mined
 	{
 		name = {"default:dirt", "default:stone", "default:cobble", "default:tree", "default:jungletree", "default:pinetree", "default:wood", "default:junglewood", "default:pinewood",},
 		chance = 20,
-		min = 5,
-		max = 10,
+		count_min = 5,
+		count_max = 10,
+		wear_min = 0,
+		wear_max = 0,
+		metadata = nil,
 	},
 	-- materials the mob could have mined
 	{
 		name = {"default:steel_ingot", "default:bronze_ingot", "default:coal_lump", "default:clay_lump", "default:iron_lump", "default:copper_lump", "default:gold_lump",},
 		chance = 10,
-		min = 5,
-		max = 10,
+		count_min = 5,
+		count_max = 10,
+		wear_min = 0,
+		wear_max = 0,
+		metadata = nil,
 	},
 	-- plants or other farming items
 	{
 		name = {"default:sapling", "default:junglesapling", "default:pine_sapling", "farming:seed_wheat", "farming:seed_cotton", "farming:wheat",},
 		chance = 10,
-		min = 10,
-		max = 25,
+		count_min = 10,
+		count_max = 25,
+		wear_min = 0,
+		wear_max = 0,
+		metadata = nil,
 	},
 	-- food or other misc items
 	{
 		name = {"default:apple", "farming:bread", "default:book", "default:stick",},
 		chance = 5,
-		min = 1,
-		max = 5,
+		count_min = 1,
+		count_max = 5,
+		wear_min = 0,
+		wear_max = 0,
+		metadata = nil,
 	},
 }
 
@@ -540,6 +555,8 @@ creatures:register_creature("creatures_races_default:ghost", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 1, y = 1},
+	inventory_craft = {x = 1, y = 1},
 	teams = {monsters = 1, humans = 1, anthropomorphics = 1, animals = 1},
 
 	-- Mob properties:
@@ -573,8 +590,6 @@ creatures:register_creature("creatures_races_default:ghost", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 1, y = 1},
-	inventory_craft = {x = 1, y = 1},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = {r = 64, g = 0, b = 128},
@@ -645,6 +660,8 @@ creatures:register_creature("creatures_races_default:human_male", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.6, humans = 1, anthropomorphics = -0.1, animals = 0},
 
 	-- Mob properties:
@@ -682,8 +699,6 @@ creatures:register_creature("creatures_races_default:human_male", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -763,6 +778,8 @@ creatures:register_creature("creatures_races_default:human_female", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.5, humans = 1, anthropomorphics = -0.1, animals = 0.1},
 
 	-- Mob properties:
@@ -800,8 +817,6 @@ creatures:register_creature("creatures_races_default:human_female", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -883,6 +898,8 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.4, humans = -0.1, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
@@ -917,8 +934,6 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -998,6 +1013,8 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.3, humans = -0.1, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
@@ -1032,8 +1049,6 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1113,6 +1128,8 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 		jump = 1.25,
 		gravity = 1.25,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.5, humans = -0.2, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
@@ -1147,8 +1164,6 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1228,6 +1243,8 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 		jump = 1.25,
 		gravity = 1.25,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.4, humans = -0.2, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
@@ -1262,8 +1279,6 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1343,6 +1358,8 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.6, humans = -0.2, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
@@ -1377,8 +1394,6 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1458,6 +1473,8 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.5, humans = -0.2, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
@@ -1492,8 +1509,6 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1573,6 +1588,8 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 		jump = 1.5,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.4, humans = 0, anthropomorphics = 1, animals = 0.4},
 
 	-- Mob properties:
@@ -1607,8 +1624,6 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1688,6 +1703,8 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 		jump = 1.5,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.3, humans = 0, anthropomorphics = 1, animals = 0.5},
 
 	-- Mob properties:
@@ -1722,8 +1739,6 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1803,6 +1818,8 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 		jump = 1,
 		gravity = 0.75,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.4, humans = -0.1, anthropomorphics = 1, animals = 0.2},
 
 	-- Mob properties:
@@ -1837,8 +1854,6 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -1918,6 +1933,8 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 		jump = 1,
 		gravity = 0.75,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = -0.3, humans = -0.1, anthropomorphics = 1, animals = 0.3},
 
 	-- Mob properties:
@@ -1952,8 +1969,6 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -2036,6 +2051,8 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 		jump = 0.75,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
 	teams = {monsters = 1, humans = -0.4, anthropomorphics = -0.4, animals = 0},
 
 	-- Mob properties:
@@ -2044,8 +2061,11 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 		{
 			name = "default:dirt",
 			chance = 1,
-			min = 3,
-			max = 5,
+			count_min = 3,
+			count_max = 5,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
 		},
 	},
 	attack_damage = 1,
@@ -2085,8 +2105,6 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 2},
-	inventory_craft = {x = 2, y = 2},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -2167,6 +2185,8 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 		jump = 0.5,
 		gravity = 1.25,
 	},
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
 	teams = {monsters = 1, humans = -0.8, anthropomorphics = -0.8, animals = -0.2},
 
 	-- Mob properties:
@@ -2175,8 +2195,11 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 		{
 			name = "default:mossycobble",
 			chance = 1,
-			min = 3,
-			max = 5,
+			count_min = 3,
+			count_max = 5,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
 		},
 	},
 	attack_damage = 3,
@@ -2216,8 +2239,6 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 2},
-	inventory_craft = {x = 2, y = 2},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -2298,6 +2319,8 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
 	teams = {monsters = 1, humans = -0.6, anthropomorphics = -0.4, animals = -0.4},
 
 	-- Mob properties:
@@ -2306,8 +2329,11 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 		{
 			name = "default:sand",
 			chance = 1,
-			min = 3,
-			max = 5,
+			count_min = 3,
+			count_max = 5,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
 		},
 	},
 	attack_damage = 2,
@@ -2347,8 +2373,6 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 2},
-	inventory_craft = {x = 2, y = 2},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -2429,6 +2453,8 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
 	teams = {monsters = 1, humans = -0.6, anthropomorphics = -0.4, animals = 0.2},
 
 	-- Mob properties:
@@ -2437,8 +2463,11 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 		{
 			name = "default:snowblock",
 			chance = 1,
-			min = 3,
-			max = 5,
+			count_min = 3,
+			count_max = 5,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
 		},
 	},
 	attack_damage = 2,
@@ -2478,8 +2507,6 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 2},
-	inventory_craft = {x = 2, y = 2},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -2560,6 +2587,8 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 		jump = 1.5,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 2},
+	inventory_craft = {x = 2, y = 2},
 	teams = {monsters = 0.8, humans = -0.4, anthropomorphics = 0, animals = 0.6},
 
 	-- Mob properties:
@@ -2568,14 +2597,29 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 		{
 			name = "default:sapling",
 			chance = 3,
-			min = 1,
-			max = 2,
+			count_min = 1,
+			count_max = 2,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
 		},
 		{
 			name = "default:junglesapling",
 			chance = 3,
-			min = 1,
-			max = 2,
+			count_min = 1,
+			count_max = 2,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
+		},
+		{
+			name = "default:pine_sapling",
+			chance = 3,
+			count_min = 1,
+			count_max = 2,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
 		},
 	},
 	disable_fall_damage = true,
@@ -2616,8 +2660,6 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 2},
-	inventory_craft = {x = 2, y = 2},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -2697,6 +2739,8 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 		jump = 1.25,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = 0.5, humans = 0.5, anthropomorphics = -0.5, animals = 0.5},
 
 	-- Mob properties:
@@ -2739,8 +2783,6 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
@@ -2820,6 +2862,8 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 		jump = 1.25,
 		gravity = 1.25,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = 1, humans = -1, anthropomorphics = -1, animals = -0.2},
 
 	-- Mob properties:
@@ -2828,8 +2872,11 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 		{
 			name = "default:mese",
 			chance = 50,
-			min = 1,
-			max = 2,
+			count_min = 1,
+			count_max = 2,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
 		},
 	},
 	attack_damage = 4,
@@ -2869,8 +2916,6 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 5, z = 0}, {x = 0, y = 5, z = 0}},
 	fog = nil,
@@ -2956,6 +3001,8 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 1},
+	inventory_craft = {x = 1, y = 1},
 	teams = {monsters = -0.4, humans = 0.2, anthropomorphics = 0, animals = 1},
 
 	-- Mob properties:
@@ -2964,8 +3011,11 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 		{
 			name = "creatures_races_default:meat_raw",
 			chance = 1,
-			min = 2,
-			max = 3,
+			count_min = 2,
+			count_max = 3,
+			wear_min = 0,
+			wear_max = 0,
+			metadata = nil,
 		},
 	},
 	nodes = {
@@ -3013,8 +3063,6 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 1},
-	inventory_craft = {x = 1, y = 1},
 	ghost = "",
 	eye_offset = {{x = 0, y = -5, z = 0}, {x = 0, y = -5, z = 0}},
 	fog = nil,
@@ -3114,6 +3162,8 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 		jump = 1,
 		gravity = 0.75,
 	},
+	inventory_main = {x = 8, y = 1},
+	inventory_craft = {x = 1, y = 1},
 	teams = {monsters = -0.4, humans = -0.2, anthropomorphics = 0, animals = 1},
 
 	-- Mob properties:
@@ -3155,8 +3205,6 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 1},
-	inventory_craft = {x = 1, y = 1},
 	ghost = "",
 	eye_offset = {{x = 0, y = -10, z = 0}, {x = 0, y = -10, z = 0}},
 	fog = nil,
@@ -3229,6 +3277,8 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 		jump = 0.75,
 		gravity = 0.75,
 	},
+	inventory_main = {x = 8, y = 1},
+	inventory_craft = {x = 1, y = 1},
 	teams = {monsters = 0.4, humans = -0.6, anthropomorphics = -0.2, animals = 1},
 
 	-- Mob properties:
@@ -3270,8 +3320,6 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 1},
-	inventory_craft = {x = 1, y = 1},
 	ghost = "",
 	eye_offset = {{x = 0, y = -15, z = 0}, {x = 0, y = -15, z = 0}},
 	fog = nil,
@@ -3381,6 +3429,8 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 		jump = 1,
 		gravity = 1,
 	},
+	inventory_main = {x = 8, y = 4},
+	inventory_craft = {x = 3, y = 3},
 	teams = {monsters = 0, humans = 0, anthropomorphics = 0, animals = 0},
 
 	-- Mob properties:
@@ -3449,8 +3499,6 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	end,
 
 	-- Player properties:
-	inventory_main = {x = 8, y = 4},
-	inventory_craft = {x = 3, y = 3},
 	ghost = "",
 	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
 	fog = {r = 64, g = 0, b = 0},
