@@ -11,6 +11,8 @@
 
 * creatures.teams_neutral = 0.1: If the relation between two creatures ranges between -this and +this, the two are considered neutral. Mobs will not idly engage creatures (follow allies or attack enemies) but the relation will be evaluated if a mob is provoked (such as punched).
 
+* creatures.tool_wear = 1000: When a creature hits another creature with a tool, that tool is worn out by (this / tool_damage). Leave nil to disable tool wearing.
+
 * creatures:register_creature("creatures:ghost", {..}): Defines a new creature, with the current parameters:
 
 - Common parameters (applied to both creatures and players):

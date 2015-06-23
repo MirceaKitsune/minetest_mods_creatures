@@ -29,9 +29,19 @@ function logic_mob_step (self, dtime)
 	local tool = self.inventory and self.inventory[self.inventory_wield]
 	local tool_item = tool and minetest.registered_items[tool:get_name()]
 
-	-- inventory: make sure the wielded item index doesn't exceed our total number of items
-	if self.inventory and #self.inventory > 0 and self.inventory_wield > #self.inventory then
-		self.inventory_wield = #self.inventory
+	-- inventory: handle items
+	if self.inventory and #self.inventory > 0 then
+		-- remove worn out items
+		for i, entry in pairs(self.inventory) do
+			if entry:get_wear() >= 65535 then
+				self.inventory[i] = nil
+			end
+		end
+
+		-- make sure the wielded item index doesn't exceed our total number of items
+		if self.inventory_wield > #self.inventory then
+			self.inventory_wield = #self.inventory
+		end
 	end
 
 	-- physics: apply gravity
@@ -340,14 +350,27 @@ function logic_mob_step (self, dtime)
 							local pos = {x = self.target_current.position.x, y = self.target_current.position.y - 1, z = self.target_current.position.z}
 							minetest.dig_node(pos)
 						elseif self.target_current.entity then
-							-- use the tool capabilities of the wielded item if one is present
-							local tool_capabilities = {full_punch_interval = self.traits_set.attack_interval, damage_groups = {fleshy = self.attack_damage}}
+							-- setup initial capabilities
+							local capabilities = {
+								full_punch_interval = self.traits_set.attack_interval,
+								damage_groups = {fleshy = self.attack_damage},
+							}
 							if tool then
-								tool_capabilities = tool:get_tool_capabilities()
+								local tool_capabilities = tool:get_tool_capabilities()
+								local tool_damage = tool_capabilities.damage_groups and tool_capabilities.damage_groups.fleshy
+								if tool_damage then
+									-- multiply with the tool capabilities of the wielded item
+									capabilities.full_punch_interval = capabilities.full_punch_interval * tool_capabilities.full_punch_interval
+									capabilities.damage_groups.fleshy = capabilities.damage_groups.fleshy * tool_damage
+									-- wear out the tool
+									if creatures.tool_wear and not minetest.setting_getbool("creative_mode") then
+										tool:add_wear(creatures.tool_wear / tool_damage)
+									end
+								end
 							end
 							local dir = vector.direction(self.v_pos, s)
 
-							self.target_current.entity:punch(self.object, self.traits_set.attack_interval, tool_capabilities, dir)
+							self.target_current.entity:punch(self.object, self.traits_set.attack_interval, capabilities, dir)
 						end
 					end
 				end
@@ -484,6 +507,17 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 	local delay = time_from_last_punch < 1 and hitter:is_player()
 
 	if not delay then
+		-- if attacker is a player, wear out their wielded tool
+		if hitter:is_player() and creatures.tool_wear and not minetest.setting_getbool("creative_mode") then
+			local item = hitter:get_wielded_item()
+			local item_capabilities = item:get_tool_capabilities()
+			local item_damage = item_capabilities.damage_groups and item_capabilities.damage_groups.fleshy
+			if item_damage then
+				item:add_wear(creatures.tool_wear / item_damage)
+			end
+			hitter:set_wielded_item(item)
+		end
+
 		-- trigger the player's attack sound
 		if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
 			minetest.sound_play(psettings.sounds.attack, {object = hitter})
