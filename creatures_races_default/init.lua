@@ -6,7 +6,8 @@ creatures_races_default = {}
 
 creatures.player_default = "creatures_races_default:ghost"
 creatures.teams_neutral = 0.1
-creatures.tool_wear = 1000
+creatures.item_wear = 1000
+creatures.item_priority = 10
 
 -- #1 - Settings | #2 - Mob formspec
 

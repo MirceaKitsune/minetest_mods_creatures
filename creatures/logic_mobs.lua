@@ -174,7 +174,7 @@ function logic_mob_step (self, dtime)
 			for i, node in pairs(self.nodes) do
 				if node.priority >= math.random() then
 					local pos_all = minetest.find_nodes_in_area_under_air(corner_start, corner_end, node.nodes)
-					for _, pos_this in pairs(pos_all) do
+					for _, pos_this in ipairs(pos_all) do
 						local id = "x"..pos_this.x.."y"..pos_this.y.."z"..pos_this.z
 						if not self.targets[id] then
 							local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
@@ -188,32 +188,43 @@ function logic_mob_step (self, dtime)
 			end
 		end
 
-		-- targets: add player or mob targets
+		-- targets: add player or entity targets
 		if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
 			local objects = minetest.env:get_objects_inside_radius(s, self.traits_set.vision)
 			for _, obj in pairs(objects) do
 				local ent = obj:get_luaentity()
-				if obj ~= self.object and (obj:is_player() or (ent and ent.teams)) and not self.targets[obj] then
+				if obj ~= self.object and (obj:is_player() or ent) and not self.targets[obj] then
 					local p = obj:getpos()
 					local relation = creatures:alliance(self.object, obj)
-					if math.abs(relation) > creatures.teams_neutral and vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
-						local action = math.random()
-						local name = nil
-						if ent then
-							name = ent.name
-						else
-							name = obj:get_player_name()
-						end
 
-						-- attack targets
-						if self.teams_target.attack and minetest.setting_getbool("enable_damage") and relation * self.traits_set.aggressivity <= -action then
-							self.targets[obj] = {entity = obj, name = name, objective = "attack", priority = math.abs(relation) * self.traits_set.aggressivity}
-						-- avoid targets
-						elseif self.teams_target.avoid and relation * self.traits_set.fear <= -action then
-							self.targets[obj] = {entity = obj, name = name, objective = "avoid", priority = math.abs(relation) * self.traits_set.fear}
-						-- follow targets
-						elseif self.teams_target.follow and relation * self.traits_set.loyalty >= action then
-							self.targets[obj] = {entity = obj, name = name, objective = "follow", priority = math.abs(relation) * self.traits_set.loyalty}
+					if vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
+						-- this is a dropped item
+						if ent and ent.name == "__builtin:item" and creatures.item_priority then
+							-- set this as an attack target, which will make the mob walk toward it and pick it up
+							-- since we have no better criteria to establish the value of an item, use the count of the stack to determine target priority
+							local stack = ItemStack(ent.itemstring)
+							local count = stack:get_count()
+							self.targets[obj] = {entity = obj, name = "__builtin:item", objective = "attack", priority = math.min(1, count / creatures.item_priority)}
+						-- this is a creature target
+						elseif relation and math.abs(relation) > creatures.teams_neutral then
+							local action = math.random()
+							local name = nil
+							if ent then
+								name = ent.name
+							else
+								name = obj:get_player_name()
+							end
+
+							-- attack targets
+							if self.teams_target.attack and minetest.setting_getbool("enable_damage") and relation * self.traits_set.aggressivity <= -action then
+								self.targets[obj] = {entity = obj, name = name, objective = "attack", priority = math.abs(relation) * self.traits_set.aggressivity}
+							-- avoid targets
+							elseif self.teams_target.avoid and relation * self.traits_set.fear <= -action then
+								self.targets[obj] = {entity = obj, name = name, objective = "avoid", priority = math.abs(relation) * self.traits_set.fear}
+							-- follow targets
+							elseif self.teams_target.follow and relation * self.traits_set.loyalty >= action then
+								self.targets[obj] = {entity = obj, name = name, objective = "follow", priority = math.abs(relation) * self.traits_set.loyalty}
+							end
 						end
 					end
 				end
@@ -247,7 +258,7 @@ function logic_mob_step (self, dtime)
 					elseif target.entity and target.entity:get_hp() <= 0 then
 						self.targets[obj] = nil
 					-- if the mob is no longer fit to fight, change attack targets to avoid
-					elseif target.entity and target.objective == "attack" and self.teams_target.avoid and self.object:get_hp() <= self.hp_max * self.traits_set.fear then
+					elseif target.entity and ent and ent.teams and target.objective == "attack" and self.teams_target.avoid and self.object:get_hp() <= self.hp_max * self.traits_set.fear then
 						self.targets[obj].objective = "avoid"
 					-- don't follow mobs which are following someone else or a persistent target
 					elseif target.entity and target.objective == "follow" then
@@ -281,13 +292,6 @@ function logic_mob_step (self, dtime)
 		end
 	end
 
-	-- inventory: if the wielded item has an on_mob_wield function, only continue if it returns true
-	if tool_item and tool_item.on_mob_wield then
-		if not tool_item.on_mob_wield(self) then
-			return
-		end
-	end
-
 	-- timer: limit the execution of this code by timer_think, threshold set by the creature's think rate
 	-- if this creature is attacking, choose the smallest threshold between think rate and attack inverval
 	self.timer_attack = self.timer_attack + dtime
@@ -314,6 +318,13 @@ function logic_mob_step (self, dtime)
 			dest = self.target_current.position or self.target_current.entity:getpos()
 		end
 
+		-- inventory: if the wielded item has an on_mob_wield function, only continue if it returns true
+		if tool_item and tool_item.on_mob_wield then
+			if not tool_item.on_mob_wield(self) then
+				return
+			end
+		end
+
 		-- state: idle
 		if not self.target_current or not dest then
 			self:set_animation("stand")
@@ -338,9 +349,6 @@ function logic_mob_step (self, dtime)
 				self.v_speed = 0
 				if self.timer_attack >= self.traits_set.attack_interval then
 					self.timer_attack = 0
-					if self.sounds and self.sounds.attack then
-						minetest.sound_play(self.sounds.attack, {object = self.object})
-					end
 
 					-- if the wielded item has an on_mob_punch function, only punch if it returns true
 					local can_punch = true
@@ -349,31 +357,50 @@ function logic_mob_step (self, dtime)
 					end
 
 					if can_punch then
+						-- this is a node target
 						if self.target_current.position then
+							-- dig the node
 							local pos = {x = self.target_current.position.x, y = self.target_current.position.y - 1, z = self.target_current.position.z}
+							local name = minetest.env:get_node(pos).name
 							minetest.dig_node(pos)
+							-- add the node to the mob's inventory
+							local stack = ItemStack(name)
+							table.insert(self.inventory, stack)
+						-- this is an entity target
 						elseif self.target_current.entity then
-							-- setup initial capabilities
-							local capabilities = {
-								full_punch_interval = self.traits_set.attack_interval,
-								damage_groups = {fleshy = self.attack_damage},
-							}
-							if tool then
-								local tool_capabilities = tool:get_tool_capabilities()
-								local tool_damage = tool_capabilities.damage_groups and tool_capabilities.damage_groups.fleshy
-								if tool_damage then
-									-- multiply with the tool capabilities of the wielded item
-									capabilities.full_punch_interval = capabilities.full_punch_interval * tool_capabilities.full_punch_interval
-									capabilities.damage_groups.fleshy = capabilities.damage_groups.fleshy * tool_damage
-									-- wear out the tool
-									if creatures.tool_wear and not minetest.setting_getbool("creative_mode") then
-										tool:add_wear(creatures.tool_wear / tool_damage)
+							-- if this is an item, pick it up
+							if self.target_current.name == "__builtin:item" then
+								local ent = self.target_current.entity:get_luaentity()
+								local stack = ItemStack(ent.itemstring)
+								table.insert(self.inventory, stack)
+								self.target_current.entity:remove()
+							-- if this is a creature, punch it
+							else
+								if self.sounds and self.sounds.attack then
+									minetest.sound_play(self.sounds.attack, {object = self.object})
+								end
+
+								local capabilities = {
+									full_punch_interval = self.traits_set.attack_interval,
+									damage_groups = {fleshy = self.attack_damage},
+								}
+								if tool then
+									local tool_capabilities = tool:get_tool_capabilities()
+									local tool_damage = tool_capabilities.damage_groups and tool_capabilities.damage_groups.fleshy
+									if tool_damage then
+										-- multiply with the tool capabilities of the wielded item
+										capabilities.full_punch_interval = capabilities.full_punch_interval * tool_capabilities.full_punch_interval
+										capabilities.damage_groups.fleshy = capabilities.damage_groups.fleshy * tool_damage
+										-- wear out the tool
+										if creatures.item_wear and not minetest.setting_getbool("creative_mode") then
+											tool:add_wear(creatures.item_wear / tool_damage)
+										end
 									end
 								end
-							end
-							local dir = vector.direction(self.v_pos, s)
+								local dir = vector.direction(self.v_pos, s)
 
-							self.target_current.entity:punch(self.object, self.traits_set.attack_interval, capabilities, dir)
+								self.target_current.entity:punch(self.object, self.traits_set.attack_interval, capabilities, dir)
+							end
 						end
 					end
 				end
@@ -522,12 +549,12 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 
 	if not delay then
 		-- if attacker is a player, wear out their wielded tool
-		if hitter:is_player() and creatures.tool_wear and not minetest.setting_getbool("creative_mode") then
+		if hitter:is_player() and creatures.item_wear and not minetest.setting_getbool("creative_mode") then
 			local item = hitter:get_wielded_item()
 			local item_capabilities = item:get_tool_capabilities()
 			local item_damage = item_capabilities.damage_groups and item_capabilities.damage_groups.fleshy
 			if item_damage then
-				item:add_wear(creatures.tool_wear / item_damage)
+				item:add_wear(creatures.item_wear / item_damage)
 			end
 			hitter:set_wielded_item(item)
 		end
@@ -551,7 +578,7 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 		if self.sounds and self.sounds.die then
 			minetest.sound_play(self.sounds.die, {object = self.object})
 		end
-	elseif not delay then
+	elseif not delay and relation then
 		-- targets: take action toward the creature who hit us
 		if self.teams_target.attack or self.teams_target.avoid then
 			local ent = hitter:get_luaentity()

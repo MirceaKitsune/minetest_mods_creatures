@@ -68,7 +68,7 @@ end
 
 -- Determines whether two players or mobs are allies
 function creatures:alliance(creature1, creature2)
-	local creature1_teams = {}
+	local creature1_teams = nil
 	if creature1:get_luaentity() then
 		creature1_teams = creature1:get_luaentity().teams
 	elseif creature1:is_player() then
@@ -76,12 +76,16 @@ function creatures:alliance(creature1, creature2)
 		creature1_teams = creatures.player_def[race].teams
 	end
 
-	local creature2_teams = {}
+	local creature2_teams = nil
 	if creature2:get_luaentity() then
 		creature2_teams = creature2:get_luaentity().teams
 	elseif creature2:is_player() then
 		local race = creatures:player_get(creature2)
 		creature2_teams = creatures.player_def[race].teams
+	end
+
+	if not creature1_teams or not creature2_teams then
+		return nil
 	end
 
 	local common = 0
