@@ -220,6 +220,33 @@ function creatures:configure_mob(self)
 		end
 		self.object:set_properties({textures = self.textures[self.skin]})
 	end
+
+	-- set initial mob inventory
+	if not self.inventory then
+		self.inventory = {}
+		for i, item in pairs(self.items) do
+			if math.random(1, item.chance) == 1 then
+				local name = item.name
+				if type(item.name) == "table" then
+					name = item.name[math.random(1, #item.name)]
+				end
+				local count = math.random(item.count_min, item.count_max)
+				local wear = nil
+				if item.wear_min and item.wear_max and item.wear_max > 0 then
+					wear = math.random(item.wear_min, item.wear_max)
+				end
+				local metadata = item.metadata
+
+				local stack = {
+					name = name,
+					count = count,
+					wear = wear,
+					metadata = metadata,
+				}
+				table.insert(self.inventory, ItemStack(stack))
+			end
+		end
+	end
 end
 
 -- Mob spawning:

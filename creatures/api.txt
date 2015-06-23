@@ -154,5 +154,5 @@
 
 * Scripting - Items:
 	The wielded item can have special functions, which will be executed by the mob at various points. This includes:
-		on_mob_wield = function(self) ... end: This function runs per mob think while this item is wielded. It's called from the mob's on_step function, after targets are chosen and before actions are taken. This is meant to be the equivalent of on_use for mobs, as well as a way to include custom mob logics in items. If it returns false, the mob won't carry out any actions.
-		on_mob_punch = function(self) ... end: If the mob is attacking, this function is called per punch. If it returns false, the punch is aborted.
+		on_mob_wield = function(self, itemstack) ... end: This function runs per mob think while this item is wielded. It's called from the mob's on_step function, after targets are chosen and before actions are taken. This is meant to be the equivalent of on_use for mobs, as well as a way to include custom mob logics in items. If it returns false, the mob won't carry out any actions.
+		on_mob_punch = function(self, itemstack) ... end: If the mob is attacking, this function is called per punch. If it returns false, the punch is aborted.

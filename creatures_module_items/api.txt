@@ -1,0 +1,16 @@
+This module enables wearable items for the Creatures mod. It allows for a 3D wielded item to show in the hand, or other inventory items to be visually represented on the body.
+
+* Functions:
+	creatures_module_items:player_join(player): This must be called from the player_join function of the creature definition, for absolutely all creatures! It handles spawning the configuration of item entities for players.
+	creatures_module_items:on_activate(self, staticdata, dtime_s): This must be called from the on_activate function of the creature definition, for absolutely all creatures! It handles spawning the configuration of item entities for mobs.
+	creatures_module_items = {...}: This must be included in the custom table of the creature definition. It can be left out if a creature doesn't use wearable items. Parameters:
+		slots = {{...}, ...}: Each table represents an item slot. The settings for each item slot are:
+			inventory = "main": Which inventory this entry addresses. Only used for players, and can typically be "main" or "craft".
+			bone = "Arm_Right": If the creature uses a rigged model, this is the name of the bone the item will be attached to. If nil, the item will be attached to the player object instead.
+			pos = {x = 0, y = 0, z = 0}: Attachment position offset.
+			rot = {x = 0, y = 0, z = 0}: Attachment rotation offset.
+			size = 0.3: The scale of the item.
+			on_step = function(self) ... end: You can optionally define a function, which is executed on each step by the item entity. If it returns false, the visual appearance of items will not be updated that tick.
+
+* Settings:
+	creatures_module_items.count = 10: The maximum number of slots and item entities allowed per creature. If more slots than this are defined, those that exceed this count will be ignored.

@@ -1,8 +1,7 @@
 creatures_module_items = {}
 
--- Settings
+-- Default settings
 
--- maximum allowed number of item slots
 creatures_module_items.count = 10
 
 -- Functions

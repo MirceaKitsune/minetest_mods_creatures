@@ -9,6 +9,10 @@ creatures.teams_neutral = 0.1
 creatures.item_wear = 1000
 creatures.item_priority = 10
 
+if creatures_module_items then
+	creatures_module_items.count = 5
+end
+
 -- #1 - Settings | #2 - Mob formspec
 
 local function formspec(self, clicker)
