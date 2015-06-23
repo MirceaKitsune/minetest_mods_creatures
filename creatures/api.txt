@@ -138,3 +138,8 @@
 	Mobs can have inventories, which are located in the "inventory" property. You can access self.inventory in a custom function (such as on_step) and read or modify it as desired.
 	The inventory is a table of item stacks. For example: If you want to get the name of the first item in the mob's inventory, you would do: self.inventory[1]:get_name().
 	The index of the item selected by the mob is stored in the "inventory_wield" property. To get the wielded itemstack, you would use self.inventory[self.inventory_wield].
+
+* Scripting - Items:
+	The wielded item can have special functions, which will be executed by the mob at various points. This includes:
+		on_mob_wield = function(self) ... end: This function runs each frame while the mob is wielding this item. It's called from the mob's on_step function, after targets are chosen and before actions are taken. This is meant to be the equivalent of on_use for mobs, as well as a way to include custom mob logics in items. If it returns false, the mob won't carry out any actions.
+		on_mob_punch = function(self) ... end: If the mob is attacking, this function is called per punch. If it returns false, the punch is aborted.

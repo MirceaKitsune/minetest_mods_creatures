@@ -24,6 +24,11 @@ local function item_step_mob (self)
 	-- return if there is nothing to do
 	if not self.enabled then return end
 
+	-- if this entry has an on_step function, only continue if it returns true
+	if entry.on_step then
+		if not entry.on_step(self) then return end
+	end
+
 	-- determine the inventory slot this item represents
 	-- the first entry always represents the wielded item
 	local item = nil
@@ -70,6 +75,11 @@ local function item_step_player (self)
 
 	-- return if there is nothing to do
 	if not self.enabled then return end
+
+	-- if this entry has an on_step function, only continue if it returns true
+	if entry.on_step then
+		if not entry.on_step(self) then return end
+	end
 
 	-- determine the inventory slot this item represents
 	-- the first entry always represents the wielded item

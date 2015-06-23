@@ -452,6 +452,7 @@ local module_custom = {
 				pos = {x = 0, y = 9, z = 3},
 				rot = {x = 90, y = 270, z = 270},
 				size = 0.3,
+				on_step = nil,
 			},
 			{
 				inventory = "main",
@@ -459,6 +460,7 @@ local module_custom = {
 				pos = {x = 2, y = 0, z = -1},
 				rot = {x = 0, y = 0, z = 0},
 				size = 0.15,
+				on_step = nil,
 			},
 			{
 				inventory = "main",
@@ -466,6 +468,7 @@ local module_custom = {
 				pos = {x = -2, y = 0, z = -1},
 				rot = {x = 0, y = 0, z = 0},
 				size = 0.15,
+				on_step = nil,
 			},
 			{
 				inventory = "main",
@@ -473,6 +476,7 @@ local module_custom = {
 				pos = {x = 2, y = 0, z = 1},
 				rot = {x = 0, y = 0, z = 0},
 				size = 0.15,
+				on_step = nil,
 			},
 			{
 				inventory = "main",
@@ -480,6 +484,7 @@ local module_custom = {
 				pos = {x = -2, y = 0, z = 1},
 				rot = {x = 0, y = 0, z = 0},
 				size = 0.15,
+				on_step = nil,
 			},
 		},
 	},

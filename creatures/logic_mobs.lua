@@ -26,6 +26,8 @@ function logic_mob_step (self, dtime)
 	local s = self.object:getpos()
 	local v = self.object:getvelocity()
 	local v_xz = self.get_velocity(self)
+	local tool = self.inventory and self.inventory[self.inventory_wield]
+	local tool_item = tool and minetest.registered_items[tool:get_name()]
 
 	-- inventory: make sure the wielded item index doesn't exceed our total number of items
 	if self.inventory and #self.inventory > 0 and self.inventory_wield > #self.inventory then
@@ -266,6 +268,13 @@ function logic_mob_step (self, dtime)
 		end
 	end
 
+	-- inventory: if the wielded item has an on_mob_wield function, only continue if it returns true
+	if tool_item and tool_item.on_mob_wield then
+		if not tool_item.on_mob_wield(self) then
+			return
+		end
+	end
+
 	-- timer: limit the execution of this code by timer_think, threshold set by the creature's think rate
 	-- if this creature is attacking, choose the smallest threshold between think rate and attack inverval
 	self.timer_attack = self.timer_attack + dtime
@@ -319,19 +328,27 @@ function logic_mob_step (self, dtime)
 					if self.sounds and self.sounds.attack then
 						minetest.sound_play(self.sounds.attack, {object = self.object})
 					end
-					if self.target_current.position then
-						local pos = {x = self.target_current.position.x, y = self.target_current.position.y - 1, z = self.target_current.position.z}
-						minetest.dig_node(pos)
-					elseif self.target_current.entity then
-						-- use the tool capabilities of the wielded item if one is present
-						local tool = self.inventory and self.inventory[self.inventory_wield]
-						local tool_capabilities = {full_punch_interval = self.traits_set.attack_interval, damage_groups = {fleshy = self.attack_damage}}
-						if tool then
-							tool_capabilities = tool:get_tool_capabilities()
-						end
-						local dir = vector.direction(self.v_pos, s)
 
-						self.target_current.entity:punch(self.object, self.traits_set.attack_interval, tool_capabilities, dir)
+					-- if the wielded item has an on_mob_punch function, only punch if it returns true
+					local can_punch = true
+					if tool_item and tool_item.on_mob_punch then
+						can_punch = tool_item.on_mob_punch(self)
+					end
+
+					if can_punch then
+						if self.target_current.position then
+							local pos = {x = self.target_current.position.x, y = self.target_current.position.y - 1, z = self.target_current.position.z}
+							minetest.dig_node(pos)
+						elseif self.target_current.entity then
+							-- use the tool capabilities of the wielded item if one is present
+							local tool_capabilities = {full_punch_interval = self.traits_set.attack_interval, damage_groups = {fleshy = self.attack_damage}}
+							if tool then
+								tool_capabilities = tool:get_tool_capabilities()
+							end
+							local dir = vector.direction(self.v_pos, s)
+
+							self.target_current.entity:punch(self.object, self.traits_set.attack_interval, tool_capabilities, dir)
+						end
 					end
 				end
 			end
