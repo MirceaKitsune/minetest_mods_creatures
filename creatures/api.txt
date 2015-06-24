@@ -73,6 +73,7 @@
 			aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first). Must range between 0 and 1!
 			determination = {0.5, 0.5}: The mob's ability to focus on a task. Lower values mean a greater tolerance to randomly choosing a different target each think. Must range between 0 and 1!
 		teams_target = {attack = true, avoid = true, follow = true}: What types of targets this mob will automatically add or change based on team relationships. Can be nil for default behavior.
+		use_items = true: Whether this mob can use items. Note that setting this to false won't disable this mob's inventory, but it will keep it from doing things like wielding tools or picking up dropped items.
 		on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the logic_mob_activate function.
 		on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the logic_mob_step function.
 		on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir) ... end: Function executed when the mob is punched. By default, this should call the logic_mob_punch function.

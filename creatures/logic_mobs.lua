@@ -2,6 +2,33 @@
 
 -- This file contains the default AI functions for mobs. Advanced users can use a different AI instead of this, or execute additional code.
 
+-- add a stack to the mob's inventory, returns true if successful
+local function inventory_add (self, stack, check)
+	if not self.inventory then
+		return false
+	end
+
+	-- if the item already exists in a stack that has room, we can add it to that stack instead
+	for i, item in pairs(self.inventory) do
+		if item:item_fits(stack) then
+			if not check then
+				item:add_item(stack)
+			end
+			return true
+		end
+	end
+
+	-- if the item wasn't added to an existing stack, see if we can add it to a new slot
+	if #self.inventory + 1 <= self.inventory_main.x * self.inventory_main.y then
+		if not check then
+			table.insert(self.inventory, stack)
+		end
+		return true
+	end
+
+	return false
+end
+
 -- drop all of the mob's items
 local function inventory_drop (self)
 	if not self.inventory then
@@ -61,7 +88,11 @@ function logic_mob_step (self, dtime)
 		end
 
 		-- make sure the wielded item index doesn't exceed our total number of items
-		if self.inventory_wield > #self.inventory then
+		if not self.use_items then
+			self.inventory_wield = 0
+		elseif self.inventory_wield <= 0 then
+			self.inventory_wield = 1
+		elseif self.inventory_wield > #self.inventory then
 			self.inventory_wield = #self.inventory
 		end
 	end
@@ -225,7 +256,7 @@ function logic_mob_step (self, dtime)
 
 					if vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
 						-- this is a dropped item
-						if ent and ent.name == "__builtin:item" and creatures.item_priority and creatures.item_priority > 0 then
+						if ent and ent.name == "__builtin:item" and self.use_items and creatures.item_priority and creatures.item_priority > 0 then
 							-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
 							-- since we have no better criteria to establish the value of an item, use the count of the stack to determine target priority
 							local stack = ItemStack(ent.itemstring)
@@ -233,11 +264,15 @@ function logic_mob_step (self, dtime)
 							local on_punch = function (self, target)
 								local ent = target.entity:get_luaentity()
 								local stack = ItemStack(ent.itemstring)
-								table.insert(self.inventory, stack)
-								target.entity:remove()
+								if inventory_add(self, stack, false) then
+									target.entity:remove()
+								end
 								return false
 							end
-							self.targets[obj] = {entity = obj, name = ent.name, objective = "attack", priority = math.min(1, count / creatures.item_priority), on_punch = on_punch}
+							-- check if this item can be added to the inventory, and set it as a target if so
+							if inventory_add(self, stack, true) then
+								self.targets[obj] = {entity = obj, name = ent.name, objective = "attack", priority = math.min(1, count / creatures.item_priority), on_punch = on_punch}
+							end
 						-- this is a creature
 						elseif relation and math.abs(relation) > creatures.teams_neutral then
 							local action = math.random()
@@ -409,13 +444,11 @@ function logic_mob_step (self, dtime)
 
 						-- this is a node target
 						if self.target_current.position then
-							-- dig the node
 							local pos = {x = self.target_current.position.x, y = self.target_current.position.y - 1, z = self.target_current.position.z}
 							local name = minetest.env:get_node(pos).name
-							minetest.dig_node(pos)
-							-- add the node to the mob's inventory
-							local stack = ItemStack(name)
-							table.insert(self.inventory, stack)
+							if inventory_add(self, name, false) then
+								minetest.dig_node(pos)
+							end
 						-- this is an entity target
 						elseif self.target_current.entity then
 							local capabilities = {

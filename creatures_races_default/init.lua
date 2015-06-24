@@ -581,6 +581,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -689,6 +690,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		{"Wheeler", "Anderson", "Simpson", "Jackson", "Parker", "Adams", "Steven", "Johnson",},
 	},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -807,6 +809,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		{"Wheeler", "Anderson", "Simpson", "Jackson", "Parker", "Adams", "Steven", "Johnson",},
 	},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -924,6 +927,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1039,6 +1043,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1154,6 +1159,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1269,6 +1275,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1384,6 +1391,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1499,6 +1507,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1614,6 +1623,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1729,6 +1739,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1844,6 +1855,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -1959,6 +1971,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -2095,6 +2108,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -2229,6 +2243,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -2363,6 +2378,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -2497,6 +2513,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -2650,6 +2667,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -2773,6 +2791,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -2906,6 +2925,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -3053,6 +3073,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -3195,6 +3216,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -3310,6 +3332,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)
@@ -3463,6 +3486,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	},
 	names = {{"Help me.", "You found me...", "Stay away...", "Run!", "No... please!", "It hurts!", "He has me.", "He's behind you..."},},
 	teams_target = {attack = true, avoid = true, follow = true},
+	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
 		module_mob_activate(self, staticdata, dtime_s)

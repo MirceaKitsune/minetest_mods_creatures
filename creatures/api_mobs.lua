@@ -27,6 +27,7 @@ function creatures:register_mob(name, def)
 		sounds = def.sounds,
 		animation = def.animation,
 		jump = def.jump or true,
+		use_items = def.use_items,
 		inventory_main = def.inventory_main,
 		inventory_craft = def.inventory_craft,
 		teams = def.teams,
@@ -47,7 +48,7 @@ function creatures:register_mob(name, def)
 
 		-- dynamic properties:
 		inventory = nil,
-		inventory_wield = 1,
+		inventory_wield = 0,
 		timer_life = 0,
 		timer_think = 0,
 		timer_decision = 0,
