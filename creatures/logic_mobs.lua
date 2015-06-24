@@ -256,11 +256,14 @@ function logic_mob_step (self, dtime)
 
 					if vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
 						-- this is a dropped item
-						if ent and ent.name == "__builtin:item" and self.use_items and creatures.item_priority and creatures.item_priority > 0 then
+						if ent and ent.name == "__builtin:item" and self.use_items then
 							-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
-							-- since we have no better criteria to establish the value of an item, use the count of the stack to determine target priority
 							local stack = ItemStack(ent.itemstring)
-							local count = stack:get_count()
+							local stack_count = stack:get_count()
+							local stack_capabilities = stack:get_tool_capabilities()
+							-- determine target priority based on count, tool capabilities, and any criteria that can be used to establish its value
+							local priority = 1 - 1 / math.max(1, stack_count * (stack_capabilities.damage_groups.fleshy / stack_capabilities.full_punch_interval + stack_capabilities.max_drop_level))
+							-- custom target function used to pick up the item
 							local on_punch = function (self, target)
 								local ent = target.entity:get_luaentity()
 								local stack = ItemStack(ent.itemstring)
@@ -271,7 +274,7 @@ function logic_mob_step (self, dtime)
 							end
 							-- check if this item can be added to the inventory, and set it as a target if so
 							if inventory_add(self, stack, true) then
-								self.targets[obj] = {entity = obj, name = ent.name, objective = "attack", priority = math.min(1, count / creatures.item_priority), on_punch = on_punch}
+								self.targets[obj] = {entity = obj, name = ent.name, objective = "attack", priority = priority, on_punch = on_punch}
 							end
 						-- this is a creature
 						elseif relation and math.abs(relation) > creatures.teams_neutral then
@@ -446,7 +449,7 @@ function logic_mob_step (self, dtime)
 						if self.target_current.position then
 							local pos = {x = self.target_current.position.x, y = self.target_current.position.y - 1, z = self.target_current.position.z}
 							local name = minetest.env:get_node(pos).name
-							if inventory_add(self, name, false) then
+							if not self.use_items or inventory_add(self, name, false) then
 								minetest.dig_node(pos)
 							end
 						-- this is an entity target

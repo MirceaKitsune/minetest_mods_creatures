@@ -6,7 +6,6 @@ creatures.player_default = ""
 creatures.teams_neutral = 0
 creatures.timer_life = 100
 creatures.item_wear = 0
-creatures.item_priority = 0
 
 -- Functions
 
