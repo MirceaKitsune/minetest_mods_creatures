@@ -23,20 +23,24 @@ end
 function logic_mob_step (self, dtime)
 	if not self.traits_set or not self.inventory then return end
 
-	self.timer_life = self.timer_life - dtime
-	if self.timer_life <= 0 and not self.actor then
-		local player_count = 0
-		for _, obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), math.max(10, self.traits_set.vision))) do
-			if obj:is_player() then
-				player_count = player_count + 1
+	-- timer: handle life timer
+	if creatures.timer_life and not self.actor then
+		self.timer_life = self.timer_life - dtime
+		if self.timer_life <= 0 then
+			local player_found = false
+			for _, obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), math.max(10, self.traits_set.vision))) do
+				if obj:is_player() then
+					player_found = true
+					break
+				end
 			end
-		end
 
-		if player_count == 0 then
-			self.object:remove()
-			return
-		else
-			self.timer_life = 60
+			if player_found then
+				self.timer_life = creatures.timer_life
+			else
+				self.object:remove()
+				return
+			end
 		end
 	end
 
@@ -61,6 +65,7 @@ function logic_mob_step (self, dtime)
 			self.inventory_wield = #self.inventory
 		end
 	end
+
 	local tool_stack = self.inventory and self.inventory[self.inventory_wield]
 	local tool_item = tool_stack and minetest.registered_items[tool_stack:get_name()]
 
@@ -513,7 +518,6 @@ end
 
 -- logic_mob_activate: Executed in on_activate, handles: initialization, static data management
 function logic_mob_activate (self, staticdata, dtime_s)
-	self.timer_life = 600 - dtime_s
 	self.object:setacceleration({x = 0, y = -self.gravity, z = 0})
 	self.object:setvelocity({x = 0, y = self.object:getvelocity().y, z = 0})
 
@@ -526,16 +530,11 @@ function logic_mob_activate (self, staticdata, dtime_s)
 
 	self.set_staticdata(self, staticdata, dtime_s)
 
-	if self.timer_life <= 0 and not self.actor then
-		inventory_drop(self)
-		self.object:remove()
-		return
-	end
-
 	creatures:configure_mob(self)
 	self:set_animation("stand")
 
 	-- randomize timers to prevent mobs from acting synchronously if initialized at the same moment
+	self.timer_life = creatures.timer_life and creatures.timer_life * math.random()
 	self.timer_think = self.think * math.random()
 	self.timer_decision = self.traits_set.decision_interval * math.random()
 	self.timer_attack = self.traits_set.attack_interval * math.random()

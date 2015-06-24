@@ -48,7 +48,7 @@ function creatures:register_mob(name, def)
 		-- dynamic properties:
 		inventory = nil,
 		inventory_wield = 1,
-		timer_life = 60,
+		timer_life = 0,
 		timer_think = 0,
 		timer_decision = 0,
 		timer_attack = 0,
@@ -132,7 +132,6 @@ function creatures:register_mob(name, def)
 			tmp.yaw = self.object:getyaw()
 			tmp.hp = self.object:get_hp()
 			tmp.skin = self.skin
-			tmp.timer_life = self.timer_life
 			tmp.actor = self.actor
 			tmp.traits_set = self.traits_set
 			tmp.names_set = self.names_set
@@ -165,9 +164,6 @@ function creatures:register_mob(name, def)
 				end
 				if tmp and tmp.skin then
 					self.skin = tmp.skin
-				end
-				if tmp and tmp.timer_life then
-					self.timer_life = tmp.timer_life - dtime_s
 				end
 				if tmp and tmp.actor then
 					self.actor = tmp.actor
@@ -256,7 +252,8 @@ function creatures:spawn(name, pos)
 	if minetest.setting_getbool("display_mob_spawn") then
 		minetest.chat_send_all("[mobs] Add "..name.." at "..minetest.pos_to_string(pos))
 	end
-	minetest.env:add_entity(pos, name)
+	local obj = minetest.env:add_entity(pos, name)
+	return obj
 end
 
 function creatures:register_spawn(name, def)

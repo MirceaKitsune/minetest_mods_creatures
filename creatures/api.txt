@@ -1,115 +1,108 @@
 * Settings (minetest.conf):
-
 	enable_damage = false: When the damage system is off, mobs will not attack. Mobs that would otherwise attack a creature will instead consider avoiding them.
 	only_peaceful_mobs = false: When enabled, only mobs that don't have the ability to attack will spawn.
 	fast_mobs = false: Whether mobs can run. This should only be turned on when players have the "fast" privilege by default, to ensure balanced gameplay.
 	pathfinding = false: Enables mob pathfinding system. Highly experimental, only use for testing purposes!
 
-* creatures.player_formspec = function(def): The inventory formspec for all players. Set whenever the player becomes a different creature. Must return either a string, either nil for no effect. def represents the player definition, from which player parameters may be read (see below).
+* Settings (init.lua)
+	creatures.player_formspec = function(def): The inventory formspec for all players. Set whenever the player becomes a different creature. Must return either a string, either nil for no effect. def represents the player definition, from which player parameters may be read (see below).
+	creatures.player_default = "creatures:ghost": Players who aren't part of a race are set to this creature. Typically applies to new players who join the server for the first time.
+	creatures.teams_neutral = 0.1: If the relation between two creatures ranges between -this and +this, the two are considered neutral. Mobs will not idly engage creatures (follow allies or attack enemies) but the relation will be evaluated if a mob is provoked (such as punched).
+	creatures.timer_life = 100: Mobs without the 'actor' flag are removed if there aren't any players nearby, checked every this number of seconds. Can be left nil to disable the check, but this might overpopulate the world with mobs and impact server performance!
+	creatures.item_wear = 1000: When a creature hits another creature with a tool, that tool is worn out by amount (this / tool_damage). Leave nil to disable tool wearing.
+	creatures.item_priority = 10: Mob priority for items dropped on the ground (stack_count / this). Leave nil to disable mobs picking up items.
 
-* creatures.player_default = "creatures:ghost": Players who aren't part of a race are set to this creature. Typically applies to new players who join the server for the first time.
+* Functions:
+	creatures:register_creature("creatures:ghost", {..}): Defines a new creature, with the current parameters:
+	Common parameters (applied to both creatures and players):
+		icon = "mobs_*_icon.png": Icon for this creature, indicating what a player or mob is. Players should see it in the inventory menu or the HUD.
+		hp_max = 20: Mobs and players are born with this amount of health, and cannot gain more than it.
+		armor = 100: Armor decides how much damage gets absorbed.
+		collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5}: Collosion box size. (TODO: Currently works only for mobs, engine implementation needed for players!)
+		visual = "sprite": Visual type of the player and mob.
+		mesh = "": 3D model of the player and mob, when mesh visual is used.
+		textures = {"clear.png", ...}: Textures used by the player and mob.
+		textures = {{"clear.png", ...}, ...}: Texture sets used by the player and mob. When defined like this, a skin is randomly chosen for each creature.
+		particles = {...}: Defines the special particles spawned by the creatures:particles command. If nil, particles are not used for this creature. Definition parameters:
+			pos_min_x = 0: Minimum X position on the texture.
+			pos_min_y = 0: Minimum Y position on the texture.
+			pos_max_x = 64: Maximum X position on the texture.
+			pos_max_y = 32: Maximum Y position on the texture.
+			size_x = 4: Size of the section to be randomly selected between the minimum and maximum X position.
+			size_y = 4: Size of the section to be randomly selected between the minimum and maximum Y position.
+			amount = 10: Number of particles to be spawned.
+			time = 1: How many seconds particles live for.
+		visual_size = {x=1, y=1}: Scales the visual of the player and mob.
+		animation = {speed = 0, stand = {1, 31}, ...}: List of animation ranges, containing the following entries: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end.
+		sounds = {attack = "filename", ...}: A list containing sound effects for various actions. Valid entries: attack, damage, die.
+		makes_footstep_sound = false: Whether the player and mob make footstep sounds while walking. (TODO: Currently works only for mobs, engine implementation needed for players!)
+		env_damage = {water = 0, ...}: Enrivonment damage, dealt once every second. Valid entries:
+			water = 0: Amount of damage the creature takes if submerged in water. If negative, this will instead heal the creature.
+			lava = 0: Amount of damage the creature takes if submerged in lava. If negative, this will instead heal the creature.
+			light = 0: Amount of damage the creature takes if exposed to light. If negative, this will instead heal the creature.
+			light_level = 0: Minimum light level this creature must be exposed to for damage to occur. Ranges between 0 and 15. If negative, the creature will instead take damage when it's darker than this light level.
+		physics = {speed = 1, ...}: Modifies player and mob movement, as an offset to the physics settings in minetest.conf. Valid entries: speed, jump, gravity.
+		inventory_main = {x = 8, y = 4}: Size of the main inventory for players which are part of this race.
+		inventory_craft = {x = 1, y = 1}: Size of the craft area for players which are part of this race.
+		teams = {monsters = 1, ...}: Contains an interest list, where 1 means "pro" and -1 means "con". Friend or foe relationships are determined based on how many things two creatures have in common here.
+	Mob only parameters:
+		think = 0.5: How fast the base AI executes for this creature. Lower values offer more responsive movement, but also increase server load and the number of packets sent over the network!
+		items = {{...}, ...}: Contains a list of items and probabilities, which determines what items the mob might spawn with. Parameters:
+			name = "default:dirt": The name of the item. It can optionally be a table of strings, in which case a random name is picked.
+			chance = 20: Probability that the item will be offered, 1 in this.
+			count_min = 1: Minimum number of items in the stack.
+			count_max = 99: Maximum number of items in the stack.
+			wear_min = 0: Minimum wear. Ranges between 0 and 65535, and should only be used on tools.
+			wear_max = 65535: Maximum wear. Ranges between 0 and 65535, and should only be used on tools.
+			metadata = nil: Optional metadata of the item stack.
+		on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
+		attack_damage = 1: How much damage the mob deals each punch. If the mob is wielding a tool, the capabilities of that tool are used instead.
+		nodes = {{nodes = "default:dirt", ...}, ...}: A list of parameters, which specifies how mobs react to certain nodes. Each entry represents one target per mob. Parameters include:
+			nodes = {"default:dirt", ...}: List of nodes or node groups that mobs will search for.
+			light_min = 0: Minimum light level the node most have to be considered an objective.
+			light_max = 15: Maximum light level the node most have to be considered an objective.
+			objective = "follow": What action to take toward this node. Can be: "follow" to go toward it, "avoid" to move away from it, "attack" to dig it.
+			priority = 0: Target priority. The higher, the more importance the mob will give to this node.
+		names = {{"Mike", "Dan", ...}, {...}}: A random name will be chosen from this list for each mob. Can be empty for mobs that shouldn't have a name (eg: monsters).
+		traits = {attack_interval = {1, 1}, ...}: Personality traits. Each individual mob gets a value between min and max when it first spawns. Actor mobs persist those settings between server restarts. Default traits:
+			attack_interval = {1, 1}: How often the mob shoots or punches. Lower values mean a greater attack skill.
+			decision_interval = {1, 1}: How often the mob scans for targets and takes new decisions. Lower values mean smarter mobs, but can greatly increase server load!
+			vision = {15, 15}: View distance of the mob, and the range in which objectives are detected.
+			loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them. Must range between 0 and 1!
+			fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first). Must range between 0 and 1!
+			aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first). Must range between 0 and 1!
+			determination = {0.5, 0.5}: The mob's ability to focus on a task. Lower values mean a greater tolerance to randomly choosing a different target each think. Must range between 0 and 1!
+		teams_target = {attack = true, avoid = true, follow = true}: What types of targets this mob will automatically add or change based on team relationships. Can be nil for default behavior.
+		on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the logic_mob_activate function.
+		on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the logic_mob_step function.
+		on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir) ... end: Function executed when the mob is punched. By default, this should call the logic_mob_punch function.
+		on_rightclick = function(self, clicker) ... end: Function executed when the mob is right-clicked. By default, this should call the logic_mob_rightclick function.
+	Player only parameters:
+		ghost = "": What creature the player becomes upon death. If blank, creatures.player_default is used.
+		eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}}: Camera offset for 1st and 3rd person views, used to adjust the camera to eye position for creatures of various shapes and sizes.
+		fog = {r = 0, g = 0, b = 0}: If set, this fog color is seen by players who are part of this race.
+		screen = "hud_*.png": If set, this image is applied over the screen. Use a transparent image here, unless you wish to block the player's vision entirely.
+		ambience = "ambient_*": If set, the player will constantly hear this ambiental sound.
+		player_join = function(player) ... end: Function executed when a player joins. By default, this should call the logic_player_join function.
+		player_step = function(player, dtime) ... end: Function executed each step. By default, this should call the logic_player_step function.
+		player_die = function(player) ... end: Function executed when the player dies. By default, this should call the logic_player_die function.
+		player_respawn = function(player) ... end: Function executed when the player respawns. By default, this should call the logic_player_respawn function.
+	Module parameters:
+		custom = {mymod = {param1 = "test", param2 = 0, ...} ...}: Allows defining custom properties for modules (sub-mods). For example, if a creature uses a module called "mymod", add specific parameters as mymod = { x = 0, y = 1, ... } to this list, and read them as custom.mymod.x, custom.mymod.y, etc. in the mod.
+		traits = {mytrait = {0.25, 0.75}, ...}: Apart from the default traits, custom personality traits for modules may also be defined, as long as they use the same format (mytrait = {min_value, max_value}).
+		on_* = function(...) & player_* = function(...): You can include functions from your modules in the builtin execution functions, to run custom code for players and mobs. For example, in on_step, you can add a mymod_step() function after the essential logic_mob_step() function.
 
-* creatures.teams_neutral = 0.1: If the relation between two creatures ranges between -this and +this, the two are considered neutral. Mobs will not idly engage creatures (follow allies or attack enemies) but the relation will be evaluated if a mob is provoked (such as punched).
-
-* creatures.item_wear = 1000: When a creature hits another creature with a tool, that tool is worn out by amount (this / tool_damage). Leave nil to disable tool wearing.
-
-* creatures.item_priority = 10: Mob priority for items dropped on the ground (stack_count / this). Leave nil to disable mobs picking up items.
-
-* creatures:register_creature("creatures:ghost", {..}): Defines a new creature, with the current parameters:
-
-- Common parameters (applied to both creatures and players):
-	icon = "mobs_*_icon.png": Icon for this creature, indicating what a player or mob is. Players should see it in the inventory menu or the HUD.
-	hp_max = 20: Mobs and players are born with this amount of health, and cannot gain more than it.
-	armor = 100: Armor decides how much damage gets absorbed.
-	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5}: Collosion box size. (TODO: Currently works only for mobs, engine implementation needed for players!)
-	visual = "sprite": Visual type of the player and mob.
-	mesh = "": 3D model of the player and mob, when mesh visual is used.
-	textures = {"clear.png", ...}: Textures used by the player and mob.
-	textures = {{"clear.png", ...}, ...}: Texture sets used by the player and mob. When defined like this, a skin is randomly chosen for each creature.
-	particles = {...}: Defines the special particles spawned by the creatures:particles command. If nil, particles are not used for this creature. Definition parameters:
-		pos_min_x = 0: Minimum X position on the texture.
-		pos_min_y = 0: Minimum Y position on the texture.
-		pos_max_x = 64: Maximum X position on the texture.
-		pos_max_y = 32: Maximum Y position on the texture.
-		size_x = 4: Size of the section to be randomly selected between the minimum and maximum X position.
-		size_y = 4: Size of the section to be randomly selected between the minimum and maximum Y position.
-		amount = 10: Number of particles to be spawned.
-		time = 1: How many seconds particles live for.
-	visual_size = {x=1, y=1}: Scales the visual of the player and mob.
-	animation = {speed = 0, stand = {1, 31}, ...}: List of animation ranges, containing the following entries: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end.
-	sounds = {attack = "filename", ...}: A list containing sound effects for various actions. Valid entries: attack, damage, die.
-	makes_footstep_sound = false: Whether the player and mob make footstep sounds while walking. (TODO: Currently works only for mobs, engine implementation needed for players!)
-	env_damage = {water = 0, ...}: Enrivonment damage, dealt once every second. Valid entries:
-		water = 0: Amount of damage the creature takes if submerged in water. If negative, this will instead heal the creature.
-		lava = 0: Amount of damage the creature takes if submerged in lava. If negative, this will instead heal the creature.
-		light = 0: Amount of damage the creature takes if exposed to light. If negative, this will instead heal the creature.
-		light_level = 0: Minimum light level this creature must be exposed to for damage to occur. Ranges between 0 and 15. If negative, the creature will instead take damage when it's darker than this light level.
-	physics = {speed = 1, ...}: Modifies player and mob movement, as an offset to the physics settings in minetest.conf. Valid entries: speed, jump, gravity.
-	inventory_main = {x = 8, y = 4}: Size of the main inventory for players which are part of this race.
-	inventory_craft = {x = 1, y = 1}: Size of the craft area for players which are part of this race.
-	teams = {monsters = 1, ...}: Contains an interest list, where 1 means "pro" and -1 means "con". Friend or foe relationships are determined based on how many things two creatures have in common here.
-
-- Mob only parameters:
-	think = 0.5: How fast the base AI executes for this creature. Lower values offer more responsive movement, but also increase server load and the number of packets sent over the network!
-	items = {{...}, ...}: Contains a list of items and probabilities, which determines what items the mob might spawn with. Parameters:
-		name = "default:dirt": The name of the item. It can optionally be a table of strings, in which case a random name is picked.
-		chance = 20: Probability that the item will be offered, 1 in this.
-		count_min = 1: Minimum number of items in the stack.
-		count_max = 99: Maximum number of items in the stack.
-		wear_min = 0: Minimum wear. Ranges between 0 and 65535, and should only be used on tools.
-		wear_max = 65535: Maximum wear. Ranges between 0 and 65535, and should only be used on tools.
-		metadata = nil: Optional metadata of the item stack.
-	on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
-	attack_damage = 1: How much damage the mob deals each punch. If the mob is wielding a tool, the capabilities of that tool are used instead.
-	nodes = {{nodes = "default:dirt", ...}, ...}: A list of parameters, which specifies how mobs react to certain nodes. Each entry represents one target per mob. Parameters include:
-		nodes = {"default:dirt", ...}: List of nodes or node groups that mobs will search for.
-		light_min = 0: Minimum light level the node most have to be considered an objective.
-		light_max = 15: Maximum light level the node most have to be considered an objective.
-		objective = "follow": What action to take toward this node. Can be: "follow" to go toward it, "avoid" to move away from it, "attack" to dig it.
-		priority = 0: Target priority. The higher, the more importance the mob will give to this node.
-	names = {{"Mike", "Dan", ...}, {...}}: A random name will be chosen from this list for each mob. Can be empty for mobs that shouldn't have a name (eg: monsters).
-	traits = {attack_interval = {1, 1}, ...}: Personality traits. Each individual mob gets a value between min and max when it first spawns. Actor mobs persist those settings between server restarts. Default traits:
-		attack_interval = {1, 1}: How often the mob shoots or punches. Lower values mean a greater attack skill.
-		decision_interval = {1, 1}: How often the mob scans for targets and takes new decisions. Lower values mean smarter mobs, but can greatly increase server load!
-		vision = {15, 15}: View distance of the mob, and the range in which objectives are detected.
-		loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them. Must range between 0 and 1!
-		fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first). Must range between 0 and 1!
-		aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first). Must range between 0 and 1!
-		determination = {0.5, 0.5}: The mob's ability to focus on a task. Lower values mean a greater tolerance to randomly choosing a different target each think. Must range between 0 and 1!
-	teams_target = {attack = true, avoid = true, follow = true}: What types of targets this mob will automatically add or change based on team relationships. Can be nil for default behavior.
-	on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the logic_mob_activate function.
-	on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the logic_mob_step function.
-	on_punch = function(self, hitter, time_from_last_punch, tool_capabilities, dir) ... end: Function executed when the mob is punched. By default, this should call the logic_mob_punch function.
-	on_rightclick = function(self, clicker) ... end: Function executed when the mob is right-clicked. By default, this should call the logic_mob_rightclick function.
-
-- Player only parameters:
-	ghost = "": What creature the player becomes upon death. If blank, creatures.player_default is used.
-	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}}: Camera offset for 1st and 3rd person views, used to adjust the camera to eye position for creatures of various shapes and sizes.
-	fog = {r = 0, g = 0, b = 0}: If set, this fog color is seen by players who are part of this race.
-	screen = "hud_*.png": If set, this image is applied over the screen. Use a transparent image here, unless you wish to block the player's vision entirely.
-	ambience = "ambient_*": If set, the player will constantly hear this ambiental sound.
-	player_join = function(player) ... end: Function executed when a player joins. By default, this should call the logic_player_join function.
-	player_step = function(player, dtime) ... end: Function executed each step. By default, this should call the logic_player_step function.
-	player_die = function(player) ... end: Function executed when the player dies. By default, this should call the logic_player_die function.
-	player_respawn = function(player) ... end: Function executed when the player respawns. By default, this should call the logic_player_respawn function.
-
-- Module parameters:
-	custom = {mymod = {param1 = "test", param2 = 0, ...} ...}: Allows defining custom properties for modules (sub-mods). For example, if a creature uses a module called "mymod", add specific parameters as mymod = { x = 0, y = 1, ... } to this list, and read them as custom.mymod.x, custom.mymod.y, etc. in the mod.
-	traits = {mytrait = {0.25, 0.75}, ...}: Apart from the default traits, custom personality traits for modules may also be defined, as long as they use the same format (mytrait = {min_value, max_value}).
-	on_* = function(...) & player_* = function(...): You can include functions from your modules in the builtin execution functions, to run custom code for players and mobs. For example, in on_step, you can add a mymod_step() function after the essential logic_mob_step() function.
-
-* creatures:spawn("creatures:human", {...}): Spawns the given creature at the specified position.
-
-* creatures:register_spawn("creatures:human", {...}): Configures a mob to spawn on a given node. Parameters:
-	nodes = {"default:dirt_with_grass", ...}: List of nodes this spawn applies to.
-	neighbors = {"air", ...}: The above nodes must be surrounded by at least one node in this list in order to work. You will almost always want this to be {"air"}
-	interval = 10: The spawn function is executed every this number of seconds. Lower values are more frequent but can reduce server performance!
-	chance = 10000: The chance of a mob spawning (1 / this). Lower values are more frequent but can reduce server performance!
-	min_height = -31000: The spawner will only work above this height.
-	max_height = 31000: The spawner will only work below this height.
-	min_light = 0: Minimum light value at which mobs will spawn.
-	max_light = 15: Maximum light value at which mobs will spawn.
-	on_spawn = function(pos, node) ... end: Custom spawn function. If present, it must return true for the spawn to occur.
+	creatures:spawn("creatures:human", {...}): Spawns the given creature at the specified position, returns the object of the spawned mob.
+	creatures:register_spawn("creatures:human", {...}): Configures a mob to spawn on a given node. Parameters:
+		nodes = {"default:dirt_with_grass", ...}: List of nodes this spawn applies to.
+		neighbors = {"air", ...}: The above nodes must be surrounded by at least one node in this list in order to work. You will almost always want this to be {"air"}
+		interval = 10: The spawn function is executed every this number of seconds. Lower values are more frequent but can reduce server performance!
+		chance = 10000: The chance of a mob spawning (1 / this). Lower values are more frequent but can reduce server performance!
+		min_height = -31000: The spawner will only work above this height.
+		max_height = 31000: The spawner will only work below this height.
+		min_light = 0: Minimum light value at which mobs will spawn.
+		max_light = 15: Maximum light value at which mobs will spawn.
+		on_spawn = function(pos, node) ... end: Custom spawn function. If present, it must return true for the spawn to occur.
 
 * Scripting - Public functions:
 	creatures.selected[player]: The creature which was last right-clicked by 'player'.
