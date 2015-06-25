@@ -46,6 +46,7 @@ local function formspec(self, clicker)
 			.."Traits - Attack: "..string.format("%.3f", 1 / self.traits_set.attack_interval)..","
 			.."Traits - Intelligence: "..string.format("%.3f", 1 / self.traits_set.decision_interval)..","
 			.."Traits - Vision: "..string.format("%.3f", self.traits_set.vision)..","
+			.."Traits - Hearing: "..string.format("%.3f", self.traits_set.hearing)..","
 			.."Traits - Loyalty: "..string.format("%.3f", self.traits_set.loyalty)..","
 			.."Traits - Fear: "..string.format("%.3f", self.traits_set.fear)..","
 			.."Traits - Aggressivity: "..string.format("%.3f", self.traits_set.aggressivity)..","
@@ -53,27 +54,27 @@ local function formspec(self, clicker)
 	end
 
 	local formspec =
-		"size[6,4]"
+		"size[6,5]"
 		..default.gui_bg
 		..default.gui_bg_img
 		..default.gui_slots
 		.."image[0,0;1,1;"..self.icon.."]"
-		.."textlist[1,0;5,3;;"..info..";0;false]"
+		.."textlist[1,0;5,4;;"..info..";0;false]"
 	-- Possession is possible
 	if name == "creatures_races_default:ghost" and not self.actor then
-		formspec = formspec.."button_exit[0,3;3,1;possess;Possess]"
-		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
+		formspec = formspec.."button_exit[0,4;3,1;possess;Possess]"
+		formspec = formspec.."button_exit[3,4;3,1;quit;Exit]"
 	-- Special button for rats
 	elseif self.name == "creatures_races_default:animal_rat" then
-		formspec = formspec.."button_exit[0,3;3,1;rat;Take]"
-		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
+		formspec = formspec.."button_exit[0,4;3,1;rat;Take]"
+		formspec = formspec.."button_exit[3,4;3,1;quit;Exit]"
 	-- Special button for sheep
 	elseif self.name == "creatures_races_default:animal_sheep" then
-		formspec = formspec.."button_exit[0,3;3,1;sheep;Shear / Breed]"
-		formspec = formspec.."button_exit[3,3;3,1;quit;Exit]"
+		formspec = formspec.."button_exit[0,4;3,1;sheep;Shear / Breed]"
+		formspec = formspec.."button_exit[3,4;3,1;quit;Exit]"
 	-- No special buttons
 	else
-		formspec = formspec.."button_exit[0,3;6,1;quit;Exit]"
+		formspec = formspec.."button_exit[0,4;6,1;quit;Exit]"
 	end
 
 	minetest.show_formspec(clicker:get_player_name(), "creatures:formspec", formspec)
@@ -573,6 +574,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 		attack_interval = {1, 1},
 		decision_interval = {1, 1},
 		vision = {15, 15},
+		hearing = {10, 10},
 		loyalty = {0.5, 0.5},
 		fear = {0.5, 0.5},
 		aggressivity = {0.5, 0.5},
@@ -679,6 +681,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		attack_interval = {0.75, 1.25},
 		decision_interval = {1, 2},
 		vision = {25, 35},
+		hearing = {20, 25},
 		loyalty = {0.25, 1},
 		fear = {0, 0.5},
 		aggressivity = {0.5, 1},
@@ -798,6 +801,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		attack_interval = {1, 1.5},
 		decision_interval = {1, 2},
 		vision = {25, 35},
+		hearing = {20, 25},
 		loyalty = {0.5, 1},
 		fear = {0.5, 1},
 		aggressivity = {0, 0.5},
@@ -919,6 +923,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 		attack_interval = {0.75, 1.25},
 		decision_interval = {0.5, 1},
 		vision = {20, 30},
+		hearing = {25, 30},
 		loyalty = {0.75, 1},
 		fear = {0.25, 0.75},
 		aggressivity = {0.25, 1},
@@ -1035,6 +1040,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 		attack_interval = {1, 1.25},
 		decision_interval = {0.5, 1},
 		vision = {20, 30},
+		hearing = {25, 30},
 		loyalty = {0.75, 1},
 		fear = {0.25, 1},
 		aggressivity = {0, 0.5},
@@ -1151,6 +1157,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 		attack_interval = {0.5, 0.75},
 		decision_interval = {1.5, 2},
 		vision = {25, 35},
+		hearing = {25, 30},
 		loyalty = {0.75, 1},
 		fear = {0.25, 0.5},
 		aggressivity = {0.5, 1},
@@ -1267,6 +1274,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 		attack_interval = {0.5, 0.75},
 		decision_interval = {1.5, 2},
 		vision = {25, 35},
+		hearing = {25, 30},
 		loyalty = {0.75, 1},
 		fear = {0.25, 0.75},
 		aggressivity = {0.25, 0.75},
@@ -1383,6 +1391,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 		attack_interval = {0.25, 0.75},
 		decision_interval = {1, 2},
 		vision = {30, 40},
+		hearing = {30, 40},
 		loyalty = {0, 0.5},
 		fear = {0.25, 0.75},
 		aggressivity = {0.5, 1},
@@ -1499,6 +1508,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 		attack_interval = {0.5, 0.75},
 		decision_interval = {1, 2},
 		vision = {30, 40},
+		hearing = {30, 40},
 		loyalty = {0, 0.75},
 		fear = {0.5, 0.75},
 		aggressivity = {0.25, 0.75},
@@ -1615,6 +1625,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 		attack_interval = {1.5, 2},
 		decision_interval = {1.5, 2},
 		vision = {15, 25},
+		hearing = {10, 15},
 		loyalty = {0.75, 1},
 		fear = {0.5, 1},
 		aggressivity = {0, 0.75},
@@ -1731,6 +1742,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 		attack_interval = {1.75, 2},
 		decision_interval = {1.5, 2},
 		vision = {15, 25},
+		hearing = {10, 15},
 		loyalty = {0.75, 1},
 		fear = {0.75, 1},
 		aggressivity = {0, 0.5},
@@ -1847,6 +1859,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 		attack_interval = {1.25, 1.75},
 		decision_interval = {1, 1.5},
 		vision = {20, 30},
+		hearing = {25, 35},
 		loyalty = {0.25, 0.75},
 		fear = {0.25, 0.75},
 		aggressivity = {0.25, 0.5},
@@ -1963,6 +1976,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 		attack_interval = {1.5, 1.75},
 		decision_interval = {1, 1.5},
 		vision = {20, 30},
+		hearing = {25, 35},
 		loyalty = {0.25, 0.75},
 		fear = {0.25, 1},
 		aggressivity = {0, 0.5},
@@ -2100,6 +2114,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 		attack_interval = {1.5, 1.75},
 		decision_interval = {3, 4},
 		vision = {10, 15},
+		hearing = {0, 0},
 		loyalty = {0, 0},
 		fear = {0, 0.25},
 		aggressivity = {0.75, 1},
@@ -2235,6 +2250,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 		attack_interval = {1, 1.25},
 		decision_interval = {2, 3},
 		vision = {15, 20},
+		hearing = {5, 10},
 		loyalty = {0, 0.25},
 		fear = {0, 0},
 		aggressivity = {0.75, 1},
@@ -2370,6 +2386,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 		attack_interval = {1.25, 1.5},
 		decision_interval = {2.5, 3.5},
 		vision = {30, 30},
+		hearing = {0, 5},
 		loyalty = {0.25, 0.5},
 		fear = {0.15, 0.3},
 		aggressivity = {0.7, 0.9},
@@ -2505,6 +2522,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 		attack_interval = {1, 1.25},
 		decision_interval = {2, 3},
 		vision = {15, 20},
+		hearing = {5, 10},
 		loyalty = {0.3, 0.6},
 		fear = {0.1, 0.25},
 		aggressivity = {0.5, 0.75},
@@ -2659,6 +2677,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 		attack_interval = {1, 1.25},
 		decision_interval = {2, 2.5},
 		vision = {25, 30},
+		hearing = {15, 20},
 		loyalty = {0.6, 0.8},
 		fear = {0.4, 0.6},
 		aggressivity = {0.4, 0.8},
@@ -2783,6 +2802,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 		attack_interval = {0.75, 1},
 		decision_interval = {1.5, 2.5},
 		vision = {15, 25},
+		hearing = {10, 20},
 		loyalty = {0.25, 0.75},
 		fear = {0.2, 0.4},
 		aggressivity = {0.4, 0.6},
@@ -2917,6 +2937,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 		attack_interval = {2.5, 3},
 		decision_interval = {2, 3},
 		vision = {15, 20},
+		hearing = {25, 30},
 		loyalty = {0.3, 0.7},
 		fear = {0, 0.25},
 		aggressivity = {0.75, 1},
@@ -3065,6 +3086,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 		attack_interval = {2, 3},
 		decision_interval = {4, 6},
 		vision = {15, 20},
+		hearing = {10, 15},
 		loyalty = {0.6, 0.8},
 		fear = {0.8, 1},
 		aggressivity = {0, 0.2},
@@ -3208,6 +3230,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 		attack_interval = {2, 2.5},
 		decision_interval = {4, 5},
 		vision = {15, 20},
+		hearing = {10, 15},
 		loyalty = {0.25, 0.5},
 		fear = {0.75, 1},
 		aggressivity = {0, 0.25},
@@ -3324,6 +3347,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 		attack_interval = {1.5, 2},
 		decision_interval = {4, 5},
 		vision = {10, 15},
+		hearing = {10, 15},
 		loyalty = {0, 0.5},
 		fear = {0.3, 0.7},
 		aggressivity = {0.4, 0.6},
@@ -3478,6 +3502,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 		attack_interval = {0.25, 0.25},
 		decision_interval = {0.5, 1},
 		vision = {20, 20},
+		hearing = {10, 10},
 		loyalty = {0, 0},
 		fear = {0, 0},
 		aggressivity = {1, 1},

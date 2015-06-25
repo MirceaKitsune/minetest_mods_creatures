@@ -66,7 +66,8 @@
 		traits = {attack_interval = {1, 1}, ...}: Personality traits. Each individual mob gets a value between min and max when it first spawns. Actor mobs persist those settings between server restarts. Default traits:
 			attack_interval = {1, 1}: How often the mob shoots or punches. Lower values mean a greater attack skill.
 			decision_interval = {1, 1}: How often the mob scans for targets and takes new decisions. Lower values mean smarter mobs, but can greatly increase server load!
-			vision = {15, 15}: View distance of the mob, and the range in which objectives are detected.
+			vision = {15, 15}: View distance of the mob, and the range in which objectives are visually detected.
+			hearing = {10, 10}: Hearing distance of the mob, and how far objectives can be detected using audio cues.
 			loyalty = {0.5, 0.5}: How probable it is that the mob will follow allies around and defend them. Must range between 0 and 1!
 			fear = {0.5, 0.5}: Likeliness of the mob running away from enemies (if aggressivity doesn't succeed first). Must range between 0 and 1!
 			aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first). Must range between 0 and 1!

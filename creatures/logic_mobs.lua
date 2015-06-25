@@ -61,6 +61,20 @@ local function awareness_sight (pos1, pos2, yaw, pitch, fov, skill)
 	return false
 end
 
+-- returns true if the mob can hear the given target
+local function awareness_audibility(pos, object, skill)
+	local dist = vector.distance(pos, object:getpos())
+	local audibility = creatures:audibility_get(object)
+	-- account distance plus audibility factor
+	if dist <= skill and audibility then
+		local probability = (1 - dist / skill) * audibility
+		if probability >= math.random() then
+			return true
+		end
+	end
+	return false
+end
+
 -- logic_mob_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
 function logic_mob_step (self, dtime)
 	if not self.traits_set or not self.inventory then return end
@@ -70,7 +84,8 @@ function logic_mob_step (self, dtime)
 		self.timer_life = self.timer_life - dtime
 		if self.timer_life <= 0 then
 			local player_found = false
-			for _, obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), math.max(10, self.traits_set.vision))) do
+			local radius = math.max(10, math.max(self.traits_set.vision, self.traits_set.hearing))
+			for _, obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), radius)) do
 				if obj:is_player() then
 					player_found = true
 					break
@@ -273,14 +288,16 @@ function logic_mob_step (self, dtime)
 
 		-- targets: add player or entity targets
 		if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
-			local objects = minetest.env:get_objects_inside_radius(s, self.traits_set.vision)
+			local radius = math.max(self.traits_set.vision, self.traits_set.hearing)
+			local objects = minetest.env:get_objects_inside_radius(s, radius)
 			for _, obj in pairs(objects) do
 				local ent = obj:get_luaentity()
 				if obj ~= self.object and (obj:is_player() or ent) and not self.targets[obj] then
 					local p = obj:getpos()
 					local relation = creatures:alliance(self.object, obj)
 
-					if awareness_sight(s, p, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
+					if awareness_sight(s, p, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) or
+					awareness_audibility(s, obj, self.traits_set.hearing) then
 						-- this is a dropped item
 						if ent and ent.name == "__builtin:item" and self.use_items then
 							-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
