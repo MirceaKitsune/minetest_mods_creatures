@@ -7,6 +7,11 @@ creatures.teams_neutral = 0
 creatures.timer_life = 100
 creatures.item_wear = 0
 
+-- Local & Global values
+
+-- stores the audibility of objects
+creatures.audibility = {}
+
 -- Helper functions
 
 -- returns the angle difference between pos1 and pos2, as seen from pos1 at the specified yaw and pitch
@@ -20,6 +25,25 @@ function pos_to_angle (pos1, pos2, yaw, pitch)
 end
 
 -- Global functions
+
+-- Gets the audibility of this object or position
+function creatures:audibility_get(object)
+	return creatures.audibility[object]
+end
+
+-- Sets the audibility of this object or position
+function creatures:audibility_set(object, amount, duration)
+	creatures.audibility[object] = amount
+	minetest.after(duration, function()
+		creatures.audibility[object] = nil
+	end)
+end
+
+-- Plays a creature sound
+function creatures:sound(snd, obj)
+	minetest.sound_play(snd, {object = obj})
+	creatures:audibility_set(obj, 1, 2)
+end
 
 -- Creates a particle burst using random pieces of the creature's texture
 function creatures:particles(creature, multiplier)

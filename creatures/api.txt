@@ -108,6 +108,9 @@
 	creatures.selected[player]: The creature which was last right-clicked by 'player'.
 	creatures:player_get(player): Gets the race of a player as a table: [1] = name, [2] = skin
 	creatures:player_set(player, settings): Sets the race of a player from a table: [1] = name, [2] = skin
+	creatures:audibility_get(object): Returns the audibility of the given  player or entry. This is internally used by mobs to detect targets that make noises.
+	creatures:audibility_set(object, amount, duration): 'object' is given the audibility 'amount' for 'duration' seconds. You typically want to call this when a player or mob triggers a noise, with amount matching the volume and duration matching the length of the sound.
+	creatures:sound(snd, obj): Triggers sound 'snd' on creature 'obj'. This function should be used for voices and other sounds made by creatures. The object should be the player entity for players and self.object for mobs.
 	creatures:possess(player, creature): Causes a player to possess a creature.
 	creatures:alliance(creature1, creature2): Returns the alliance between two mobs and / or players, ranging between -1 and 1.
 	creatures:particles(creature, multiplier): Triggers a particle burst using pieces of the creature's skin, by default used when the creature is damaged. You can optionally specify a value to multiply the particle count by.

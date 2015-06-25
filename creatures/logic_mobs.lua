@@ -142,13 +142,13 @@ function logic_mob_step (self, dtime)
 				creatures:particles(self.object, nil)
 				if self.object:get_hp() == 0 then
 					if self.sounds and self.sounds.die then
-						minetest.sound_play(self.sounds.die, {object = self.object})
+						creatures:sound(self.sounds.die, self.object)
 					end
 					inventory_drop(self)
 					self.object:remove()
 				else
 					if self.sounds and self.sounds.damage then
-						minetest.sound_play(self.sounds.damage, {object = self.object})
+						creatures:sound(self.sounds.damage, self.object)
 					end
 				end
 			end
@@ -156,48 +156,59 @@ function logic_mob_step (self, dtime)
 		end
 	end
 
-	-- timer: limit the execution of this code by timer_env_damage, threshold set to 1 second
-	self.timer_env_damage = self.timer_env_damage + dtime
-	if self.timer_env_damage >= 1 and minetest.setting_getbool("enable_damage") then
-		self.timer_env_damage = 0
+	-- timer: limit the execution of this code by timer_env, threshold set to 1 second
+	self.timer_env = self.timer_env + dtime
+	if self.timer_env >= 1 then
+		self.timer_env = 0
 
 		local pos = s
 		pos.y = pos.y - 1 -- exclude player offset
 		local n = minetest.env:get_node(pos)
 		local l = minetest.env:get_node_light(pos)
 
+		-- audibility: set mob audibility for node footsteps
+		if v_xz > 1 then
+			local pos_under = {x = s.x, y = s.y - 1, z = s.z}
+			local node_under = minetest.env:get_node(pos_under)
+			local sounds = minetest.registered_items[node_under.name].sounds
+			local sound = sounds and sounds.footstep
+			if sound then
+				creatures:audibility_set(self.object, sound.gain, 1)
+			end
+		end
+
 		-- environment damage: handle light damage
-		if self.env_damage.light and self.env_damage.light ~= 0 and l and
+		if self.env_damage.light and self.env_damage.light ~= 0 and l and minetest.setting_getbool("enable_damage") and
 		(l >= self.env_damage.light_level or l < -self.env_damage.light_level) then
 			self.object:set_hp(self.object:get_hp() - self.env_damage.light)
 			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
 				if self.sounds and self.sounds.die then
-					minetest.sound_play(self.sounds.die, {object = self.object})
+					creatures:sound(self.sounds.die, self.object)
 				end
 				inventory_drop(self)
 				self.object:remove()
 			else
 				if self.sounds and self.sounds.damage then
-					minetest.sound_play(self.sounds.damage, {object = self.object})
+					creatures:sound(self.sounds.damage, self.object)
 				end
 			end
 		end
 
 		-- environment damage: handle water damage
-		if self.env_damage.water and self.env_damage.water ~= 0 and
+		if self.env_damage.water and self.env_damage.water ~= 0 and minetest.setting_getbool("enable_damage") and
 		minetest.get_item_group(n.name, "water") ~= 0 then
 			self.object:set_hp(self.object:get_hp() - self.env_damage.water)
 			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
 				if self.sounds and self.sounds.die then
-					minetest.sound_play(self.sounds.die, {object = self.object})
+					creatures:sound(self.sounds.die, self.object)
 				end
 				inventory_drop(self)
 				self.object:remove()
 			else
 				if self.sounds and self.sounds.damage then
-					minetest.sound_play(self.sounds.damage, {object = self.object})
+					creatures:sound(self.sounds.damage, self.object)
 				end
 
 				-- jump if we're standing on something solid
@@ -209,19 +220,19 @@ function logic_mob_step (self, dtime)
 		end
 
 		-- environment damage: handle lava damage
-		if self.env_damage.lava and self.env_damage.lava ~= 0 and
+		if self.env_damage.lava and self.env_damage.lava ~= 0 and minetest.setting_getbool("enable_damage") and
 		minetest.get_item_group(n.name, "lava") ~= 0 then
 			self.object:set_hp(self.object:get_hp()-self.env_damage.lava)
 			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
 				if self.sounds and self.sounds.die then
-					minetest.sound_play(self.sounds.die, {object = self.object})
+					creatures:sound(self.sounds.die, self.object)
 				end
 				inventory_drop(self)
 				self.object:remove()
 			else
 				if self.sounds and self.sounds.damage then
-					minetest.sound_play(self.sounds.damage, {object = self.object})
+					creatures:sound(self.sounds.damage, self.object)
 				end
 
 				-- jump if we're standing on something solid
@@ -457,7 +468,7 @@ function logic_mob_step (self, dtime)
 
 					if can_punch then
 						if self.sounds and self.sounds.attack then
-							minetest.sound_play(self.sounds.attack, {object = self.object})
+							creatures:sound(self.sounds.attack, self.object)
 						end
 
 						-- this is a node target
@@ -589,7 +600,7 @@ function logic_mob_activate (self, staticdata, dtime_s)
 	self.timer_think = self.think * math.random()
 	self.timer_decision = self.traits_set.decision_interval * math.random()
 	self.timer_attack = self.traits_set.attack_interval * math.random()
-	self.timer_env_damage = 1 * math.random()
+	self.timer_env = 1 * math.random()
 end
 
 -- logic_mob_punch: Executed in on_punch, handles: damage, death, target management
@@ -606,7 +617,7 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 	if not delay then
 		-- trigger the player's attack sound
 		if hitter:is_player() and psettings.sounds and psettings.sounds.attack then
-			minetest.sound_play(psettings.sounds.attack, {object = hitter})
+			creatures:sound(self.sounds.attack, hitter)
 		end
 
 		-- if attacker is a player, wear out their wielded tool
@@ -627,7 +638,7 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 	-- handle mob death
 	if self.object:get_hp() <= 0 then
 		if self.sounds and self.sounds.die then
-			minetest.sound_play(self.sounds.die, {object = self.object})
+			creatures:sound(self.sounds.die, self.object)
 		end
 		inventory_drop(self)
 	elseif not delay and relation then
@@ -663,7 +674,7 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 		end
 
 		if self.sounds and self.sounds.damage then
-			minetest.sound_play(self.sounds.damage, {object = self.object})
+			creatures:sound(self.sounds.damage, self.object)
 		end
 	end
 end

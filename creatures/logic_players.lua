@@ -2,6 +2,33 @@
 
 -- This file contains the default functions for players. Advanced users can use a different function set instead of this, or execute additional code.
 
+-- set player audibility for node placement
+minetest.register_on_placenode(function(pos, newnode, placer, oldnode, itemstack, pointed_thing)
+	local sounds = minetest.registered_items[newnode.name].sounds
+	local sound = sounds and sounds.place
+	if sound then
+		creatures:audibility_set(placer, sound.gain, 1)
+	end
+end)
+
+-- set player audibility for node digging
+minetest.register_on_dignode(function(pos, oldnode, digger)
+	local sounds = minetest.registered_items[oldnode.name].sounds
+	local sound = sounds and (sounds.dig or sounds.dug)
+	if sound then
+		creatures:audibility_set(digger, sound.gain, 1)
+	end
+end)
+
+-- set player audibility for node punching
+minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
+	local sounds = minetest.registered_items[node.name].sounds
+	local sound = sounds and (sounds.dig or sounds.dug)
+	if sound then
+		creatures:audibility_set(puncher, sound.gain, 1)
+	end
+end)
+
 -- logic_player_step: Executed in minetest.register_globalstep, handles: animations, movement, damage
 function logic_player_step (player, dtime)
 	local name = player:get_player_name()
@@ -37,7 +64,7 @@ function logic_player_step (player, dtime)
 	if player_data[name].last_hp and player:get_hp() < player_data[name].last_hp and player:get_hp() > 0 then
 		-- play damage sounds
 		if race_settings.sounds and race_settings.sounds.damage then
-			minetest.sound_play(race_settings.sounds.damage, {object = player})
+			creatures:sound(race_settings.sounds.damage, player)
 		end
 
 		-- spawn damage particles
@@ -63,6 +90,19 @@ function logic_player_step (player, dtime)
 	local pos = player:getpos()
 	local n = minetest.env:get_node(pos)
 	local l = minetest.env:get_node_light(pos)
+
+	-- set player audibility for node footsteps
+	-- since we can't easily get the player's velocity, check if a movement key is pressed without sneaking
+	local controls = player:get_player_control()
+	if (controls.up or controls.down or controls.left or controls.right or controls.jump) and not controls.sneak then
+		local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
+		local node_under = minetest.env:get_node(pos_under)
+		local sounds = minetest.registered_items[node_under.name].sounds
+		local sound = sounds and sounds.footstep
+		if sound then
+			creatures:audibility_set(player, sound.gain, 1)
+		end
+	end
 
 	-- environment damage: handle light damage
 	if race_settings.env_damage.light and race_settings.env_damage.light ~= 0 and l and
@@ -90,7 +130,7 @@ function logic_player_die (player)
 	local race_settings = creatures.player_def[race]
 
 	if race_settings.sounds and race_settings.sounds.die then
-		minetest.sound_play(race_settings.sounds.die, {object = player})
+		creatures:sound(race_settings.sounds.die, player)
 	end
 
 	-- drop the player's inventory

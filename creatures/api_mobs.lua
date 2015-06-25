@@ -53,7 +53,7 @@ function creatures:register_mob(name, def)
 		timer_think = 0,
 		timer_decision = 0,
 		timer_attack = 0,
-		timer_env_damage = 0,
+		timer_env = 0,
 		walk_velocity = tonumber(minetest.setting_get("movement_speed_walk")) * def.physics.speed,
 		run_velocity = tonumber(minetest.setting_get("movement_speed_fast")) * def.physics.speed,
 		jump_velocity = tonumber(minetest.setting_get("movement_speed_jump")) * def.physics.jump,
