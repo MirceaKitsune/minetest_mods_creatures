@@ -46,17 +46,33 @@ local function inventory_drop (self)
 	self.inventory = {}
 end
 
--- returns true if the mob can see the given target
-local function awareness_sight (pos1, pos2, yaw, pitch, fov, skill)
-	-- check if distance is within the mob's view range
-	if vector.distance(pos1, pos2) <= skill then
-		-- check that the target is within the mob's field of vision
-		if pos_to_angle(pos1, pos2, yaw, pitch) <= fov then
-			-- trace a line and check that the target's position isn't blocked by a solid object
-			if minetest.line_of_sight(pos1, pos2, 1) then
-				return true
-			end
-		end
+-- returns true if the mob is bumping into the given target
+local function awareness_bump(self, object)
+	local pos1 = self.object:getpos()
+	local pos2 = object:getpos()
+	local collisionbox1 = self.collisionbox
+	local collisionbox2 = object:get_properties().collisionbox
+	-- check if the collision boxes of the two mobs are closer than 0.25
+	local box1 = {
+		x_start = pos1.x + collisionbox1[1] - 0.125,
+		y_start = pos1.y + collisionbox1[2] - 0.125,
+		z_start = pos1.z + collisionbox1[3] - 0.125,
+		x_end = pos1.x + collisionbox1[4] + 0.125,
+		y_end = pos1.y + collisionbox1[5] + 0.125,
+		z_end = pos1.z + collisionbox1[6] + 0.125,
+	}
+	local box2 = {
+		x_start = pos2.x + collisionbox2[1] - 0.125,
+		y_start = pos2.y + collisionbox2[2] - 0.125,
+		z_start = pos2.z + collisionbox2[3] - 0.125,
+		x_end = pos2.x + collisionbox2[4] + 0.125,
+		y_end = pos2.y + collisionbox2[5] + 0.125,
+		z_end = pos2.z + collisionbox2[6] + 0.125,
+	}
+	if box1.x_start <= box2.x_end and box1.x_end >= box2.x_start and
+	box1.y_start <= box2.y_end and box1.y_end >= box2.y_start and
+	box1.z_start <= box2.z_end and box1.z_end >= box2.z_start then
+		return true
 	end
 	return false
 end
@@ -67,9 +83,25 @@ local function awareness_audibility(pos, object, skill)
 	local audibility = creatures:audibility_get(object)
 	-- account distance plus audibility factor
 	if dist <= skill and audibility then
-		local probability = (1 - dist / skill) * audibility
-		if probability >= math.random() then
+		local range = (1 - dist / skill)
+		if audibility >= range then
 			return true
+		end
+	end
+	return false
+end
+
+-- returns true if the mob can see the given target
+local function awareness_sight (pos1, pos2, yaw, pitch, fov, skill)
+	local light = (1 + minetest.env:get_node_light(pos2)) / 16
+	-- check if distance is within the mob's view range, decreased by light level
+	if vector.distance(pos1, pos2) <= skill * light then
+		-- check that the target is within the mob's field of vision
+		if pos_to_angle(pos1, pos2, yaw, pitch) <= fov then
+			-- trace a line and check that the target's position isn't blocked by a solid object
+			if minetest.line_of_sight(pos1, pos2, 1) then
+				return true
+			end
 		end
 	end
 	return false
@@ -296,8 +328,9 @@ function logic_mob_step (self, dtime)
 					local p = obj:getpos()
 					local relation = creatures:alliance(self.object, obj)
 
-					if awareness_sight(s, p, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) or
-					awareness_audibility(s, obj, self.traits_set.hearing) then
+					if awareness_bump(self, obj) or
+					awareness_audibility(s, obj, self.traits_set.hearing) or
+					awareness_sight(s, p, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
 						-- this is a dropped item
 						if ent and ent.name == "__builtin:item" and self.use_items then
 							-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
