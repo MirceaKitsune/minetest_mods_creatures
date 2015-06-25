@@ -7,7 +7,19 @@ creatures.teams_neutral = 0
 creatures.timer_life = 100
 creatures.item_wear = 0
 
--- Functions
+-- Helper functions
+
+-- returns the angle difference between pos1 and pos2, as seen from pos1 at the specified yaw and pitch
+function pos_to_angle (pos1, pos2, yaw, pitch)
+	-- note: we must invert the yaw for x in yaw_vec, to keep the result from inverting when facing opposite directions (0* becoming 180*)
+	local yaw_vec = {x = -math.sin(yaw) * math.cos(pitch), y = math.sin(pitch), z = math.cos(yaw) * math.cos(pitch)}
+	local pos_subtract = vector.subtract(pos2, pos1)
+	local pos_dotproduct = (yaw_vec.x * pos_subtract.x) + (yaw_vec.y * pos_subtract.y) + (yaw_vec.z * pos_subtract.z)
+	local angle = math.deg(math.acos(pos_dotproduct / (vector.length(yaw_vec) * vector.length(pos_subtract))))
+	return angle
+end
+
+-- Global functions
 
 -- Creates a particle burst using random pieces of the creature's texture
 function creatures:particles(creature, multiplier)

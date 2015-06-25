@@ -2,7 +2,7 @@
 
 -- This file contains the default AI functions for mobs. Advanced users can use a different AI instead of this, or execute additional code.
 
--- add a stack to the mob's inventory, returns true if successful
+-- adds a stack to the mob's inventory, returns true if successful
 local function inventory_add (self, stack, check)
 	if not self.inventory then
 		return false
@@ -29,7 +29,7 @@ local function inventory_add (self, stack, check)
 	return false
 end
 
--- drop all of the mob's items
+-- drops all of the mob's items
 local function inventory_drop (self)
 	if not self.inventory then
 		return
@@ -44,6 +44,21 @@ local function inventory_drop (self)
 	end
 
 	self.inventory = {}
+end
+
+-- returns true if the mob can see the given target
+local function awareness_sight (pos1, pos2, yaw, pitch, fov, skill)
+	-- check if distance is within the mob's view range
+	if vector.distance(pos1, pos2) <= skill then
+		-- check that the target is within the mob's field of vision
+		if pos_to_angle(pos1, pos2, yaw, pitch) <= fov then
+			-- trace a line and check that the target's position isn't blocked by a solid object
+			if minetest.line_of_sight(pos1, pos2, 1) then
+				return true
+			end
+		end
+	end
+	return false
 end
 
 -- logic_mob_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
@@ -226,8 +241,8 @@ function logic_mob_step (self, dtime)
 		-- targets: add node targets
 		if self.nodes and #self.nodes > 0 then
 			local distance = self.traits_set.vision / 2
-			local corner_start = {x = s.x - distance, y = s.y - distance / 2, z = s.z - distance}
-			local corner_end = {x = s.x + distance, y = s.y + distance / 2, z = s.z + distance}
+			local corner_start = {x = s.x - distance, y = s.y - distance, z = s.z - distance}
+			local corner_end = {x = s.x + distance, y = s.y + distance, z = s.z + distance}
 			for i, node in pairs(self.nodes) do
 				if node.priority >= math.random() then
 					local pos_all = minetest.find_nodes_in_area_under_air(corner_start, corner_end, node.nodes)
@@ -235,7 +250,7 @@ function logic_mob_step (self, dtime)
 						local id = "x"..pos_this.x.."y"..pos_this.y.."z"..pos_this.z
 						if not self.targets[id] then
 							local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
-							if vector.distance(s, pos_this_up) <= self.traits_set.vision and minetest.line_of_sight(s, pos_this_up, 1) then
+							if awareness_sight(s, pos_this_up, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
 								local name = minetest.env:get_node(pos_this).name
 								self.targets[id] = {position = pos_this_up, name = name, light_min = node.light_min, light_max = node.light_max, objective = node.objective, priority = node.priority}
 							end
@@ -254,7 +269,7 @@ function logic_mob_step (self, dtime)
 					local p = obj:getpos()
 					local relation = creatures:alliance(self.object, obj)
 
-					if vector.distance(s, p) <= self.traits_set.vision and minetest.line_of_sight(s, p, 1) then
+					if awareness_sight(s, p, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
 						-- this is a dropped item
 						if ent and ent.name == "__builtin:item" and self.use_items then
 							-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
