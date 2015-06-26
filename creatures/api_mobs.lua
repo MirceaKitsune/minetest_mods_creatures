@@ -144,13 +144,6 @@ function creatures:register_mob(name, def)
 					tmp.inventory[obj] = item:to_table()
 				end
 			end
-			-- only add persistent targets
-			tmp.targets = {}
-			for obj, target in pairs(self.targets) do
-				if target.persist then
-					tmp.targets[obj] = target
-				end
-			end
 			return minetest.serialize(tmp)
 		end,
 
@@ -181,9 +174,6 @@ function creatures:register_mob(name, def)
 						-- userdata cannot be serialized, convert from table
 						self.inventory[obj] = ItemStack(item)
 					end
-				end
-				if tmp and tmp.targets then
-					self.targets = tmp.targets
 				end
 			end
 		end,
@@ -288,8 +278,25 @@ function creatures:register_spawn(name, def)
 	})
 end
 
--- Causes a player to possess a mob:
+-- Other functions:
 
+-- sets the target object in the mob's target list
+function creatures:target_set (self, object, def)
+	if not object then
+		return
+	end
+	self.targets[object] = def
+end
+
+-- gets the target object from the mob's target list
+function creatures:target_get (self, object)
+	if not object then
+		return self.target_current
+	end
+	return self.targets[object]
+end
+
+-- causes a player to possess a mob:
 function creatures:possess(player, creature)
 	-- set player position and race
 	player:setpos(creature.object:getpos())
@@ -311,8 +318,7 @@ function creatures:possess(player, creature)
 	creature.object:remove()
 end
 
--- This field is set when a player interacts with a mob, and indicates the last mob clicked:
-
+-- this field is set when a player interacts with a mob, and indicates the last mob clicked:
 creatures.selected = {}
 minetest.register_on_leaveplayer(function(player)
 	creatures.selected[player] = nil

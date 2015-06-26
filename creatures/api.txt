@@ -107,6 +107,8 @@
 
 * Scripting - Public functions:
 	creatures.selected[player]: The creature which was last right-clicked by 'player'.
+	creatures:target_get(self, object): Returns the target definition of 'object' for mob 'self'. If the object field is nil, the function returns the current target instead.
+	creatures:target_set(self, object, def): Sets the target definition 'def' of 'object' for mob 'self'. To remove a target, simply use nil for the definition.
 	creatures:player_get(player): Gets the race of a player as a table: [1] = name, [2] = skin
 	creatures:player_set(player, settings): Sets the race of a player from a table: [1] = name, [2] = skin
 	creatures:audibility_get(object): Returns the audibility of the given  player or entry. This is internally used by mobs to detect targets that make noises.
@@ -127,11 +129,11 @@
 	The formspec can contain its own fields, which can be read using a custom minetest.register_on_player_receive_fields function.
 
 * Scripting - Targets:
-	By default, mobs will attack or avoid foes and follow allies. This is determined by the teams field (see "creatures:alliance") and each behavoir can be disabled using "teams_target". Mobs may also walk to random nodes, based on the rules specified in "nodes".
-	Mob targets are of three types: Attack, Avoid, Follow. Each target can address either an entity (creature) or a position (node). Each target has a priority, which together with distance is used to determine which task the mob chooses.
-	A mob's targets can be referenced in two ways: As self.targets[name] or self.current_target. The second simply references an entry from the first... the one which is currently being carried out. Modifying self.current_target has no effect, it is read-only!
-	To add a custom target, use table.insert(self.targets[name], {...}). To remove one, use self.targets[name] = nil. Every custom target must have the persist property set to true, otherwise the code will assume it was added automatically and may modify it!
-	Below is a list of the default target properties. You can add and use your own if needed, eg: self.targets[mytarget].mytext = "I'm a target".
+	By default, mobs will attack or avoid foes and follow allies. This is determined by the teams field (see 'creatures:alliance') and each behavoir can be disabled using 'teams_target'. Mobs may also walk to random nodes, based on the rules specified in 'nodes'.
+	Mob targets are of three types: Attack, Avoid, Follow. Each target can address either an entity (creature) or a position (node). Each target has a priority, which alongside multiple factors is used to determine which task the mob chooses.
+	Use the 'creatures:target_get' function to get self's target for object. If an object is not specified, this returns the target actively being carried out.
+	To add or modify a target use 'creatures:target_set'. Include a table definition to set the target to, or use nil to remove it instead. Every custom target should have the persist property set to true, otherwise the code will assume it was added automatically and may modify it!
+	Below is a list of the default target properties. You can add and use your own if needed, for example: creatures:target_set(self, object, {..., mytext = "I'm a target"}). Lastly, keep in mind that the object is used as a table index, meaning it can be anything... like a string or an entity.
 		entity = object: The entity this target is addressing. Can be a player or any Lua object. Alternatively you can use "position".
 		position = {...}: The position this target is addressing. Alternatively you can use "entity".
 		name = "name": The name of the entity this target is addressing. For players this is the player name, for entities this is the definition name, for nodes this is the node name.
@@ -140,7 +142,7 @@
 		objective = "type": The type of action to take. Can be "attack", "avoid", or "follow".
 		distance = 10: Optional. When set, the target will be taken into account if no further away than this value. If not set, only if it's within the mob's radius of vision.
 		priority = 0.5: The importance of this target. The target with the highest priority will be the task carried on by the mob. This also determines the probability for the target to be added at all (per think).
-		persist = true: Prevents the logic code from modifying this target, and also persists it on the mob entity. Always set this to true!
+		persist = true: Prevents the logic code from modifying this target, unless its entity is no longer available on the server. Always set this to true, unless there's a precise reason not to!
 		on_step = function(self, target) ... end: This function executes per mob think if this is the current target. It's called from the mob's on_step function, after targets are chosen and before actions are taken. 'self' is the mob, 'target' is this target. If it returns false, the mob won't carry out any actions.
 		on_punch = function(self, target) ... end: If this is an attack target and the mob is punching, this function is executed if this is the current target. 'self' is the mob, 'target' is this target. If it returns false, the punch is aborted.
 

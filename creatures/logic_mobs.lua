@@ -310,11 +310,11 @@ function logic_mob_step (self, dtime)
 				local pos_all = minetest.find_nodes_in_area_under_air(corner_start, corner_end, node.nodes)
 				for _, pos_this in ipairs(pos_all) do
 					local id = "x"..pos_this.x.."y"..pos_this.y.."z"..pos_this.z
-					if not self.targets[id] then
+					if not creatures:target_get(self, id) then
 						local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
 						if awareness_sight(pos, pos_this_up, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
 							local name = minetest.env:get_node(pos_this).name
-							self.targets[id] = {position = pos_this_up, name = name, light_min = node.light_min, light_max = node.light_max, objective = node.objective, priority = node.priority}
+							creatures:target_set(self, id, {position = pos_this_up, name = name, light_min = node.light_min, light_max = node.light_max, objective = node.objective, priority = node.priority})
 						end
 					end
 				end
@@ -326,7 +326,7 @@ function logic_mob_step (self, dtime)
 			local objects = minetest.env:get_objects_inside_radius(pos, radius)
 			for _, obj in pairs(objects) do
 				local ent = obj:get_luaentity()
-				if obj ~= self.object and (obj:is_player() or ent) and not self.targets[obj] then
+				if obj ~= self.object and (obj:is_player() or ent) and not creatures:target_get(self, obj) then
 					local obj_pos = obj:getpos()
 					local relation = creatures:alliance(self.object, obj)
 
@@ -352,7 +352,7 @@ function logic_mob_step (self, dtime)
 							end
 							-- check if this item can be added to the inventory, and set it as a target if so
 							if inventory_add(self, stack, true) then
-								self.targets[obj] = {entity = obj, name = ent.name, objective = "attack", priority = priority, on_punch = on_punch}
+								creatures:target_set(self, obj, {entity = obj, name = ent.name, objective = "attack", priority = priority, on_punch = on_punch})
 							end
 						-- this is a creature
 						elseif relation and math.abs(relation) > creatures.teams_neutral then
@@ -365,13 +365,13 @@ function logic_mob_step (self, dtime)
 
 							-- attack targets
 							if self.teams_target.attack and minetest.setting_getbool("enable_damage") and relation <= -1 + self.traits_set.aggressivity then
-								self.targets[obj] = {entity = obj, name = name, objective = "attack", priority = math.abs(relation) * self.traits_set.aggressivity}
+								creatures:target_set(self, obj, {entity = obj, name = name, objective = "attack", priority = math.abs(relation) * self.traits_set.aggressivity})
 							-- avoid targets
 							elseif self.teams_target.avoid and relation <= -1 + self.traits_set.fear then
-								self.targets[obj] = {entity = obj, name = name, objective = "avoid", priority = math.abs(relation) * self.traits_set.fear}
+								creatures:target_set(self, obj, {entity = obj, name = name, objective = "avoid", priority = math.abs(relation) * self.traits_set.fear})
 							-- follow targets
 							elseif self.teams_target.follow and relation >= self.traits_set.loyalty then
-								self.targets[obj] = {entity = obj, name = name, objective = "follow", priority = math.abs(relation) * self.traits_set.loyalty}
+								creatures:target_set(self, obj, {entity = obj, name = name, objective = "follow", priority = math.abs(relation) * self.traits_set.loyalty})
 							end
 						end
 					end
@@ -381,8 +381,8 @@ function logic_mob_step (self, dtime)
 
 		-- targets: remove or modify targets
 		for obj, target in pairs(self.targets) do
-			if not target.persist then
-				if target.position or target.entity:is_player() or target.entity:get_luaentity() then
+			if target.position or target.entity:is_player() or target.entity:get_luaentity() then
+				if not target.persist then
 					local obj_pos = target.position or target.entity:getpos()
 					local dist = vector.distance(pos, obj_pos)
 					local dist_max = target.distance or radius
@@ -393,32 +393,33 @@ function logic_mob_step (self, dtime)
 
 					-- remove targets which are out of range
 					if dist > dist_max then
-						self.targets[obj] = nil
+						creatures:target_set(self, obj, nil)
 					-- remove node targets that don't meet the necessary criteria
 					elseif target.position and not target.entity and target.name then
 						local node_pos = {x = target.position.x, y = target.position.y - 1, z = target.position.z}
 						local node_name = minetest.env:get_node(node_pos).name
 						local node_light = minetest.get_node_light(target.position, nil)
 						if node_name ~= target.name or not node_light or node_light < target.light_min or node_light > target.light_max then
-							self.targets[obj] = nil
+							creatures:target_set(self, obj, nil)
 						end
 					-- remove entity targets which are dead
 					elseif target.entity and target.entity:get_hp() <= 0 then
-						self.targets[obj] = nil
+						creatures:target_set(self, obj, nil)
 					-- if the mob is no longer fit to fight, change attack targets to avoid
 					elseif target.entity and (target.entity:is_player() or (ent and ent.teams)) and
 					target.objective == "attack" and self.teams_target.avoid and
 					self.object:get_hp() <= self.hp_max * self.traits_set.fear then
-						self.targets[obj].objective = "avoid"
+						target.objective = "avoid"
+						creatures:target_set(self, obj, target)
 					-- don't follow mobs which are following someone else or a persistent target
 					elseif target.entity and target.objective == "follow" and
 					ent and ent.target_current and (ent.target_current.entity or ent.target_current.persist) then
-						self.targets[obj] = nil
+						creatures:target_set(self, obj, nil)
 					end
-				else
-					-- remove entities which are no longer available
-					self.targets[obj] = nil
 				end
+			else
+				-- remove entities which are no longer available
+				creatures:target_set(self, obj, nil)
 			end
 		end
 
@@ -696,7 +697,8 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 		-- targets: take action toward the creature who hit us
 		if self.teams_target.attack or self.teams_target.avoid then
 			local ent = hitter:get_luaentity()
-			if not (self.targets[hitter] and self.targets[hitter].persist) and (hitter:is_player() or (ent and ent.teams)) then
+			local def = creatures:target_get(self, hitter)
+			if not (def and def.persist) and (hitter:is_player() or (ent and ent.teams)) then
 				local importance = (1 - relation) * 0.5
 				local action = math.random()
 				local name = nil
@@ -707,18 +709,20 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 				end
 
 				if self.teams_target.attack and minetest.setting_getbool("enable_damage") and importance * self.traits_set.aggressivity >= action then
-					if not self.targets[hitter] then
-						self.targets[hitter] = {entity = hitter, name = name, objective = "attack", priority = importance * self.traits_set.aggressivity}
+					if not def then
+						creatures:target_set(self, hitter, {entity = hitter, name = name, objective = "attack", priority = importance * self.traits_set.aggressivity})
 					else
-						self.targets[hitter].objective = "attack"
-						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits_set.aggressivity
+						def.objective = "attack"
+						def.priority = def.priority + importance * self.traits_set.aggressivity
+						creatures:target_set(self, hitter, def)
 					end
 				elseif self.teams_target.avoid and importance * self.traits_set.fear >= action then
-					if not self.targets[hitter] then
-						self.targets[hitter] = {entity = hitter, name = name, objective = "avoid", priority = importance * self.traits_set.fear}
+					if not def then
+						creatures:target_set(self, hitter, {entity = hitter, name = name, objective = "avoid", priority = importance * self.traits_set.fear})
 					else
-						self.targets[hitter].objective = "avoid"
-						self.targets[hitter].priority = self.targets[hitter].priority + importance * self.traits_set.fear
+						def.objective = "avoid"
+						def.priority = def.priority + importance * self.traits_set.fear
+						creatures:target_set(self, hitter, def)
 					end
 				end
 			end
