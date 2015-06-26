@@ -710,7 +710,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -830,7 +830,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -949,7 +949,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1066,7 +1066,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1183,7 +1183,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1300,7 +1300,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1417,7 +1417,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1534,7 +1534,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1651,7 +1651,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1768,7 +1768,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -1885,7 +1885,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -2002,7 +2002,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -2140,7 +2140,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = nil,
 	screen = "",
 	ambience = "",
@@ -3554,7 +3554,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 
 	-- Player properties:
 	ghost = "",
-	eye_offset = {{x = 0, y = 0,z = 0}, {x = 0, y = 0, z = 0}},
+	eye_offset = {{x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0}},
 	fog = {r = 64, g = 0, b = 0},
 	screen = "",
 	ambience = "creatures_ambient_ghost",

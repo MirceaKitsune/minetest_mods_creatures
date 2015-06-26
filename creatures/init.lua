@@ -14,6 +14,11 @@ creatures.audibility = {}
 
 -- Helper functions
 
+-- calculates the linear interpolation between two numbers
+function lerp (value_start, value_end, control)
+	return (1 - control) * value_start + control * value_end
+end
+
 -- returns the angle difference between pos1 and pos2, as seen from pos1 at the specified yaw and pitch
 function pos_to_angle (pos1, pos2, yaw, pitch)
 	-- note: we must invert the yaw for x in yaw_vec, to keep the result from inverting when facing opposite directions (0* becoming 180*)

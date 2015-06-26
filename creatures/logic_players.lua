@@ -92,9 +92,11 @@ function logic_player_step (player, dtime)
 	local l = minetest.env:get_node_light(pos)
 
 	-- set player audibility for node footsteps
-	-- since we can't easily get the player's velocity, check if a movement key is pressed without sneaking
+	-- since we can't easily get the player's velocity, check movement keys
 	local controls = player:get_player_control()
-	if (controls.up or controls.down or controls.left or controls.right or controls.jump) and not controls.sneak then
+	if controls.jump or
+	((controls.up or controls.down) and not (controls.up and controls.down) and not controls.sneak) or
+	((controls.left or controls.right) and not (controls.left and controls.right) and not controls.sneak) then
 		local pos_under = {x = pos.x, y = pos.y - 1, z = pos.z}
 		local node_under = minetest.env:get_node(pos_under)
 		local sounds = minetest.registered_items[node_under.name].sounds
