@@ -1,7 +1,7 @@
 Creatures mod by MirceaKitsune
 Authors of media and source files:
 
-PilzAdam, MirceaKitsune (WTFPL):
+MirceaKitsune, PilzAdam (LGPL):
   *.lua (source code)
 
 MirceaKitsune (WTFPL):
@@ -9,7 +9,7 @@ MirceaKitsune (WTFPL):
   mobs_anthro.*
   mobs_anthro_*.png
 
-Stuart Jones, MirceaKitsune (WTFPL):
+MirceaKitsune, Stuart Jones (WTFPL):
   mobs_human_*.png
   mobs_clothing_*.png
 
