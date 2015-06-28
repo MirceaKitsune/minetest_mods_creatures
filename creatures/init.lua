@@ -33,15 +33,22 @@ end
 
 -- Gets the audibility of this object or position
 function creatures:audibility_get(object)
-	return creatures.audibility[object]
+	if object then
+		return creatures.audibility[object]
+	end
+	return nil
 end
 
 -- Sets the audibility of this object or position
 function creatures:audibility_set(object, amount, duration)
-	creatures.audibility[object] = amount
-	minetest.after(duration, function()
-		creatures.audibility[object] = nil
-	end)
+	if object then
+		creatures.audibility[object] = amount
+		minetest.after(duration, function()
+			if object then
+				creatures.audibility[object] = nil
+			end
+		end)
+	end
 end
 
 -- Plays a creature sound
