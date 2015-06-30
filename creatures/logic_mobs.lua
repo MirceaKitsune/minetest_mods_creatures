@@ -213,6 +213,7 @@ function logic_mob_step (self, dtime)
 		pos.y = pos.y - 1 -- exclude player offset
 		local n = minetest.env:get_node(pos)
 		local l = minetest.env:get_node_light(pos)
+		local dmg = 0
 
 		-- audibility: set mob audibility for node footsteps
 		if v_xz > 1 then
@@ -225,52 +226,30 @@ function logic_mob_step (self, dtime)
 			end
 		end
 
-		-- environment damage: handle light damage
-		if self.env_damage.light and self.env_damage.light ~= 0 and l and minetest.setting_getbool("enable_damage") and
+		-- environment damage: add light damage
+		if self.env_damage.light and self.env_damage.light ~= 0 and l and
 		(l >= self.env_damage.light_level or l < -self.env_damage.light_level) then
-			self.object:set_hp(self.object:get_hp() - self.env_damage.light)
-			creatures:particles(self.object, nil)
-			if self.object:get_hp() == 0 then
-				if self.sounds and self.sounds.die then
-					creatures:sound(self.sounds.die, self.object)
-				end
-				inventory_drop(self)
-				self.object:remove()
-			else
-				if self.sounds and self.sounds.damage then
-					creatures:sound(self.sounds.damage, self.object)
+			dmg = dmg + self.env_damage.light
+		end
+
+		-- environment damage: add damage_per_second node damage
+		local n_damage = minetest.registered_items[n.name].damage_per_second
+		if n_damage then
+			dmg = dmg + n_damage
+		end
+
+		-- environment damage: add group damage
+		if self.env_damage.groups then
+			for group, amount in pairs(self.env_damage.groups) do
+				if amount ~= 0 and minetest.get_item_group(n.name, group) ~= 0 then
+					dmg = dmg + amount
 				end
 			end
 		end
 
-		-- environment damage: handle water damage
-		if self.env_damage.water and self.env_damage.water ~= 0 and minetest.setting_getbool("enable_damage") and
-		minetest.get_item_group(n.name, "water") ~= 0 then
-			self.object:set_hp(self.object:get_hp() - self.env_damage.water)
-			creatures:particles(self.object, nil)
-			if self.object:get_hp() == 0 then
-				if self.sounds and self.sounds.die then
-					creatures:sound(self.sounds.die, self.object)
-				end
-				inventory_drop(self)
-				self.object:remove()
-			else
-				if self.sounds and self.sounds.damage then
-					creatures:sound(self.sounds.damage, self.object)
-				end
-
-				-- jump if we're standing on something solid
-				if self.jump and v.y == 0 then
-					v.y = self.jump_velocity * 0.75
-					self.object:setvelocity(v)
-				end
-			end
-		end
-
-		-- environment damage: handle lava damage
-		if self.env_damage.lava and self.env_damage.lava ~= 0 and minetest.setting_getbool("enable_damage") and
-		minetest.get_item_group(n.name, "lava") ~= 0 then
-			self.object:set_hp(self.object:get_hp()-self.env_damage.lava)
+		-- environment damage: apply the damage
+		if dmg ~= 0 and minetest.setting_getbool("enable_damage") then
+			self.object:set_hp(self.object:get_hp() - dmg)
 			creatures:particles(self.object, nil)
 			if self.object:get_hp() == 0 then
 				if self.sounds and self.sounds.die then

@@ -551,8 +551,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 	},
 	makes_footstep_sound = false,
 	env_damage = {
-		water = 0,
-		lava = 0,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -661,8 +660,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -784,8 +782,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -909,8 +906,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1029,8 +1025,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1149,8 +1144,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1269,8 +1263,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1389,8 +1382,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1509,8 +1501,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1629,8 +1620,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1749,8 +1739,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1869,8 +1858,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -1989,8 +1977,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -2112,8 +2099,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 1,
-		lava = 5,
+		groups = {water = 1},
 		light = 1,
 		light_level = 7,
 	},
@@ -2251,8 +2237,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 0,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -2390,8 +2375,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 3,
-		lava = 1,
+		groups = {water = 3},
 		light = 0,
 		light_level = 0,
 	},
@@ -2529,8 +2513,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 3,
-		lava = 5,
+		groups = {water = 3},
 		light = 1,
 		light_level = 7,
 	},
@@ -2668,8 +2651,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 1,
-		lava = 5,
+		groups = {water = 1},
 		light = 0,
 		light_level = 0,
 	},
@@ -2824,8 +2806,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	},
 	makes_footstep_sound = false,
 	env_damage = {
-		water = 0,
-		lava = 1,
+		groups = {water = 0},
 		light = 1,
 		light_level = 7,
 	},
@@ -2952,8 +2933,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 1,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -3096,8 +3076,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -3262,8 +3241,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	sounds = {},
 	makes_footstep_sound = true,
 	env_damage = {
-		water = 0,
-		lava = 1,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -3382,8 +3360,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	},
 	makes_footstep_sound = false,
 	env_damage = {
-		water = 0,
-		lava = 1,
+		groups = {water = 0},
 		light = 0,
 		light_level = 0,
 	},
@@ -3539,8 +3516,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	},
 	makes_footstep_sound = false,
 	env_damage = {
-		water = 0,
-		lava = 5,
+		groups = {water = 0},
 		light = 1,
 		light_level = 15,
 	},

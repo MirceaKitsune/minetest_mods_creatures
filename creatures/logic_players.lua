@@ -111,23 +111,19 @@ function logic_player_step (player, dtime)
 		end
 	end
 
-	-- environment damage: handle light damage
+	-- environment damage: add light damage
 	if race_settings.env_damage.light and race_settings.env_damage.light ~= 0 and l and
 	(l >= race_settings.env_damage.light_level or l < -race_settings.env_damage.light_level) then
 		player:set_hp(player:get_hp() - race_settings.env_damage.light)
 	end
 
-	-- environment damage: handle water damage
-	if race_settings.env_damage.water and race_settings.env_damage.water ~= 0 and
-	minetest.get_item_group(n.name, "water") ~= 0 then
-		player:set_hp(player:get_hp() - race_settings.env_damage.water)
-	end
-
-	-- environment damage: handle lava damage
-	-- NOTE: Lava damage is applied on top of normal player lava damage
-	if race_settings.env_damage.lava and race_settings.env_damage.lava ~= 0 and
-	minetest.get_item_group(n.name, "lava") ~= 0 then
-		player:set_hp(player:get_hp() - race_settings.env_damage.lava)
+	-- environment damage: add group damage
+	if race_settings.env_damage.groups then
+		for group, amount in pairs(race_settings.env_damage.groups) do
+			if amount ~= 0 and minetest.get_item_group(n.name, group) ~= 0 then
+				player:set_hp(player:get_hp() - amount)
+			end
+		end
 	end
 end
 
