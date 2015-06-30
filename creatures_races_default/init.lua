@@ -610,6 +610,9 @@ creatures:register_creature("creatures_races_default:ghost", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -720,6 +723,9 @@ creatures:register_creature("creatures_races_default:human_male", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -841,6 +847,9 @@ creatures:register_creature("creatures_races_default:human_female", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -960,6 +969,9 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -1076,6 +1088,9 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -1194,6 +1209,9 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -1310,6 +1328,9 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -1428,6 +1449,9 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -1544,6 +1568,9 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -1662,6 +1689,9 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -1778,6 +1808,9 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -1896,6 +1929,9 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -2012,6 +2048,9 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -2151,6 +2190,9 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -2286,6 +2328,9 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -2423,6 +2468,9 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -2558,6 +2606,9 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -2713,6 +2764,9 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -2837,6 +2891,9 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -2972,6 +3029,9 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -3122,6 +3182,9 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -3266,6 +3329,9 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
 	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
+	end,
 	player_die = function(player)
 		logic_player_die (player)
 	end,
@@ -3382,6 +3448,9 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)
@@ -3570,6 +3639,9 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	end,
 	player_step = function(player, dtime)
 		logic_player_step (player, dtime)
+	end,
+	player_hpchange = function(player, hp_change)
+		logic_player_hpchange (player, hp_change)
 	end,
 	player_die = function(player)
 		logic_player_die (player)

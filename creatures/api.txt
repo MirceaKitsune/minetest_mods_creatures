@@ -85,6 +85,7 @@
 		ambience = "ambient_*": If set, the player will constantly hear this ambiental sound.
 		player_join = function(player) ... end: Function executed when a player joins. By default, this should call the logic_player_join function.
 		player_step = function(player, dtime) ... end: Function executed each step. By default, this should call the logic_player_step function.
+		player_hpchange = function(player, hp_change) ... end: Function executed when the player's HP changes. By default, this should call the logic_player_hpchange function.
 		player_die = function(player) ... end: Function executed when the player dies. By default, this should call the logic_player_die function.
 		player_respawn = function(player) ... end: Function executed when the player respawns. By default, this should call the logic_player_respawn function.
 	Module parameters:

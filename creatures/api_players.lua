@@ -28,6 +28,7 @@ function creatures:register_player(name, def)
 	creatures.player_def[name].icon = def.icon
 	creatures.player_def[name].player_join = def.player_join
 	creatures.player_def[name].player_step = def.player_step
+	creatures.player_def[name].player_hpchange = def.player_hpchange
 	creatures.player_def[name].player_die = def.player_die
 	creatures.player_def[name].player_respawn = def.player_respawn
 	creatures.player_def[name].custom = def.custom
@@ -181,6 +182,15 @@ minetest.register_globalstep(function(dtime)
 		if race and race_settings then
 			race_settings.player_step(player, dtime)
 		end
+	end
+end)
+
+minetest.register_on_player_hpchange(function(player, hp_change)
+	local name = player:get_player_name()
+	local race = creatures:player_get(name)
+	local race_settings = creatures.player_def[race]
+	if race and race_settings then
+		race_settings.player_hpchange(player, hp_change)
 	end
 end)
 

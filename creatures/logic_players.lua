@@ -29,15 +29,32 @@ minetest.register_on_punchnode(function(pos, node, puncher, pointed_thing)
 	end
 end)
 
+-- logic_player_hpchange: Executed in minetest.register_on_player_hpchange, handles: damage
+function logic_player_hpchange (player, hp_change)
+	local name = player:get_player_name()
+	local race = creatures:player_get(name)
+	local race_settings = creatures.player_def[race]
+
+	if hp_change < 0 then
+		-- play damage sounds
+		if race_settings.sounds and race_settings.sounds.damage then
+			creatures:sound(race_settings.sounds.damage, player)
+		end
+
+		-- spawn damage particles
+		creatures:particles(player, nil)
+	end
+end
+
 -- logic_player_step: Executed in minetest.register_globalstep, handles: animations, movement, damage
 function logic_player_step (player, dtime)
 	local name = player:get_player_name()
 	local race = creatures:player_get(name)
 	local race_settings = creatures.player_def[race]
+	local controls = player:get_player_control()
 
 	-- handle player animations
 	if race_settings.mesh and race_settings.animation then
-		local controls = player:get_player_control()
 		-- determine if the player is walking
 		local walking = controls.up or controls.down or controls.left or controls.right
 		-- determine if the player is sneaking, and reduce animation speed if so
@@ -61,17 +78,6 @@ function logic_player_step (player, dtime)
 		end
 	end
 
-	if player_data[name].last_hp and player:get_hp() < player_data[name].last_hp and player:get_hp() > 0 then
-		-- play damage sounds
-		if race_settings.sounds and race_settings.sounds.damage then
-			creatures:sound(race_settings.sounds.damage, player)
-		end
-
-		-- spawn damage particles
-		creatures:particles(player, nil)
-	end
-	player_data[name].last_hp = player:get_hp()
-
 	-- don't let players have more HP than their race allows
 	if player:get_hp() > race_settings.hp_max then
 		player:set_hp(race_settings.hp_max)
@@ -93,7 +99,6 @@ function logic_player_step (player, dtime)
 
 	-- set player audibility for node footsteps
 	-- since we can't easily get the player's velocity, check movement keys
-	local controls = player:get_player_control()
 	if controls.jump or
 	((controls.up or controls.down) and not (controls.up and controls.down) and not controls.sneak) or
 	((controls.left or controls.right) and not (controls.left and controls.right) and not controls.sneak) then
