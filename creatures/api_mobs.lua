@@ -297,29 +297,6 @@ function creatures:target_get (self, object)
 	return self.targets[object]
 end
 
--- causes a player to possess a mob:
-function creatures:possess(player, creature)
-	-- set player position and race
-	player:setpos(creature.object:getpos())
-	player:set_look_yaw(creature.object:getyaw())
-	player:set_look_pitch(0)
-	creatures:player_set(player, {name = creature.name, skin = creature.skin, hp = creature.object:get_hp()})
-	player:set_breath(creature.breath)
-
-	-- copy inventory from mob to player
-	local inv_player = player:get_inventory()
-	local inv_mob = creature.inventory
-	if inv_player then
-		inv_player:set_list("main", {})
-		for _, entry in pairs(inv_mob) do
-			inv_player:add_item("main", entry)
-		end
-	end
-
-	-- remove the mob
-	creature.object:remove()
-end
-
 -- this field is set when a player interacts with a mob, and indicates the last mob clicked:
 creatures.selected = {}
 minetest.register_on_leaveplayer(function(player)

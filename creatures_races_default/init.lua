@@ -87,7 +87,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Handle possession:
 			if fields["possess"] then
 				if not creature.actor then
-					creatures:possess(player, creature)
+					creatures:mob_to_player(player, creature)
 				end
 			-- Handle rats:
 			elseif fields["rat"] then
@@ -182,7 +182,7 @@ creatures.player_formspec = function(def)
 			..default.gui_bg
 			..default.gui_bg_img
 			..default.gui_slots
-			.."image[0,0;1,1;"..icon.."]"
+			.."image_button_exit[0,0;1,1;"..icon..";exorcise;]"
 			.."list[current_player;craft;"..(size.x - size_craft.x - 2)..",0;"..size_craft.x..","..size_craft.y..";]"
 			.."list[current_player;craftpreview;"..(size.x - 1)..","..math.floor(size_craft.y / 2)..";1,1;]"
 			.."list[current_player;main;"..(size.x - size_main.x)..","..(size_craft.y + 1)..";"..size_main.x..",1;]"
@@ -195,6 +195,15 @@ creatures.player_formspec = function(def)
 	-- Return the formspec string
 	return formspec
 end
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname == "" then
+		-- Handle exorcization:
+		if fields["exorcise"] then
+			creatures:player_to_mob(player)
+		end
+	end
+end)
 
 -- #1 - Settings | #4 - Nodes, items, functions
 

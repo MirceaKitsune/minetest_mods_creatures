@@ -113,7 +113,8 @@
 	creatures:audibility_get(object): Returns the audibility of the given  player or entry. This is internally used by mobs to detect targets that make noises.
 	creatures:audibility_set(object, amount, duration): 'object' is given the audibility 'amount' for 'duration' seconds. You typically want to call this when a player or mob triggers a noise, with amount matching the volume and duration matching the length of the sound.
 	creatures:sound(snd, obj): Triggers sound 'snd' on creature 'obj'. This function should be used for voices and other sounds made by creatures. The object should be the player entity for players and self.object for mobs.
-	creatures:possess(player, creature): Causes a player to possess a creature.
+	creatures:mob_to_player(player, creature): Causes a player to possess a mob, removing the mob and giving the player its appearance and settings.
+	creatures:player_to_mob(player): Causes a player to be exorcised into a mob, ghosting the player and spawning a mob with its appearance and settings.
 	creatures:alliance(creature1, creature2): Returns the alliance between two mobs and / or players, ranging between -1 and 1.
 	creatures:particles(creature, multiplier): Triggers a particle burst using pieces of the creature's skin, by default used when the creature is damaged. You can optionally specify a value to multiply the particle count by.
 	creatures:outfit({{...}, ...}): Uses lists of textures and colors to generate all possible combinations, and outputs a full skin table. Each entry represents a layer, all images are overlayed in order (transparent textures). When used, the "textures" parameter of the creature should point directly to the product of this function. Definition parameters:

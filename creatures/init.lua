@@ -31,6 +31,57 @@ end
 
 -- Global functions
 
+-- transforms a mob into a player:
+function creatures:mob_to_player(player, mob)
+	-- set player position and race
+	player:setpos(mob.object:getpos())
+	player:set_look_yaw(mob.object:getyaw())
+	player:set_look_pitch(0)
+	creatures:player_set(player, {name = mob.name, skin = mob.skin, hp = mob.object:get_hp()})
+	player:set_breath(mob.breath)
+
+	-- move inventory from the mob to the player
+	local inv_player = player:get_inventory()
+	local inv_mob = mob.inventory
+	if inv_player then
+		inv_player:set_list("main", {})
+		for _, entry in pairs(inv_mob) do
+			inv_player:add_item("main", entry)
+		end
+	end
+
+	-- remove the mob
+	mob.object:remove()
+end
+
+-- transforms a player into a mob:
+function creatures:player_to_mob(player)
+	-- get player position and race
+	local name, skin = creatures:player_get(player)
+	local obj = creatures:spawn(name, player:getpos())
+	local ent = obj:get_luaentity()
+	obj:setyaw(player:get_look_yaw())
+	obj:set_hp(player:get_hp())
+	ent.skin = skin
+	ent.breath = player:get_breath()
+
+	-- move inventory from the player to the mob
+	ent.inventory = {}
+	local inv = player:get_inventory()
+	local size = inv:get_size("main")
+	for i = 1, size do
+		local stack = inv:get_stack("main", i)
+		if not stack:is_empty() then
+			table.insert(ent.inventory, stack)
+		end
+	end
+	inv:set_list("main", {})
+
+	-- configure the mob's properties, and change the player into the default creature
+	creatures:configure_mob(ent)
+	creatures:player_set(player, {name = creatures.player_default})
+end
+
 -- Gets the audibility of this object or position
 function creatures:audibility_get(object)
 	if object then
