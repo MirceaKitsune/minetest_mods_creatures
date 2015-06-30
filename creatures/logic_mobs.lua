@@ -599,9 +599,9 @@ function logic_mob_step (self, dtime)
 		end
 
 		-- pathfinding: set our destination to the first node in the path, or the target if no path is present
-		local pos = self.v_pos
+		local target = self.v_pos
 		if self.v_path and #self.v_path > 0 then
-			pos = self.v_path[1]
+			target = self.v_path[1]
 		end
 
 		-- movement: jump whenever stuck
@@ -610,18 +610,27 @@ function logic_mob_step (self, dtime)
 			self.object:setvelocity(v)
 		end
 
-		-- movement: handle orientation and walking
-		if pos and self.v_speed then
-			local dir = vector.direction(pos, s)
+		-- movement: set orientation and speed
+		if target and self.v_speed then
+			-- account liquid viscosity
+			local pos = s
+			pos.y = pos.y - 1 -- exclude player offset
+			local n = minetest.env:get_node(pos)
+			local viscosity = minetest.registered_items[n.name].liquid_viscosity or 0
+			viscosity = viscosity + 1
+
+			-- calculate the orientation
+			local dir = vector.direction(target, s)
 			local yaw = math.atan(dir.z / dir.x) + math.pi / 2
-			if pos.x > s.x then
+			if target.x > s.x then
 				yaw = yaw + math.pi
 			end
 			if self.v_avoid then
 				yaw = yaw + math.pi
 			end
+
 			self.object:setyaw(yaw)
-			self.set_velocity(self, self.v_speed)
+			self.set_velocity(self, self.v_speed / viscosity)
 			self.v_start = self.v_speed > 0
 		else
 			self.set_velocity(self, 0)
