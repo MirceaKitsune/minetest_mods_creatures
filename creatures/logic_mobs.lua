@@ -137,6 +137,12 @@ function logic_mob_step (self, dtime)
 	local s = self.object:getpos()
 	local v = self.object:getvelocity()
 	local v_xz = self.get_velocity(self)
+	-- estimate head position at 4/5 of total height
+	local s_head = {
+		x = s.x,
+		y = lerp(s.y + self.collisionbox[2], s.y + self.collisionbox[5], 0.8),
+		z = s.z,
+	}
 
 	-- inventory: handle items
 	if self.inventory and #self.inventory > 0 then
@@ -212,6 +218,7 @@ function logic_mob_step (self, dtime)
 		local pos = s
 		pos.y = pos.y - 1 -- exclude player offset
 		local n = minetest.env:get_node(pos)
+		local n_head = minetest.env:get_node(s_head)
 		local l = minetest.env:get_node_light(pos)
 		local dmg = 0
 
@@ -248,7 +255,7 @@ function logic_mob_step (self, dtime)
 		end
 
 		-- environment damage: add drowning damage
-		local n_drowning = minetest.registered_items[n.name].drowning
+		local n_drowning = minetest.registered_items[n_head.name].drowning
 		if n_drowning and n_drowning ~= 0 then
 			if self.breath > 0 then
 				self.breath = self.breath - 1
@@ -288,22 +295,19 @@ function logic_mob_step (self, dtime)
 	if self.timer_decision >= self.traits_set.decision_interval then
 		self.timer_decision = 0
 		local radius = math.max(self.traits_set.vision, self.traits_set.hearing)
-		local pos = s
-		-- estimate eye position at 3/4 of total height
-		pos.y = lerp(pos.y + self.collisionbox[2], pos.y + self.collisionbox[5], 0.75)
 
 		-- targets: add node targets
 		if self.nodes and #self.nodes > 0 then
 			local distance = self.traits_set.vision / 2
-			local corner_start = {x = pos.x - distance, y = pos.y - distance, z = pos.z - distance}
-			local corner_end = {x = pos.x + distance, y = pos.y + distance, z = pos.z + distance}
+			local corner_start = {x = s_head.x - distance, y = s_head.y - distance, z = s_head.z - distance}
+			local corner_end = {x = s_head.x + distance, y = s_head.y + distance, z = s_head.z + distance}
 			for i, node in pairs(self.nodes) do
 				local pos_all = minetest.find_nodes_in_area_under_air(corner_start, corner_end, node.nodes)
 				for _, pos_this in ipairs(pos_all) do
 					local id = "x"..pos_this.x.."y"..pos_this.y.."z"..pos_this.z
 					if not creatures:target_get(self, id) then
 						local pos_this_up = {x = pos_this.x, y = pos_this.y + 1, z = pos_this.z}
-						if awareness_sight(pos, pos_this_up, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
+						if awareness_sight(s_head, pos_this_up, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
 							local name = minetest.env:get_node(pos_this).name
 							creatures:target_set(self, id, {position = pos_this_up, name = name, light_min = node.light_min, light_max = node.light_max, objective = node.objective, priority = node.priority})
 						end
@@ -314,7 +318,7 @@ function logic_mob_step (self, dtime)
 
 		-- targets: add player or entity targets
 		if self.teams_target.attack or self.teams_target.avoid or self.teams_target.follow then
-			local objects = minetest.env:get_objects_inside_radius(pos, radius)
+			local objects = minetest.env:get_objects_inside_radius(s_head, radius)
 			for _, obj in pairs(objects) do
 				local ent = obj:get_luaentity()
 				if obj ~= self.object and (obj:is_player() or ent) and not creatures:target_get(self, obj) then
@@ -322,8 +326,8 @@ function logic_mob_step (self, dtime)
 					local relation = creatures:alliance(self.object, obj)
 
 					if awareness_bump(self, obj) or
-					awareness_audibility(pos, obj, self.traits_set.hearing) or
-					awareness_sight(pos, obj_pos, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
+					awareness_audibility(s_head, obj, self.traits_set.hearing) or
+					awareness_sight(s_head, obj_pos, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
 						-- this is a dropped item
 						if ent and ent.name == "__builtin:item" and self.use_items then
 							-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
@@ -381,7 +385,7 @@ function logic_mob_step (self, dtime)
 			if target.position or target.entity:is_player() or target.entity:get_luaentity() then
 				if not target.persist then
 					local obj_pos = target.position or target.entity:getpos()
-					local dist = vector.distance(pos, obj_pos)
+					local dist = vector.distance(s_head, obj_pos)
 					local dist_max = target.distance or radius
 					local ent = nil
 					if target.entity then
@@ -425,7 +429,7 @@ function logic_mob_step (self, dtime)
 		local best_priority = 0
 		for _, target in pairs(self.targets) do
 			local obj_pos = target.position or target.entity:getpos()
-			local dist = vector.distance(pos, obj_pos)
+			local dist = vector.distance(s_head, obj_pos)
 			local dist_max = target.distance or radius
 			local interest = target.priority * (1 - dist / dist_max) + ((1 - self.traits_set.determination) * math.random())
 

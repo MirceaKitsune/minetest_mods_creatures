@@ -133,6 +133,7 @@ function creatures:register_mob(name, def)
 			local tmp = {}
 			tmp.yaw = self.object:getyaw()
 			tmp.hp = self.object:get_hp()
+			tmp.breath = self.breath
 			tmp.skin = self.skin
 			tmp.actor = self.actor
 			tmp.traits_set = self.traits_set
@@ -156,6 +157,9 @@ function creatures:register_mob(name, def)
 				end
 				if tmp and tmp.hp then
 					self.object:set_hp(tmp.hp)
+				end
+				if tmp and tmp.breath then
+					self.breath = tmp.breath
 				end
 				if tmp and tmp.skin then
 					self.skin = tmp.skin
