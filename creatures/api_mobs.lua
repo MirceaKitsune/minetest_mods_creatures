@@ -61,6 +61,7 @@ function creatures:register_mob(name, def)
 		targets = {},
 		target_current = nil,
 		in_liquid = false,
+		breath = 11,
 		v_pos = nil,
 		v_avoid = false,
 		v_speed = nil,
@@ -303,10 +304,11 @@ function creatures:possess(player, creature)
 	player:set_look_yaw(creature.object:getyaw())
 	player:set_look_pitch(0)
 	creatures:player_set(player, {name = creature.name, skin = creature.skin, hp = creature.object:get_hp()})
+	player:set_breath(creature.breath)
 
 	-- copy inventory from mob to player
 	local inv_player = player:get_inventory()
-	local inv_mob = creature.object:get_luaentity().inventory
+	local inv_mob = creature.inventory
 	if inv_player then
 		inv_player:set_list("main", {})
 		for _, entry in pairs(inv_mob) do

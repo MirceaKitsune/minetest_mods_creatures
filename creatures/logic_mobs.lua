@@ -247,6 +247,18 @@ function logic_mob_step (self, dtime)
 			end
 		end
 
+		-- environment damage: add drowning damage
+		local n_drowning = minetest.registered_items[n.name].drowning
+		if n_drowning and n_drowning ~= 0 then
+			if self.breath > 0 then
+				self.breath = self.breath - 1
+			else
+				dmg = dmg + n_drowning
+			end
+		elseif self.breath < 11 then
+			self.breath = self.breath + 1
+		end
+
 		-- environment damage: apply the damage
 		if dmg ~= 0 and minetest.setting_getbool("enable_damage") then
 			self.object:set_hp(self.object:get_hp() - dmg)
