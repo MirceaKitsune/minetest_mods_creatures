@@ -60,7 +60,7 @@ function creatures:player_to_mob(player)
 	local name, skin = creatures:player_get(player)
 	local obj = creatures:spawn(name, player:getpos())
 	local ent = obj:get_luaentity()
-	obj:setyaw(player:get_look_yaw())
+	obj:setyaw(player:get_look_yaw() - 1.5)
 	obj:set_hp(player:get_hp())
 	ent.skin = skin
 	ent.breath = player:get_breath()
