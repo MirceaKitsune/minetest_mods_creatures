@@ -534,7 +534,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 	-- Common properties:
 	icon = "mobs_ghost_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5},
 	visual = "sprite",
 	mesh = "",
@@ -567,8 +567,8 @@ creatures:register_creature("creatures_races_default:ghost", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = {},
-	attack_damage = 1,
 	nodes = {},
 	traits = {
 		attack_interval = {1, 1},
@@ -627,7 +627,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 	-- Common properties:
 	icon = "mobs_human_male_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_human.b3d",
@@ -674,8 +674,8 @@ creatures:register_creature("creatures_races_default:human_male", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_human_male,
-	attack_damage = 1,
 	nodes = nodes_human_male,
 	traits = {
 		attack_interval = {0.75, 1.25},
@@ -747,7 +747,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 	-- Common properties:
 	icon = "mobs_human_female_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_human.b3d",
@@ -794,8 +794,8 @@ creatures:register_creature("creatures_races_default:human_female", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_human_female,
-	attack_damage = 1,
 	nodes = nodes_human_female,
 	traits = {
 		attack_interval = {1, 1.5},
@@ -869,7 +869,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	-- Common properties:
 	icon = "mobs_anthro_fox_male_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -916,8 +916,8 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_male,
-	attack_damage = 1,
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.75, 1.25},
@@ -986,7 +986,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	-- Common properties:
 	icon = "mobs_anthro_fox_female_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1033,8 +1033,8 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_female,
-	attack_damage = 1,
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1, 1.25},
@@ -1103,7 +1103,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	-- Common properties:
 	icon = "mobs_anthro_wolf_male_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1150,8 +1150,8 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_male,
-	attack_damage = 1,
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.5, 0.75},
@@ -1220,7 +1220,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	-- Common properties:
 	icon = "mobs_anthro_wolf_female_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1267,8 +1267,8 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_female,
-	attack_damage = 1,
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {0.5, 0.75},
@@ -1337,7 +1337,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	-- Common properties:
 	icon = "mobs_anthro_leopard_male_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1384,8 +1384,8 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_male,
-	attack_damage = 1,
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {0.25, 0.75},
@@ -1454,7 +1454,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	-- Common properties:
 	icon = "mobs_anthro_leopard_female_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1501,8 +1501,8 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_female,
-	attack_damage = 1,
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {0.5, 0.75},
@@ -1571,7 +1571,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	-- Common properties:
 	icon = "mobs_anthro_rabbit_male_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1618,8 +1618,8 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_male,
-	attack_damage = 1,
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {1.5, 2},
@@ -1688,7 +1688,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	-- Common properties:
 	icon = "mobs_anthro_rabbit_female_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1735,8 +1735,8 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_female,
-	attack_damage = 1,
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1.75, 2},
@@ -1805,7 +1805,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	-- Common properties:
 	icon = "mobs_anthro_squirrel_male_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1852,8 +1852,8 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_male,
-	attack_damage = 1,
 	nodes = nodes_anthro_male,
 	traits = {
 		attack_interval = {1.25, 1.75},
@@ -1922,7 +1922,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	-- Common properties:
 	icon = "mobs_anthro_squirrel_female_icon.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -1969,8 +1969,8 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = items_anthro_female,
-	attack_damage = 1,
 	nodes = nodes_anthro_female,
 	traits = {
 		attack_interval = {1.5, 1.75},
@@ -2041,7 +2041,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	-- Common properties:
 	icon = "mobs_dirt_monster_icon.png",
 	hp_max = 5,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_stone_monster.b3d",
@@ -2089,6 +2089,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 
 	-- Mob properties:
 	think = 1,
+	attack_capabilities = {damage_groups = {fleshy = 1}},
 	items = {
 		{
 			name = "default:dirt",
@@ -2100,7 +2101,6 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 			metadata = nil,
 		},
 	},
-	attack_damage = 1,
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2177,7 +2177,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	-- Common properties:
 	icon = "mobs_stone_monster_icon.png",
 	hp_max = 10,
-	armor = 90,
+	armor = {fleshy = 90},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_stone_monster.b3d",
@@ -2225,6 +2225,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 
 	-- Mob properties:
 	think = 1,
+	attack_capabilities = {damage_groups = {fleshy = 3}},
 	items = {
 		{
 			name = "default:mossycobble",
@@ -2236,7 +2237,6 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 			metadata = nil,
 		},
 	},
-	attack_damage = 3,
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2313,7 +2313,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	-- Common properties:
 	icon = "mobs_sand_monster_icon.png",
 	hp_max = 5,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_sand_monster.b3d",
@@ -2361,6 +2361,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 
 	-- Mob properties:
 	think = 1,
+	attack_capabilities = {damage_groups = {fleshy = 2}},
 	items = {
 		{
 			name = "default:sand",
@@ -2372,7 +2373,6 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 			metadata = nil,
 		},
 	},
-	attack_damage = 2,
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2449,7 +2449,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	-- Common properties:
 	icon = "mobs_snow_monster_icon.png",
 	hp_max = 5,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_sand_monster.b3d",
@@ -2497,6 +2497,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 
 	-- Mob properties:
 	think = 1,
+	attack_capabilities = {damage_groups = {fleshy = 2}},
 	items = {
 		{
 			name = "default:snowblock",
@@ -2508,7 +2509,6 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 			metadata = nil,
 		},
 	},
-	attack_damage = 2,
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2585,7 +2585,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	-- Common properties:
 	icon = "mobs_tree_monster_icon.png",
 	hp_max = 10,
-	armor = 90,
+	armor = {fleshy = 90},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_tree_monster.b3d",
@@ -2633,6 +2633,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 
 	-- Mob properties:
 	think = 1,
+	attack_capabilities = {damage_groups = {fleshy = 2}},
 	items = {
 		{
 			name = "default:sapling",
@@ -2662,8 +2663,6 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 			metadata = nil,
 		},
 	},
-	disable_fall_damage = true,
-	attack_damage = 2,
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2740,7 +2739,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	-- Common properties:
 	icon = "mobs_oerkki_icon.png",
 	hp_max = 10,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_oerkki.b3d",
@@ -2787,8 +2786,8 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 
 	-- Mob properties:
 	think = 1,
+	attack_capabilities = {damage_groups = {fleshy = 3}},
 	items = {},
-	attack_damage = 3,
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -2865,7 +2864,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	-- Common properties:
 	icon = "mobs_dungeon_master_icon.png",
 	hp_max = 10,
-	armor = 80,
+	armor = {fleshy = 80},
 	collisionbox = {-0.7, -0.01, -0.7, 0.7, 2.6, 0.7},
 	visual = "mesh",
 	mesh = "mobs_dungeon_master.b3d",
@@ -2912,6 +2911,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 
 	-- Mob properties:
 	think = 1,
+	attack_capabilities = {damage_groups = {fleshy = 4}},
 	items = {
 		{
 			name = "default:mese",
@@ -2923,7 +2923,6 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 			metadata = nil,
 		},
 	},
-	attack_damage = 4,
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},
@@ -3002,7 +3001,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	-- Common properties:
 	icon = "mobs_sheep_icon.png",
 	hp_max = 5,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.5, -0.01, -0.5, 0.65, 1, 0.5},
 	visual = "mesh",
 	mesh = "mobs_sheep.b3d",
@@ -3167,7 +3166,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	-- Common properties:
 	icon = "mobs_rabbit_icon.png",
 	hp_max = 2,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.25, -0.01, -0.25, 0.25, 0.5, 0.25},
 	visual = "mesh",
 	mesh = "mobs_rabbit.b3d",
@@ -3293,7 +3292,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	-- Common properties:
 	icon = "mobs_rat_icon.png",
 	hp_max = 1,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.2, -0.01, -0.2, 0.2, 0.2, 0.2},
 	visual = "mesh",
 	mesh = "mobs_rat.b3d",
@@ -3440,7 +3439,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	-- Common properties:
 	icon = "clear.png",
 	hp_max = 20,
-	armor = 100,
+	armor = {fleshy = 100},
 	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.9, 0.4},
 	visual = "mesh",
 	mesh = "mobs_anthro.b3d",
@@ -3487,8 +3486,8 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 
 	-- Mob properties:
 	think = 0.5,
+	attack_capabilities = {damage_groups = {fleshy = 4}},
 	items = nil,
-	attack_damage = 4,
 	nodes = {
 		{
 			nodes = {"group:crumbly", "group:cracky", "group:choppy"},

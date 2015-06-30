@@ -339,8 +339,14 @@ function logic_mob_step (self, dtime)
 							local stack = ItemStack(ent.itemstring)
 							local stack_count = stack:get_count()
 							local stack_capabilities = stack:get_tool_capabilities()
+							local stack_damage = 1
+							if stack_capabilities.damage_groups then
+								for _, dmg in pairs(stack_capabilities.damage_groups) do
+									stack_damage = stack_damage * dmg
+								end
+							end
 							-- determine target priority based on count, tool capabilities, and any criteria that can be used to establish its value
-							local priority = 1 - 1 / math.max(1, stack_count * (stack_capabilities.damage_groups.fleshy / stack_capabilities.full_punch_interval + stack_capabilities.max_drop_level))
+							local priority = 1 - 1 / math.max(1, stack_count * (stack_damage / stack_capabilities.full_punch_interval + stack_capabilities.max_drop_level))
 							-- custom target function used to pick up the item
 							local on_punch = function (self, target)
 								local ent = target.entity:get_luaentity()
@@ -532,25 +538,29 @@ function logic_mob_step (self, dtime)
 							end
 						-- this is an entity target
 						elseif self.target_current.entity then
-							local capabilities = {
-								full_punch_interval = self.traits_set.attack_interval,
-								damage_groups = {fleshy = self.attack_damage},
-							}
+							local capabilities = self.attack_capabilities
+							-- if a custom punch interval isn't set, use the attack_interval trait
+							if not capabilities.full_punch_interval then
+								capabilities.full_punch_interval = self.traits_set.attack_interval
+							end
+
 							if tool_stack then
 								local tool_capabilities = tool_stack:get_tool_capabilities()
-								local tool_damage = tool_capabilities.damage_groups and tool_capabilities.damage_groups.fleshy
-								if tool_damage then
-									-- multiply with the tool capabilities of the wielded item
-									capabilities.full_punch_interval = capabilities.full_punch_interval * tool_capabilities.full_punch_interval
-									capabilities.damage_groups.fleshy = capabilities.damage_groups.fleshy * tool_damage
-									-- wear out the tool
+								if tool_capabilities.damage_groups then
+									-- use the tool's capabilities instead of the mob's
+									capabilities = tool_capabilities
+									-- wear out the tool based on the total amount of damage it can deal
 									if creatures.item_wear and creatures.item_wear > 0 and not minetest.setting_getbool("creative_mode") then
+										local tool_damage = 1
+										for _, dmg in pairs(tool_capabilities.damage_groups) do
+											tool_damage = tool_damage * dmg
+										end
 										tool_stack:add_wear(creatures.item_wear / tool_damage)
 									end
 								end
 							end
-							local dir = vector.direction(self.v_pos, s)
 
+							local dir = vector.direction(self.v_pos, s)
 							self.target_current.entity:punch(self.object, self.traits_set.attack_interval, capabilities, dir)
 						end
 					end
@@ -637,9 +647,9 @@ function logic_mob_activate (self, staticdata, dtime_s)
 
 	-- if damage is disabled, make mobs invincible
 	if minetest.setting_getbool("enable_damage") then
-		self.object:set_armor_groups({fleshy = self.armor})
+		self.object:set_armor_groups(self.armor)
 	else
-		self.object:set_armor_groups({fleshy = 0})
+		self.object:set_armor_groups({})
 	end
 
 	self.set_staticdata(self, staticdata, dtime_s)
@@ -676,11 +686,14 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 		if hitter:is_player() and creatures.item_wear and creatures.item_wear > 0 and not minetest.setting_getbool("creative_mode") then
 			local item = hitter:get_wielded_item()
 			local item_capabilities = item:get_tool_capabilities()
-			local item_damage = item_capabilities.damage_groups and item_capabilities.damage_groups.fleshy
-			if item_damage then
+			if item_capabilities.damage_groups then
+				local item_damage = 1
+				for _, dmg in pairs(item_capabilities.damage_groups) do
+					item_damage = item_damage * dmg
+				end
 				item:add_wear(creatures.item_wear / item_damage)
+				hitter:set_wielded_item(item)
 			end
-			hitter:set_wielded_item(item)
 		end
 
 		-- spawn damage particles

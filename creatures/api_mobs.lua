@@ -23,7 +23,7 @@ function creatures:register_mob(name, def)
 		icon = def.icon,
 		nodes = def.nodes,
 		think = def.think,
-		attack_damage = def.attack_damage,
+		attack_capabilities = def.attack_capabilities,
 		sounds = def.sounds,
 		animation = def.animation,
 		jump = def.jump or true,

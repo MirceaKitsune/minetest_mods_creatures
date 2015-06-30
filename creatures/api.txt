@@ -16,7 +16,7 @@
 	Common parameters (applied to both creatures and players):
 		icon = "mobs_*_icon.png": Icon for this creature, indicating what a player or mob is. Players should see it in the inventory menu or the HUD.
 		hp_max = 20: Mobs and players are born with this amount of health, and cannot gain more than it.
-		armor = 100: Armor decides how much damage gets absorbed.
+		armor = {fleshy = 100, ...}: The armor groups. Default is 100, lower values mean less damage for that group.
 		collisionbox = {-0.5, 0, -0.5, 0.5, 2, 0.5}: Collosion box size. (TODO: Currently works only for mobs, engine implementation needed for players!)
 		visual = "sprite": Visual type of the player and mob.
 		mesh = "": 3D model of the player and mob, when mesh visual is used.
@@ -46,6 +46,7 @@
 		teams = {monsters = 1, ...}: Contains an interest list, where 1 means "pro" and -1 means "con". Friend or foe relationships are determined based on how many things two creatures have in common here.
 	Mob only parameters:
 		think = 0.5: How fast the base AI executes for this creature. Lower values offer more responsive movement, but also increase server load and the number of packets sent over the network!
+		attack_capabilities = {damage_groups = {fleshy = 1}, ...}: Attack capabilities of the mob's punch. If the mob is wielding a tool, the capabilities of that tool are used instead. You normally only need to include damage_groups, full_punch_interval is set to the attack trait if left out.
 		items = {{...}, ...}: Contains a list of items and probabilities, which determines what items the mob might spawn with. Parameters:
 			name = "default:dirt": The name of the item. It can optionally be a table of strings, in which case a random name is picked.
 			chance = 20: Probability that the item will be offered, 1 in this.
@@ -54,8 +55,6 @@
 			wear_min = 0: Minimum wear. Ranges between 0 and 65535, and should only be used on tools.
 			wear_max = 65535: Maximum wear. Ranges between 0 and 65535, and should only be used on tools.
 			metadata = nil: Optional metadata of the item stack.
-		on_rightclick = function(self, clicker) {...}: A custom function can be assigned to this, which will be executed when the mob is right-clicked by a player.
-		attack_damage = 1: How much damage the mob deals each punch. If the mob is wielding a tool, the capabilities of that tool are used instead.
 		nodes = {{nodes = "default:dirt", ...}, ...}: A list of parameters, which specifies how mobs react to certain nodes. Each entry represents one target per mob. Parameters include:
 			nodes = {"default:dirt", ...}: List of nodes or node groups that mobs will search for.
 			light_min = 0: Minimum light level the node most have to be considered an objective.
@@ -64,7 +63,7 @@
 			priority = 0: Target priority. The higher, the more importance the mob will give to this node.
 		names = {{"Mike", "Dan", ...}, {...}}: A random name will be chosen from this list for each mob. Can be empty for mobs that shouldn't have a name (eg: monsters).
 		traits = {attack_interval = {1, 1}, ...}: Personality traits. Each individual mob gets a value between min and max when it first spawns. Actor mobs persist those settings between server restarts. Default traits:
-			attack_interval = {1, 1}: How often the mob shoots or punches. Lower values mean a greater attack skill.
+			attack_interval = {1, 1}: How often the mob tries to punch. Lower values mean a greater attack skill. Be careful how you sync this with the full_punch_interval of the attack capabilities used!
 			decision_interval = {1, 1}: How often the mob scans for targets and takes new decisions. Lower values mean smarter mobs, but can greatly increase server load!
 			vision = {15, 15}: View distance of the mob, and the range in which objectives are visually detected.
 			hearing = {10, 10}: Hearing distance of the mob, and how far objectives can be detected using audio cues.

@@ -123,7 +123,7 @@ local function apply_settings (player, settings)
 	end
 
 	-- player: configure properties
-	player:set_armor_groups({fleshy = def.armor})
+	player:set_armor_groups(def.armor)
 	player:set_physics_override({speed = def.physics.speed, jump = def.physics.jump, gravity = def.physics.gravity})
 	player:set_properties({
 		collisionbox = def.collisionbox,
