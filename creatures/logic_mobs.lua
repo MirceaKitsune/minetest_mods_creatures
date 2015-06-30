@@ -516,6 +516,7 @@ function logic_mob_step (self, dtime)
 					end
 
 					if can_punch then
+						local capabilities = self.attack_capabilities
 						if self.sounds and self.sounds.attack then
 							creatures:sound(self.sounds.attack, self.object)
 						end
@@ -528,8 +529,7 @@ function logic_mob_step (self, dtime)
 								minetest.dig_node(pos)
 							end
 						-- this is an entity target
-						elseif self.target_current.entity then
-							local capabilities = self.attack_capabilities
+						elseif self.target_current.entity and capabilities then
 							-- if a custom punch interval isn't set, use the attack_interval trait
 							if not capabilities.full_punch_interval then
 								capabilities.full_punch_interval = self.traits_set.attack_interval

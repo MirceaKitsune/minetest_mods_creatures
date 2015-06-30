@@ -63,10 +63,12 @@ local function item_step_player (self)
 		if entry then
 			self.object:set_properties({visual_size = {x = entry.size, y = entry.size}})
 			self.object:set_attach(self.owner, entry.bone, entry.pos, entry.rot)
+			self.owner_item = ""
 			self.enabled = true
 		else
 			self.object:set_properties({textures = {"air"}, is_visible = false})
 			self.object:set_attach(self.owner, nil, {x = 0, y = 0, z = 0}, {x = 0, y = 0, z = 0})
+			self.owner_item = ""
 			self.enabled = false
 		end
 		self.owner_race = race
