@@ -71,6 +71,15 @@
 			aggressivity = {0.5, 0.5}: Likeliness of the mob to attack enemies (if fear doesn't succeed first). Must range between 0 and 1!
 			determination = {0.5, 0.5}: The mob's ability to focus on a task. Lower values mean a greater tolerance to randomly choosing a different target each think. Must range between 0 and 1!
 		teams_target = {attack = true, avoid = true, follow = true}: What types of targets this mob will automatically add or change based on team relationships. Can be nil for default behavior.
+		alert = {...}: Contains the rules based on which the mob becomes alert. The alert level ranges between 0 and 1, and represent the mob's awareness as well as interest to carry out the task. Only creature targets are affected by alert level, and for friendly targets an inverse calculation is used (1 - alert_level). Parameters:
+			add = -0.01: How much to modify alert level periodically. Calculated per target scan (intelligence trait). You normally want this to be a small negative value, so alert level slowly drops over time.
+			add_friend = 0: How much to modify alert level when detecting a friendly target. Calculated per target scan (intelligence trait), amount added per creature is (relation * this). You normally want this to be 0 or a small negative value, so allies either don't affect alert level or make the creature more calm.
+			add_foe = 0.5: How much to modify alert level when detecting an enemy target. Calculated per target scan (intelligence trait), amount added per creature is (relation * this). You normally want this to be a large positive value, so alert level increases to 1 after a few detections.
+			add_punch = 1: How much to modify alert level when being punched. Calculated per punch, amount added per creature is (importance * this). You normally want this to be 1 or close, so mobs become alert immediately when getting hit.
+			action_look = 0.25: Mobs will only look toward their target when alert level is greater than this.
+			action_walk = 0.5: Mobs will only walk toward their target when alert level is greater than this. Must be greater than movement_look!
+			action_run = 0.75: Mobs will only run toward their target when alert level is greater than this. Must be greater than movement_walk! Only works if the fast_mobs setting is enabled.
+			action_punch = 1: Mobs will only attack their target if alert level is greater than this value. Must be greater than movement_look, otherwise it's not guaranteed that the mob is looking at their target and can therefore punch them!
 		use_items = true: Whether this mob can use items. Note that setting this to false won't disable this mob's inventory, but it will keep it from doing things like wielding tools or picking up dropped items.
 		on_activate = function(self, staticdata, dtime_s) ... end: Function executed when the mob is activated. By default, this should call the logic_mob_activate function.
 		on_step = function(self, dtime) ... end: Function executed each step. By default, this should call the logic_mob_step function.

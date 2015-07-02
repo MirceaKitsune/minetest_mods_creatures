@@ -32,6 +32,7 @@ function creatures:register_mob(name, def)
 		inventory_craft = def.inventory_craft,
 		teams = def.teams,
 		teams_target = def.teams_target or {attack = true, avoid = true, follow = true},
+		alert = def.alert,
 		traits = def.traits,
 		names = def.names,
 		custom = def.custom,
@@ -60,6 +61,7 @@ function creatures:register_mob(name, def)
 		gravity = tonumber(minetest.setting_get("movement_gravity")) * def.physics.gravity,
 		targets = {},
 		target_current = nil,
+		alert_level = 0,
 		in_liquid = false,
 		breath = 11,
 		v_pos = nil,
@@ -134,6 +136,7 @@ function creatures:register_mob(name, def)
 			tmp.yaw = self.object:getyaw()
 			tmp.hp = self.object:get_hp()
 			tmp.breath = self.breath
+			tmp.alert_level = self.alert_level
 			tmp.skin = self.skin
 			tmp.actor = self.actor
 			tmp.traits_set = self.traits_set
@@ -160,6 +163,9 @@ function creatures:register_mob(name, def)
 				end
 				if tmp and tmp.breath then
 					self.breath = tmp.breath
+				end
+				if tmp and tmp.alert_level then
+					self.alert_level = tmp.alert_level
 				end
 				if tmp and tmp.skin then
 					self.skin = tmp.skin

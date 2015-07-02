@@ -37,10 +37,16 @@ local function formspec(self, clicker)
 		end
 	end
 
+	local alert = "N/A"
+	if self.alert then
+		alert = self.alert_level
+	end
+
 	local info =
 		"Name: "..names..","
 		.."Health: "..(self.object:get_hp() * 5).."%,"
 		..alliance_color.."Alliance: "..alliance..","
+		.."Alert: "..alert..","
 	if alliance > creatures.teams_neutral then
 		info = info
 			.."Traits - Attack: "..string.format("%.3f", 1 / self.traits_set.attack_interval)..","
@@ -350,6 +356,28 @@ local items_anthro_male = items_all
 
 local items_anthro_female = items_all
 
+local alert_all_male = {
+	add = -0.01,
+	add_friend = 0,
+	add_foe = 0.5,
+	add_punch = 1,
+	action_look = 0.25,
+	action_walk = 0.5,
+	action_run = 0.75,
+	action_punch = 1,
+}
+
+local alert_all_female = {
+	add = -0.005,
+	add_friend = 0,
+	add_foe = 0.5,
+	add_punch = 1,
+	action_look = 0.25,
+	action_walk = 0.5,
+	action_run = 0.75,
+	action_punch = 1,
+}
+
 -- #1 - Settings | #5 - Outfits and colors
 
 local colors_clothes = {
@@ -590,6 +618,7 @@ creatures:register_creature("creatures_races_default:ghost", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -702,6 +731,7 @@ creatures:register_creature("creatures_races_default:human_male", {
 		{"Wheeler", "Anderson", "Simpson", "Jackson", "Parker", "Adams", "Steven", "Johnson",},
 	},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_male,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -824,6 +854,7 @@ creatures:register_creature("creatures_races_default:human_female", {
 		{"Wheeler", "Anderson", "Simpson", "Jackson", "Parker", "Adams", "Steven", "Johnson",},
 	},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_female,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -945,6 +976,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_male,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -1064,6 +1096,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_female,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -1183,6 +1216,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_male,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -1302,6 +1336,7 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_female,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -1421,6 +1456,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_male,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -1540,6 +1576,7 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_female,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -1659,6 +1696,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_male,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -1778,6 +1816,7 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_female,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -1897,6 +1936,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_male,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -2016,6 +2056,7 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = alert_all_female,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -2156,6 +2197,7 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -2294,6 +2336,7 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -2432,6 +2475,7 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -2570,6 +2614,7 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -2726,6 +2771,7 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -2853,6 +2899,7 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -2990,6 +3037,7 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -3141,6 +3189,7 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -3287,6 +3336,7 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -3406,6 +3456,7 @@ creatures:register_creature("creatures_races_default:animal_rat", {
 	},
 	names = {},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = false,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)
@@ -3563,6 +3614,7 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	},
 	names = {{"Help me.", "You found me...", "Stay away...", "Run!", "No... please!", "It hurts!", "He has me.", "He's behind you..."},},
 	teams_target = {attack = true, avoid = true, follow = true},
+	alert = nil,
 	use_items = true,
 	on_activate = function(self, staticdata, dtime_s)
 		logic_mob_activate(self, staticdata, dtime_s)

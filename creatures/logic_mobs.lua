@@ -111,6 +111,15 @@ end
 -- logic_mob_step: Executed in on_step, handles: animations, movement, attacking, damage, target management, decision making
 function logic_mob_step (self, dtime)
 	if not self.traits_set or not self.inventory then return end
+	local s = self.object:getpos()
+	local v = self.object:getvelocity()
+	local v_xz = self.get_velocity(self)
+	-- estimate head position at 4/5 of total height
+	local s_head = {
+		x = s.x,
+		y = lerp(s.y + self.collisionbox[2], s.y + self.collisionbox[5], 0.8),
+		z = s.z,
+	}
 
 	-- timer: handle life timer
 	if creatures.timer_life and not self.actor then
@@ -118,7 +127,7 @@ function logic_mob_step (self, dtime)
 		if self.timer_life <= 0 then
 			local player_found = false
 			local radius = math.max(10, math.max(self.traits_set.vision, self.traits_set.hearing))
-			for _, obj in ipairs(minetest.env:get_objects_inside_radius(self.object:getpos(), radius)) do
+			for _, obj in ipairs(minetest.env:get_objects_inside_radius(s, radius)) do
 				if obj:is_player() then
 					player_found = true
 					break
@@ -133,16 +142,6 @@ function logic_mob_step (self, dtime)
 			end
 		end
 	end
-
-	local s = self.object:getpos()
-	local v = self.object:getvelocity()
-	local v_xz = self.get_velocity(self)
-	-- estimate head position at 4/5 of total height
-	local s_head = {
-		x = s.x,
-		y = lerp(s.y + self.collisionbox[2], s.y + self.collisionbox[5], 0.8),
-		z = s.z,
-	}
 
 	-- inventory: handle items
 	if self.inventory and #self.inventory > 0 then
@@ -296,6 +295,11 @@ function logic_mob_step (self, dtime)
 		self.timer_decision = 0
 		local radius = math.max(self.traits_set.vision, self.traits_set.hearing)
 
+		-- alert: modify alert level periodically
+		if self.alert then
+			self.alert_level = math.max(0, math.min(1, self.alert_level + self.alert.add))
+		end
+
 		-- targets: add node targets
 		if self.nodes and #self.nodes > 0 then
 			local distance = self.traits_set.vision / 2
@@ -321,58 +325,70 @@ function logic_mob_step (self, dtime)
 			local objects = minetest.env:get_objects_inside_radius(s_head, radius)
 			for _, obj in pairs(objects) do
 				local ent = obj:get_luaentity()
-				if obj ~= self.object and (obj:is_player() or ent) and not creatures:target_get(self, obj) then
+				if obj ~= self.object and (obj:is_player() or ent) then
 					local obj_pos = obj:getpos()
-					local relation = creatures:alliance(self.object, obj)
-
 					if awareness_bump(self, obj) or
 					awareness_audibility(s_head, obj, self.traits_set.hearing) or
 					awareness_sight(s_head, obj_pos, self.object:getyaw(), 0, tonumber(minetest.setting_get("fov")), self.traits_set.vision) then
-						-- this is a dropped item
-						if ent and ent.name == "__builtin:item" and self.use_items then
-							-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
-							local stack = ItemStack(ent.itemstring)
-							local stack_count = stack:get_count()
-							local stack_capabilities = stack:get_tool_capabilities()
-							local stack_damage = 1
-							if stack_capabilities.damage_groups then
-								for _, dmg in pairs(stack_capabilities.damage_groups) do
-									stack_damage = stack_damage * dmg
-								end
-							end
-							-- determine target priority based on count, tool capabilities, and any criteria that can be used to establish its value
-							local priority = 1 - 1 / math.max(1, stack_count * (stack_damage / stack_capabilities.full_punch_interval + stack_capabilities.max_drop_level))
-							-- custom target function used to pick up the item
-							local on_punch = function (self, target)
-								local ent = target.entity:get_luaentity()
-								local stack = ItemStack(ent.itemstring)
-								if inventory_add(self, stack, false) then
-									target.entity:remove()
-								end
-								return false
-							end
-							-- check if this item can be added to the inventory, and set it as a target if so
-							if inventory_add(self, stack, true) then
-								creatures:target_set(self, obj, {entity = obj, name = ent.name, objective = "attack", priority = priority, on_punch = on_punch})
-							end
-						-- this is a creature
-						elseif relation and math.abs(relation) > creatures.teams_neutral then
-							local name = nil
-							if ent then
-								name = ent.name
-							else
-								name = obj:get_player_name()
-							end
+						local relation = creatures:alliance(self.object, obj)
 
-							-- attack targets
-							if self.teams_target.attack and minetest.setting_getbool("enable_damage") and relation <= -1 + self.traits_set.aggressivity then
-								creatures:target_set(self, obj, {entity = obj, name = name, objective = "attack", priority = math.abs(relation) * self.traits_set.aggressivity})
-							-- avoid targets
-							elseif self.teams_target.avoid and relation <= -1 + self.traits_set.fear then
-								creatures:target_set(self, obj, {entity = obj, name = name, objective = "avoid", priority = math.abs(relation) * self.traits_set.fear})
-							-- follow targets
-							elseif self.teams_target.follow and relation >= self.traits_set.loyalty then
-								creatures:target_set(self, obj, {entity = obj, name = name, objective = "follow", priority = math.abs(relation) * self.traits_set.loyalty})
+						-- alert: modify alert level based on our relationship with the target
+						if self.alert and relation then
+							if relation < -creatures.teams_neutral then
+								self.alert_level = math.max(0, math.min(1, self.alert_level + (self.alert.add_foe * -relation)))
+							elseif relation > creatures.teams_neutral then
+								self.alert_level = math.max(0, math.min(1, self.alert_level + (self.alert.add_friend * relation)))
+							end
+						end
+
+						-- attempt to add the target if it doesn't already exist
+						if not creatures:target_get(self, obj) then
+							-- this is a dropped item
+							if ent and ent.name == "__builtin:item" and self.use_items then
+								-- set this as a custom attack target, which will make the mob walk toward the item and pick it up
+								local stack = ItemStack(ent.itemstring)
+								local stack_count = stack:get_count()
+								local stack_capabilities = stack:get_tool_capabilities()
+								local stack_damage = 1
+								if stack_capabilities.damage_groups then
+									for _, dmg in pairs(stack_capabilities.damage_groups) do
+										stack_damage = stack_damage * dmg
+									end
+								end
+								-- determine target priority based on count, tool capabilities, and any criteria that can be used to establish its value
+								local priority = 1 - 1 / math.max(1, stack_count * (stack_damage / stack_capabilities.full_punch_interval + stack_capabilities.max_drop_level))
+								-- custom target function used to pick up the item
+								local on_punch = function (self, target)
+									local ent = target.entity:get_luaentity()
+									local stack = ItemStack(ent.itemstring)
+									if inventory_add(self, stack, false) then
+										target.entity:remove()
+									end
+									return false
+								end
+								-- check if this item can be added to the inventory, and set it as a target if so
+								if inventory_add(self, stack, true) then
+									creatures:target_set(self, obj, {entity = obj, name = ent.name, objective = "attack", priority = priority, on_punch = on_punch})
+								end
+							-- this is a creature
+							elseif relation and math.abs(relation) > creatures.teams_neutral then
+								local name = nil
+								if ent then
+									name = ent.name
+								else
+									name = obj:get_player_name()
+								end
+
+								-- attack targets
+								if self.teams_target.attack and minetest.setting_getbool("enable_damage") and relation <= -1 + self.traits_set.aggressivity then
+									creatures:target_set(self, obj, {entity = obj, name = name, objective = "attack", priority = math.abs(relation) * self.traits_set.aggressivity})
+								-- avoid targets
+								elseif self.teams_target.avoid and relation <= -1 + self.traits_set.fear then
+									creatures:target_set(self, obj, {entity = obj, name = name, objective = "avoid", priority = math.abs(relation) * self.traits_set.fear})
+								-- follow targets
+								elseif self.teams_target.follow and relation >= self.traits_set.loyalty then
+									creatures:target_set(self, obj, {entity = obj, name = name, objective = "follow", priority = math.abs(relation) * self.traits_set.loyalty})
+								end
 							end
 						end
 					end
@@ -483,6 +499,15 @@ function logic_mob_step (self, dtime)
 			end
 		end
 
+		-- alert: determine possible actions based on alert level
+		local ent = self.target_current and self.target_current.entity and self.target_current.entity:get_luaentity()
+		local is_creature = self.alert and (self.target_current and self.target_current.entity and ((ent and ent.teams) or self.target_current.entity:is_player()))
+		local is_enemy = self.target_current and self.target_current.objective == "attack"
+		local action_look = not is_creature or ((is_enemy and self.alert_level >= self.alert.action_look) or (not is_enemy and 1 - self.alert_level >= self.alert.action_look))
+		local action_walk = not is_creature or (action_look and (is_enemy and self.alert_level >= self.alert.action_walk) or (not is_enemy and 1 - self.alert_level >= self.alert.action_walk))
+		local action_run = not is_creature or (action_walk and (is_enemy and self.alert_level >= self.alert.action_run) or (not is_enemy and 1 - self.alert_level >= self.alert.action_run))
+		local action_punch = not is_creature or (is_enemy and action_look and self.alert_level >= self.alert.action_punch)
+
 		-- state: idle
 		if not self.target_current or not dest then
 			self:set_animation("stand")
@@ -496,13 +521,8 @@ function logic_mob_step (self, dtime)
 			local dist = vector.distance(s, dest)
 			local dist_max = self.target_current.distance or self.traits_set.vision
 
-			if minetest.setting_getbool("fast_mobs") and dist > 2 and dist / dist_max >= 1 - self.target_current.priority then
-				self:set_animation("walk_punch")
-				self.v_speed = self.run_velocity
-			elseif dist > 2 then
-				self:set_animation("walk_punch")
-				self.v_speed = self.walk_velocity
-			else
+			-- action: punch the target
+			if action_punch and dist <= 2 then
 				self:set_animation("punch")
 				self.v_speed = 0
 				if self.timer_attack >= self.traits_set.attack_interval then
@@ -560,6 +580,34 @@ function logic_mob_step (self, dtime)
 						end
 					end
 				end
+			-- action: run toward the target
+			elseif action_run and minetest.setting_getbool("fast_mobs") and dist > 2 and dist / dist_max >= 1 - self.target_current.priority then
+				if action_punch then
+					self:set_animation("walk_punch")
+				else
+					self:set_animation("walk")
+				end
+				self.v_speed = self.run_velocity
+			-- action: walk toward the target
+			elseif action_walk and dist > 2 then
+				if action_punch then
+					self:set_animation("walk_punch")
+				else
+					self:set_animation("walk")
+				end
+				self.v_speed = self.walk_velocity
+			-- action: look toward the target
+			elseif action_look and dist > 2 then
+				if action_punch then
+					self:set_animation("punch")
+				else
+					self:set_animation("stand")
+				end
+				self.v_speed = 0
+			-- action: none
+			else
+				self:set_animation("stand")
+				self.v_speed = nil
 			end
 
 		-- state: following or avoiding
@@ -569,14 +617,21 @@ function logic_mob_step (self, dtime)
 			local dist = vector.distance(s, dest)
 			local dist_max = self.target_current.distance or self.traits_set.vision
 
-			if minetest.setting_getbool("fast_mobs") and
+			-- action: run toward or away from the target
+			if action_run and minetest.setting_getbool("fast_mobs") and
 			((not self.v_avoid and dist / dist_max >= 1 - self.target_current.priority) or
 			(self.v_avoid and dist / dist_max < 1 - self.target_current.priority)) then
 				self:set_animation("walk")
 				self.v_speed = self.run_velocity
-			elseif self.v_avoid or dist > math.max(5, dist_max / 10) then
+			-- action: walk toward or away from the target
+			elseif action_walk and (self.v_avoid or dist > math.max(5, dist_max / 10)) then
 				self:set_animation("walk")
 				self.v_speed = self.walk_velocity
+			-- action: look toward or away from the target
+			elseif action_look and (self.v_avoid or dist > math.max(5, dist_max / 10)) then
+				self:set_animation("stand")
+				self.v_speed = 0
+			-- action: none
 			else
 				self:set_animation("stand")
 				self.v_speed = nil
@@ -725,6 +780,12 @@ function logic_mob_punch (self, hitter, time_from_last_punch, tool_capabilities,
 					name = hitter:get_player_name()
 				end
 
+				-- alert: modify alert level on punch
+				if self.alert then
+					self.alert_level = math.max(0, math.min(1, self.alert_level + self.alert.add_punch * importance))
+				end
+
+				-- targets: change or add hitter target
 				if self.teams_target.attack and minetest.setting_getbool("enable_damage") and importance * self.traits_set.aggressivity >= action then
 					if not def then
 						creatures:target_set(self, hitter, {entity = hitter, name = name, objective = "attack", priority = importance * self.traits_set.aggressivity})
