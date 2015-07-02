@@ -358,24 +358,24 @@ local items_anthro_female = items_all
 
 local alert_all_male = {
 	add = -0.01,
-	add_friend = 0,
+	add_friend = -0.05,
 	add_foe = 0.5,
 	add_punch = 1,
 	action_look = 0.25,
 	action_walk = 0.5,
 	action_run = 0.75,
-	action_punch = 1,
+	action_punch = 0.375,
 }
 
 local alert_all_female = {
 	add = -0.005,
-	add_friend = 0,
+	add_friend = -0.1,
 	add_foe = 0.5,
 	add_punch = 1,
 	action_look = 0.25,
 	action_walk = 0.5,
 	action_run = 0.75,
-	action_punch = 1,
+	action_punch = 0.625,
 }
 
 -- #1 - Settings | #5 - Outfits and colors

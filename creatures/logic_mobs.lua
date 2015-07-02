@@ -447,10 +447,21 @@ function logic_mob_step (self, dtime)
 			local obj_pos = target.position or target.entity:getpos()
 			local dist = vector.distance(s_head, obj_pos)
 			local dist_max = target.distance or radius
-			local interest = target.priority * (1 - dist / dist_max) + ((1 - self.traits_set.determination) * math.random())
 
 			-- an engine bug occasionally causes incorrect positions, so check that distance isn't 0
 			if dist ~= 0 and dist <= dist_max then
+				local ent = target and target.entity and target.entity:get_luaentity()
+				local interest = target.priority * (1 - dist / dist_max) + ((1 - self.traits_set.determination) * math.random())
+
+				-- alert: choose enemy targets over friendly targets based on alert level
+				if self.alert and not target.persist and ((ent and ent.teams) or (target.entity and target.entity:is_player())) then
+					if target.objective ~= "follow" then
+						interest = interest * self.alert_level
+					else
+						interest = interest * (1 - self.alert_level)
+					end
+				end
+
 				if interest >= best_priority then
 					best_priority = interest
 					self.target_current = target
@@ -501,12 +512,12 @@ function logic_mob_step (self, dtime)
 
 		-- alert: determine possible actions based on alert level
 		local ent = self.target_current and self.target_current.entity and self.target_current.entity:get_luaentity()
-		local is_creature = self.alert and (self.target_current and self.target_current.entity and ((ent and ent.teams) or self.target_current.entity:is_player()))
-		local is_enemy = self.target_current and self.target_current.objective == "attack"
-		local action_look = not is_creature or ((is_enemy and self.alert_level >= self.alert.action_look) or (not is_enemy and 1 - self.alert_level >= self.alert.action_look))
-		local action_walk = not is_creature or (action_look and (is_enemy and self.alert_level >= self.alert.action_walk) or (not is_enemy and 1 - self.alert_level >= self.alert.action_walk))
-		local action_run = not is_creature or (action_walk and (is_enemy and self.alert_level >= self.alert.action_run) or (not is_enemy and 1 - self.alert_level >= self.alert.action_run))
-		local action_punch = not is_creature or (is_enemy and action_look and self.alert_level >= self.alert.action_punch)
+		local use_alert = self.alert and self.target_current and not self.target_current.persist and ((ent and ent.teams) or (self.target_current.entity and self.target_current.entity:is_player()))
+		local is_enemy = use_alert and self.target_current and self.target_current.objective ~= "follow"
+		local action_look = not use_alert or ((is_enemy and self.alert_level >= self.alert.action_look) or (not is_enemy and 1 - self.alert_level >= self.alert.action_look))
+		local action_walk = not use_alert or (action_look and (is_enemy and self.alert_level >= self.alert.action_walk) or (not is_enemy and 1 - self.alert_level >= self.alert.action_walk))
+		local action_run = not use_alert or (action_walk and (is_enemy and self.alert_level >= self.alert.action_run) or (not is_enemy and 1 - self.alert_level >= self.alert.action_run))
+		local action_punch = not use_alert or (is_enemy and action_look and self.alert_level >= self.alert.action_punch)
 
 		-- state: idle
 		if not self.target_current or not dest then
@@ -562,8 +573,10 @@ function logic_mob_step (self, dtime)
 							if tool_stack then
 								local tool_capabilities = tool_stack:get_tool_capabilities()
 								if tool_capabilities.damage_groups then
-									-- use the tool's capabilities instead of the mob's
+									-- use the tool's capabilities instead of the mob's, except for attack_inverval as this causes breakage for mobs
+									local attack_interval = capabilities.full_punch_interval
 									capabilities = tool_capabilities
+									capabilities.full_punch_interval = attack_interval
 									-- wear out the tool based on the total amount of damage it can deal
 									if creatures.item_wear and creatures.item_wear > 0 and not minetest.setting_getbool("creative_mode") then
 										local tool_damage = 1
