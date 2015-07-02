@@ -510,30 +510,31 @@ function logic_mob_step (self, dtime)
 			end
 		end
 
-		-- alert: determine possible actions based on alert level
-		local ent = self.target_current and self.target_current.entity and self.target_current.entity:get_luaentity()
-		local use_alert = self.alert and self.target_current and not self.target_current.persist and ((ent and ent.teams) or (self.target_current.entity and self.target_current.entity:is_player()))
-		local is_enemy = use_alert and self.target_current and self.target_current.objective ~= "follow"
-		local action_look = not use_alert or ((is_enemy and self.alert_level >= self.alert.action_look) or (not is_enemy and 1 - self.alert_level >= self.alert.action_look))
-		local action_walk = not use_alert or (action_look and (is_enemy and self.alert_level >= self.alert.action_walk) or (not is_enemy and 1 - self.alert_level >= self.alert.action_walk))
-		local action_run = not use_alert or (action_walk and (is_enemy and self.alert_level >= self.alert.action_run) or (not is_enemy and 1 - self.alert_level >= self.alert.action_run))
-		local action_punch = not use_alert or (is_enemy and action_look and self.alert_level >= self.alert.action_punch)
-
-		-- state: idle
-		if not self.target_current or not dest then
-			self:set_animation("stand")
-			self.v_speed = nil
-			return
-
-		-- state: attacking
-		elseif self.target_current.objective == "attack" then
+		-- handle actions
+		if self.target_current and dest then
 			self.v_pos = dest
-			self.v_avoid = false
+			self.v_avoid = self.target_current.objective == "avoid"
 			local dist = vector.distance(s, dest)
 			local dist_max = self.target_current.distance or self.traits_set.vision
 
+			local ent = self.target_current.entity and self.target_current.entity:get_luaentity()
+			local use_alert = self.alert and not self.target_current.persist and ((ent and ent.teams) or (self.target_current.entity and self.target_current.entity:is_player()))
+			local is_enemy = self.target_current.objective ~= "follow"
+			local walk_dist = 0
+			if self.target_current.objective == "follow" then
+				walk_dist = math.max(5, dist_max / 10)
+			elseif self.target_current.objective == "attack" then
+				walk_dist = 2
+			end
+
+			-- alert: determine possible actions based on alert level
+			local action_look = not use_alert or ((is_enemy and self.alert_level >= self.alert.action_look) or (not is_enemy and 1 - self.alert_level >= self.alert.action_look))
+			local action_walk = not use_alert or (action_look and (is_enemy and self.alert_level >= self.alert.action_walk) or (not is_enemy and 1 - self.alert_level >= self.alert.action_walk))
+			local action_run = not use_alert or (action_walk and (is_enemy and self.alert_level >= self.alert.action_run) or (not is_enemy and 1 - self.alert_level >= self.alert.action_run))
+			local action_punch = not use_alert or (is_enemy and action_look and self.alert_level >= self.alert.action_punch)
+
 			-- action: punch the target
-			if action_punch and dist <= 2 then
+			if action_punch and self.target_current.objective == "attack" and dist <= walk_dist then
 				self:set_animation("punch")
 				self.v_speed = 0
 				if self.timer_attack >= self.traits_set.attack_interval then
@@ -593,62 +594,45 @@ function logic_mob_step (self, dtime)
 						end
 					end
 				end
-			-- action: run toward the target
-			elseif action_run and minetest.setting_getbool("fast_mobs") and dist > 2 and dist / dist_max >= 1 - self.target_current.priority then
-				if action_punch then
+
+			-- action: run toward or away from the target
+			elseif action_run and minetest.setting_getbool("fast_mobs") and
+			((not self.v_avoid and dist / dist_max >= 1 - self.target_current.priority) or
+			(self.v_avoid and dist / dist_max < 1 - self.target_current.priority)) then
+				if action_punch and not self.v_avoid then
 					self:set_animation("walk_punch")
 				else
 					self:set_animation("walk")
 				end
 				self.v_speed = self.run_velocity
-			-- action: walk toward the target
-			elseif action_walk and dist > 2 then
-				if action_punch then
+
+			-- action: walk toward or away from the target
+			elseif action_walk and dist > walk_dist then
+				if action_punch and not self.v_avoid then
 					self:set_animation("walk_punch")
 				else
 					self:set_animation("walk")
 				end
 				self.v_speed = self.walk_velocity
-			-- action: look toward the target
-			elseif action_look and dist > 2 then
-				if action_punch then
+
+			-- action: look toward or away from the target
+			elseif action_look and dist > walk_dist then
+				if action_punch and not self.v_avoid then
 					self:set_animation("punch")
 				else
 					self:set_animation("stand")
 				end
 				self.v_speed = 0
+
 			-- action: none
 			else
 				self:set_animation("stand")
 				self.v_speed = nil
 			end
-
-		-- state: following or avoiding
-		elseif self.target_current.objective == "follow" or self.target_current.objective == "avoid" then
-			self.v_pos = dest
-			self.v_avoid = self.target_current.objective == "avoid"
-			local dist = vector.distance(s, dest)
-			local dist_max = self.target_current.distance or self.traits_set.vision
-
-			-- action: run toward or away from the target
-			if action_run and minetest.setting_getbool("fast_mobs") and
-			((not self.v_avoid and dist / dist_max >= 1 - self.target_current.priority) or
-			(self.v_avoid and dist / dist_max < 1 - self.target_current.priority)) then
-				self:set_animation("walk")
-				self.v_speed = self.run_velocity
-			-- action: walk toward or away from the target
-			elseif action_walk and (self.v_avoid or dist > math.max(5, dist_max / 10)) then
-				self:set_animation("walk")
-				self.v_speed = self.walk_velocity
-			-- action: look toward or away from the target
-			elseif action_look and (self.v_avoid or dist > math.max(5, dist_max / 10)) then
-				self:set_animation("stand")
-				self.v_speed = 0
-			-- action: none
-			else
-				self:set_animation("stand")
-				self.v_speed = nil
-			end
+		else
+			self:set_animation("stand")
+			self.v_speed = nil
+			return
 		end
 
 		-- pathfinding: calculate path, when none exists or the target position changed
