@@ -541,7 +541,7 @@ function logic_mob_step (self, dtime)
 
 			-- action: punch the target
 			if action_punch and self.target_current.objective == "attack" and dist <= walk_dist then
-				self:set_animation("punch")
+				creatures:animation_set(self.object, "punch", 1)
 				self.v_speed = 0
 				if self.timer_attack >= self.traits_set.attack_interval then
 					self.timer_attack = 0
@@ -606,37 +606,37 @@ function logic_mob_step (self, dtime)
 			((not self.v_avoid and dist / dist_max >= 1 - self.target_current.priority) or
 			(self.v_avoid and dist / dist_max < 1 - self.target_current.priority)) then
 				if action_punch and not self.v_avoid then
-					self:set_animation("walk_punch")
+					creatures:animation_set(self.object, "walk_punch", 2)
 				else
-					self:set_animation("walk")
+					creatures:animation_set(self.object, "walk", 2)
 				end
 				self.v_speed = self.run_velocity
 
 			-- action: walk toward or away from the target
 			elseif action_walk and dist > walk_dist then
 				if action_punch and not self.v_avoid then
-					self:set_animation("walk_punch")
+					creatures:animation_set(self.object, "walk_punch", 1)
 				else
-					self:set_animation("walk")
+					creatures:animation_set(self.object, "walk", 1)
 				end
 				self.v_speed = self.walk_velocity
 
 			-- action: look toward or away from the target
 			elseif action_look and dist > walk_dist then
 				if action_punch and not self.v_avoid then
-					self:set_animation("punch")
+					creatures:animation_set(self.object, "punch", 1)
 				else
-					self:set_animation("stand")
+					creatures:animation_set(self.object, "stand", 1)
 				end
 				self.v_speed = 0
 
 			-- action: none
 			else
-				self:set_animation("stand")
+				creatures:animation_set(self.object, "stand", 1)
 				self.v_speed = nil
 			end
 		else
-			self:set_animation("stand")
+			creatures:animation_set(self.object, "stand", 1)
 			self.v_speed = nil
 			return
 		end
@@ -717,7 +717,7 @@ function logic_mob_activate (self, staticdata, dtime_s)
 	self.set_staticdata(self, staticdata, dtime_s)
 
 	creatures:configure_mob(self)
-	self:set_animation("stand")
+	creatures:animation_set(self.object, "stand", 1)
 
 	-- randomize timers to prevent mobs from acting synchronously if initialized at the same moment
 	self.timer_life = creatures.timer_life and creatures.timer_life * math.random()

@@ -76,59 +76,28 @@ function creatures:register_mob(name, def)
 			local v = self.object:getvelocity()
 			return (v.x^2 + v.z^2)^(0.5)
 		end,
-		
+
 		set_velocity = function(self, v)
 			local yaw = self.object:getyaw()
 			local x = math.sin(yaw) * -v
 			local z = math.cos(yaw) * v
 			self.object:setvelocity({x=x, y=self.object:getvelocity().y, z=z})
 		end,
-		
-		set_animation = function(self, type)
-			if not self.animation or not self.animation.speed then
-				return
-			end
-			if not self.animation.current then
-				self.animation.current = ""
-			end
-			if type == self.animation.current then
+
+		get_animation = function(self)
+			return self.animation.current
+		end,
+
+		set_animation = function(self, type, speed)
+			if not self.animation or type == self.animation.current then
 				return
 			end
 
-			local speed = self.animation.speed
-			if self.get_velocity(self) >= (self.walk_velocity + self.run_velocity) / 2 then
-				speed = self.animation.speed * 2
-			end
+			local animation_this = self.animation[type]
+			local speed_this = animation_this.speed * speed
 
-			if type == "stand" then
-				if self.animation.stand then
-					self.object:set_animation(
-						{x=self.animation.stand[1], y=self.animation.stand[2]},
-						speed, 0)
-					self.animation.current = "stand"
-				end
-			elseif type == "walk" then
-				if self.animation.walk then
-					self.object:set_animation(
-						{x=self.animation.walk[1], y=self.animation.walk[2]},
-						speed, 0)
-					self.animation.current = "walk"
-				end
-			elseif type == "walk_punch" then
-				if self.animation.walk_punch then
-					self.object:set_animation(
-						{x=self.animation.walk_punch[1], y=self.animation.walk_punch[2]},
-						speed, 0)
-					self.animation.current = "walk_punch"
-				end
-			elseif type == "punch" then
-				if self.animation.punch then
-					self.object:set_animation(
-						{x=self.animation.punch[1], y=self.animation.punch[2]},
-						speed, 0)
-					self.animation.current = "punch"
-				end
-			end
+			self.object:set_animation({x = animation_this.x, y = animation_this.y}, speed_this, animation_this.blend, animation_this.loop)
+			self.animation.current = type
 		end,
 
 		get_staticdata = function(self)

@@ -274,6 +274,27 @@ function creatures:register_creature(name, def)
 	creatures:register_player(name, def)
 end
 
+-- Pipe the get_animation function into the player and mob api
+function creatures:animation_get(self)
+	local ent = self:get_luaentity()
+	if ent then
+		return ent.get_animation(ent)
+	elseif self:is_player() then
+		return creatures:player_animation_get(self)
+	end
+	return nil
+end
+
+-- Pipe the set_animation function into the player and mob api
+function creatures:animation_set(self, type, speed)
+	local ent = self:get_luaentity()
+	if ent then
+		ent.set_animation(ent, type, speed)
+	elseif self:is_player() then
+		creatures:player_animation_set(self, type, speed)
+	end
+end
+
 -- Load files
 dofile(minetest.get_modpath("creatures").."/api_players.lua")
 dofile(minetest.get_modpath("creatures").."/api_mobs.lua")

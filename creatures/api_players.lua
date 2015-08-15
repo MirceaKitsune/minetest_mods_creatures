@@ -38,54 +38,28 @@ end
 
 player_data = {}
 
-function creatures:set_animation(player, type, speed)
+function creatures:player_animation_get(player)
 	local name = player:get_player_name()
-	if not player_data[name].animation then
-		player_data[name].animation = ""
-	end
-	if type == player_data[name].animation then
-		return
-	end
-
-	local race = creatures:player_get(name)
-	local race_settings = creatures.player_def[race]
-	local animation = race_settings.animation
-	if not animation.speed then
-		return
-	end
-
-	if type == "stand" then
-		if animation.stand then
-			player:set_animation(
-				{x=animation.stand[1], y=animation.stand[2]},
-				speed, 0)
-			player_data[name].animation = "stand"
-		end
-	elseif type == "walk" then
-		if animation.walk then
-			player:set_animation(
-				{x=animation.walk[1], y=animation.walk[2]},
-				speed, 0)
-			player_data[name].animation = "walk"
-		end
-	elseif type == "walk_punch" then
-		if animation.walk_punch then
-			player:set_animation(
-				{x=animation.walk_punch[1], y=animation.walk_punch[2]},
-				speed, 0)
-			player_data[name].animation = "walk_punch"
-		end
-	elseif type == "punch" then
-		if animation.punch then
-			player:set_animation(
-				{x=animation.punch[1], y=animation.punch[2]},
-				speed, 0)
-			player_data[name].animation = "punch"
-		end
-	end
+	return player_data[name].animation
 end
 
-local function apply_settings (player, settings)
+function creatures:player_animation_set(player, type, speed)
+	local name = player:get_player_name()
+	local race = creatures:player_get(name)
+	local race_settings = creatures.player_def[race]
+
+	if not race_settings.animation or type == player_data[name].animation then
+		return
+	end
+
+	local animation_this = race_settings.animation[type]
+	local speed_this = animation_this.speed * speed
+
+	player:set_animation({x = animation_this.x, y = animation_this.y}, speed_this, animation_this.blend, animation_this.loop)
+	player_data[name].animation = type
+end
+
+local function configure_player (player, settings)
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
 	local def = creatures.player_def[settings.name]
@@ -165,12 +139,13 @@ local function apply_settings (player, settings)
 	end
 
 	-- player: set local animations
-	if def.animation and def.animation.speed then
-		player:set_local_animation({x = def.animation.stand[1], y = def.animation.stand[2]},
-			{x = def.animation.walk[1], y = def.animation.walk[2]},
-			{x = def.animation.punch[1], y = def.animation.punch[2]},
-			{x = def.animation.walk_punch[1], y = def.animation.walk_punch[2]},
-			def.animation.speed)
+	if def.animation then
+		player:set_local_animation(
+			{x = def.animation["stand"].x, y = def.animation["stand"].y},
+			{x = def.animation["walk"].x, y = def.animation["walk"].y},
+			{x = def.animation["punch"].x, y = def.animation["punch"].y},
+			{x = def.animation["walk_punch"].x, y = def.animation["walk_punch"].y},
+			def.animation["stand"].speed)
 	end
 end
 
@@ -252,7 +227,7 @@ function creatures:player_set (player, settings)
 		settings.skin = 0
 	end
 
-	apply_settings(player, settings)
+	configure_player(player, settings)
 	-- structure: [1] = name, [2] = skin
 	creatures.player_settings[pname] = {}
 	creatures.player_settings[pname][1] = settings.name or creatures.player_default

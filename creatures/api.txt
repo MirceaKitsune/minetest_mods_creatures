@@ -32,7 +32,12 @@
 			amount = 10: Number of particles to be spawned.
 			time = 1: How many seconds particles live for.
 		visual_size = {x=1, y=1}: Scales the visual of the player and mob.
-		animation = {speed = 0, stand = {1, 31}, ...}: List of animation ranges, containing the following entries: speed, stand_start, stand_end, walk_start, walk_end, run_start, run_end, punch_start, punch_end.
+		animation = {stand = {x = 1, y = 31, ...}, ...}: List of animations available for this mob. Obligatory entries include: stand, walk, walk_punch, punch. It can also contain custom animations, which may be used in creatures:set_animation. Animation parameters:
+			x = 1: The start frame of the animation.
+			y = 31: The end frame of the animation.
+			speed = 20: Animation speed.
+			blend = 0: How much this animation should blend in with the previous animation.
+			loop = true: Whether this animation should loop or only play once.
 		sounds = {attack = "filename", ...}: A list containing sound effects for various actions. Valid entries: attack, damage, die.
 		makes_footstep_sound = false: Whether the player and mob make footstep sounds while walking. (TODO: Currently works only for mobs, engine implementation needed for players!)
 		env_damage = {...}: Enrivonment damage, dealt once every second. Valid entries:
@@ -115,6 +120,8 @@
 
 * Scripting - Public functions:
 	creatures.selected[player]: The creature which was last right-clicked by 'player'.
+	creatures:animation_get(creature): Returns the animation of 'creature'. self should be used for players, self.object for mobs.
+	creatures:animation_set(creature, name, speed): Sets the animation of 'creature' to 'name', animation speed multiplied by 'speed'. self should be used for players, self.object for mobs.
 	creatures:target_get(self, object): Returns the target definition of 'object' for mob 'self'. If the object field is nil, the function returns the current target instead.
 	creatures:target_set(self, object, def): Sets the target definition 'def' of 'object' for mob 'self'. To remove a target, simply use nil for the definition.
 	creatures:player_get(player): Gets the race of a player as a table: [1] = name, [2] = skin
@@ -124,7 +131,7 @@
 	creatures:sound(snd, obj): Triggers sound 'snd' on creature 'obj'. This function should be used for voices and other sounds made by creatures. The object should be the player entity for players and self.object for mobs.
 	creatures:mob_to_player(player, creature): Causes a player to possess a mob, removing the mob and giving the player its appearance and settings.
 	creatures:player_to_mob(player): Causes a player to be exorcised into a mob, ghosting the player and spawning a mob with its appearance and settings.
-	creatures:alliance(creature1, creature2): Returns the alliance between two mobs and / or players, ranging between -1 and 1.
+	creatures:alliance(creature1, creature2): Returns the alliance between two mobs and / or players, ranging between -1 and 1. self should be used for players, self.object for mobs.
 	creatures:particles(creature, multiplier): Triggers a particle burst using pieces of the creature's skin, by default used when the creature is damaged. You can optionally specify a value to multiply the particle count by.
 	creatures:outfit({{...}, ...}): Uses lists of textures and colors to generate all possible combinations, and outputs a full skin table. Each entry represents a layer, all images are overlayed in order (transparent textures). When used, the "textures" parameter of the creature should point directly to the product of this function. Definition parameters:
 		textures = {{"body_1.png", ...}, ...}: The first level of tables contains the texture sets, while the second level contains the textures for each material. Materials are always combined in pairs, and material slots not present in all sets will be discarded. Example: {{"body_1.png", "hair_1.png"}, {"body_2.png", "hair_2.png"}}

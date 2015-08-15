@@ -58,23 +58,23 @@ function logic_player_step (player, dtime)
 		-- determine if the player is walking
 		local walking = controls.up or controls.down or controls.left or controls.right
 		-- determine if the player is sneaking, and reduce animation speed if so
-		-- TODO: Use run animation and speed when player is running (fast mode)
-		local speed = race_settings.animation.speed
+		-- TODO: Use 2x speed when the player is running (fast mode)
+		local speed = 1
 		if controls.sneak then
-			speed = race_settings.animation.speed / 2
+			speed = 0.5
 		end
 
 		-- apply animations based on what the player is doing
 		if player:get_hp() == 0 then
 			-- TODO: mobs don't have a death animation, make the player invisible here
 		elseif walking and controls.LMB then
-			creatures:set_animation(player, "walk_punch", speed)
+			creatures:animation_set(player, "walk_punch", speed)
 		elseif walking then
-			creatures:set_animation(player, "walk", speed)
+			creatures:animation_set(player, "walk", speed)
 		elseif controls.LMB then
-			creatures:set_animation(player, "punch", speed)
+			creatures:animation_set(player, "punch", speed)
 		else
-			creatures:set_animation(player, "stand", speed)
+			creatures:animation_set(player, "stand", speed)
 		end
 	end
 
@@ -166,7 +166,7 @@ function logic_player_respawn (player)
 	end
 end
 
--- logic_player_join: Executed in minetest.register_on_joinplayer, handles: N/A
+-- logic_player_join: Executed in minetest.register_on_joinplayer, handles: initialization
 function logic_player_join (player)
-	-- currently there is no default on_joinplayer function
+	creatures:animation_set(player, "stand", 1)
 end

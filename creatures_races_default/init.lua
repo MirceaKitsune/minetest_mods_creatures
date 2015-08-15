@@ -685,11 +685,10 @@ creatures:register_creature("creatures_races_default:human_male", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_male_attack",
@@ -808,11 +807,10 @@ creatures:register_creature("creatures_races_default:human_female", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_female_attack",
@@ -933,11 +931,10 @@ creatures:register_creature("creatures_races_default:anthro_fox_male", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_male_attack",
@@ -1053,11 +1050,10 @@ creatures:register_creature("creatures_races_default:anthro_fox_female", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_female_attack",
@@ -1173,11 +1169,10 @@ creatures:register_creature("creatures_races_default:anthro_wolf_male", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_male_attack",
@@ -1293,11 +1288,10 @@ creatures:register_creature("creatures_races_default:anthro_wolf_female", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_female_attack",
@@ -1413,11 +1407,10 @@ creatures:register_creature("creatures_races_default:anthro_leopard_male", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_male_attack",
@@ -1533,11 +1526,10 @@ creatures:register_creature("creatures_races_default:anthro_leopard_female", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_female_attack",
@@ -1653,11 +1645,10 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_male", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_male_attack",
@@ -1773,11 +1764,10 @@ creatures:register_creature("creatures_races_default:anthro_rabbit_female", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_female_attack",
@@ -1893,11 +1883,10 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_male", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_male_attack",
@@ -2013,11 +2002,10 @@ creatures:register_creature("creatures_races_default:anthro_squirrel_female", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_human_female_attack",
@@ -2135,11 +2123,10 @@ creatures:register_creature("creatures_races_default:monster_dirt", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 20,
-		stand = {0, 14},
-		walk = {15, 38},
-		walk_punch = {40, 63},
-		punch = {40, 63},
+		stand = {x = 0, y = 14, speed = 20, blend = 0, loop = true},
+		walk = {x = 15, y = 38, speed = 20, blend = 0, loop = true},
+		walk_punch = {x = 40, y = 63, speed = 20, blend = 0, loop = true},
+		punch = {x = 40, y = 63, speed = 20, blend = 0, loop = true},
 	},
 	sounds = {
 		random_idle = "creatures_monster_random", -- must be implemented as a custom function
@@ -2274,11 +2261,10 @@ creatures:register_creature("creatures_races_default:monster_stone", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 25,
-		stand = {0, 14},
-		walk = {15, 38},
-		walk_punch = {40, 63},
-		punch = {40, 63},
+		stand = {x = 0, y = 14, speed = 25, blend = 0, loop = true},
+		walk = {x = 15, y = 38, speed = 25, blend = 0, loop = true},
+		walk_punch = {x = 40, y = 63, speed = 25, blend = 0, loop = true},
+		punch = {x = 40, y = 63, speed = 25, blend = 0, loop = true},
 	},
 	sounds = {
 		random_idle = "creatures_monster_random", -- must be implemented as a custom function
@@ -2413,11 +2399,10 @@ creatures:register_creature("creatures_races_default:monster_sand", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 20,
-		stand = {0, 39},
-		walk = {41, 72},
-		walk_punch = {74, 105},
-		punch = {74, 105},
+		stand = {x = 0, y = 39, speed = 20, blend = 0, loop = true},
+		walk = {x = 41, y = 72, speed = 20, blend = 0, loop = true},
+		walk_punch = {x = 74, y = 105, speed = 20, blend = 0, loop = true},
+		punch = {x = 74, y = 105, speed = 20, blend = 0, loop = true},
 	},
 	sounds = {
 		random_idle = "creatures_monster_random", -- must be implemented as a custom function
@@ -2552,11 +2537,10 @@ creatures:register_creature("creatures_races_default:monster_snow", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 25,
-		stand = {0, 39},
-		walk = {41, 72},
-		walk_punch = {74, 105},
-		punch = {74, 105},
+		stand = {x = 0, y = 39, speed = 25, blend = 0, loop = true},
+		walk = {x = 41, y = 72, speed = 25, blend = 0, loop = true},
+		walk_punch = {x = 74, y = 105, speed = 25, blend = 0, loop = true},
+		punch = {x = 74, y = 105, speed = 25, blend = 0, loop = true},
 	},
 	sounds = {
 		random_idle = "creatures_monster_random", -- must be implemented as a custom function
@@ -2691,11 +2675,10 @@ creatures:register_creature("creatures_races_default:monster_tree", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 25,
-		stand = {0, 24},
-		walk = {25, 47},
-		walk_punch = {48, 62},
-		punch = {48, 62},
+		stand = {x = 0, y = 24, speed = 25, blend = 0, loop = true},
+		walk = {x = 25, y = 47, speed = 25, blend = 0, loop = true},
+		walk_punch = {x = 48, y = 62, speed = 25, blend = 0, loop = true},
+		punch = {x = 48, y = 62, speed = 25, blend = 0, loop = true},
 	},
 	sounds = {
 		random_idle = "creatures_monster_random", -- must be implemented as a custom function
@@ -2848,11 +2831,10 @@ creatures:register_creature("creatures_races_default:monster_oerkki", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 40,
-		stand = {0, 23},
-		walk = {24, 36},
-		walk_punch = {37, 49},
-		punch = {37, 49},
+		stand = {x = 0, y = 23, speed = 40, blend = 0, loop = true},
+		walk = {x = 24, y = 36, speed = 40, blend = 0, loop = true},
+		walk_punch = {x = 37, y = 49, speed = 40, blend = 0, loop = true},
+		punch = {x = 37, y = 49, speed = 40, blend = 0, loop = true},
 	},
 	sounds = {
 		random_idle = "creatures_human_male_attack", -- must be implemented as a custom function
@@ -2976,10 +2958,10 @@ creatures:register_creature("creatures_races_default:monster_dungeon_master", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 20,
-		stand = {0, 19},
-		walk = {20, 35},
-		punch = {36, 48},
+		stand = {x = 0, y = 19, speed = 20, blend = 0, loop = true},
+		walk = {x = 20, y = 35, speed = 20, blend = 0, loop = true},
+		walk_punch = {x = 20, y = 35, speed = 20, blend = 0, loop = true},
+		punch = {x = 36, y = 48, speed = 20, blend = 0, loop = true},
 	},
 	sounds = {
 		random_idle = "creatures_monster_large_random", -- must be implemented as a custom function
@@ -3120,11 +3102,10 @@ creatures:register_creature("creatures_races_default:animal_sheep", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 15,
-		stand = {0, 80},
-		walk = {81, 100},
-		walk_punch = {81, 100},
-		punch = {81, 100},
+		stand = {x = 0, y = 80, speed = 15, blend = 0, loop = true},
+		walk = {x = 81, y = 100, speed = 15, blend = 0, loop = true},
+		walk_punch = {x = 81, y = 100, speed = 15, blend = 0, loop = true},
+		punch = {x = 81, y = 100, speed = 15, blend = 0, loop = true},
 	},
 	sounds = {
 		random_idle = "creatures_sheep_random", -- must be implemented as a custom function
@@ -3290,11 +3271,10 @@ creatures:register_creature("creatures_races_default:animal_rabbit", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 25,
-		stand = {0, 60},
-		walk = {61, 80},
-		walk_punch = {61, 80},
-		punch = {61, 80},
+		stand = {x = 0, y = 60, speed = 25, blend = 0, loop = true},
+		walk = {x = 61, y = 80, speed = 25, blend = 0, loop = true},
+		walk_punch = {x = 61, y = 80, speed = 25, blend = 0, loop = true},
+		punch = {x = 61, y = 80, speed = 25, blend = 0, loop = true},
 	},
 	sounds = {},
 	makes_footstep_sound = true,
@@ -3563,11 +3543,10 @@ creatures:register_creature("creatures_races_default:anthro_fox_demon", {
 	visual_size = {x=1, y=1},
 	drawtype = "front",
 	animation = {
-		speed = 30,
-		stand = {0, 79},
-		walk = {168, 187},
-		walk_punch = {200, 219},
-		punch = {189, 198},
+		stand = {x = 0, y = 79, speed = 30, blend = 0, loop = true},
+		walk = {x = 168, y = 187, speed = 30, blend = 0, loop = true},
+		walk_punch = {x = 200, y = 219, speed = 30, blend = 0, loop = true},
+		punch = {x = 189, y = 198, speed = 30, blend = 0, loop = true},
 	},
 	sounds = {
 		attack = "creatures_ghost_attack",
