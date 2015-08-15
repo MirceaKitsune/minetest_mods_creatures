@@ -370,6 +370,12 @@ function logic_mob_step (self, dtime)
 								if inventory_add(self, stack, true) then
 									creatures:target_set(self, obj, {entity = obj, name = ent.name, objective = "attack", priority = priority, on_punch = on_punch})
 								end
+							-- this contains an on_mob_target function
+							elseif ent and ent.on_mob_target then
+								local target = ent.on_mob_target(self)
+								if target then
+									creatures:target_set(self, obj, target)
+								end
 							-- this is a creature
 							elseif relation and math.abs(relation) > creatures.teams_neutral then
 								local name = nil
